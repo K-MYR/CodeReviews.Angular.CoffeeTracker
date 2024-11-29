@@ -1,0 +1,3 @@
+@id = 2
+GET {{HostAddress}}/{{id}}
+Accept: application/json

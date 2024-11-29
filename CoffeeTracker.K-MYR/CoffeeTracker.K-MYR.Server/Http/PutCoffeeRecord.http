@@ -1,0 +1,9 @@
+@id = 2
+PUT {{HostAddress}}/{{id}}
+Content-Type: application/json
+Accept: application/json
+{
+  "id": 2,
+  "type": "Cappucino",
+  "dateTime": "2024-11-232T14:15:20Z"
+}
