@@ -1,0 +1,7 @@
+POST {{HostAddress}}
+Content-Type: application/json
+Accept: application/json
+{
+  "type": "Cappucino",
+  "dateTime": "2024-11-23T14:15:20Z"
+}
