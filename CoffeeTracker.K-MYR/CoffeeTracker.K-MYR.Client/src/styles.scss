@@ -1,1 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
+// CSS Reset
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+// Sidewide Styles
+
+@font-face {
+    font-family: Roboto;
+    src: url('../public/assets/fonts/Roboto-Regular.ttf')
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('../public/assets/fonts/Roboto-Bold.ttf');
+  font-weight: bold;  
+}
+
+:root {
+  --primary: #FFE9C1;
+  --secondary: #A53F3F;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body, input, button {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 18px;
+}
+
+body {  
+  height: 100%;
+  width: 100%;
+}
+
+.form-input {
+  padding: 7px;
+  border-radius: 5px;
+  border: 2px solid var(--secondary);
+  text-align: center;
+}
+
+.form-button {
+  padding: 7px;
+  border-radius: 5px;
+  color: white;
+  background-color: var(--secondary);
+  text-align: center;
+}
