@@ -29,8 +29,10 @@ button {
 }
 
 :root {
-  --primary: #FFE9C1;
-  --secondary: #A53F3F;
+  --primary: #15141A;
+  --blue: #04D9FF;
+  --orange: #FFC628;
+  --silver: #D9D9D9;
 }
 
 html {
@@ -46,6 +48,7 @@ body, input, button {
 body {  
   height: 100%;
   width: 100%;
+  background: var(--primary)
 }
 
 .form-input {
