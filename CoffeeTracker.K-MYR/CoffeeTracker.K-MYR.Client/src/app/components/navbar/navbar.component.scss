@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.navbar__list {
+  width: 100%;
+  padding: 20px 15px 20px 15px;
+  display: flex;
+  align-content: center;
+  gap: 40px;
+}
+
+.navbar__item {
+  align-content: center;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  list-style-type: none;
+  text-shadow: 0 0 5px var(--silver);
+}
+
+.navbar__brand {
+  margin-right: 25px;
+  color: var(--orange);
+  font-size: 40px;
+  font-weight: bold;
+  text-shadow: 0px 0px 15px var(--orange);
+}
+
+.navbar__divider {
+  height: 5px;
+  background-color: var(--blue);
+  border: none;
+  box-shadow: 0 0 20px var(--blue),
+}
