@@ -6,6 +6,7 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\Coffeetracker.K-MYR.Client\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="public\assets\img\" />
     <Folder Include="src\app\components\" />
     <Folder Include="src\app\interfaces\" />
     <Folder Include="src\app\services\" />

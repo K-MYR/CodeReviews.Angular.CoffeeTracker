@@ -28,11 +28,21 @@ button {
   font-weight: bold;  
 }
 
+@font-face {
+  font-family: Roboto;
+  src: url('../public/assets/fonts/Roboto-Medium.ttf');
+  font-weight: 500;
+}
+
 :root {
   --primary: #15141A;
   --blue: #04D9FF;
+  --light-blue: rgba(4, 217, 255, 0.5);
   --orange: #FFC628;
+  --medium-orange: rgba(255,198,40, 0.7);
   --silver: #D9D9D9;
+  --light-silver: rgba(217,217,217, 0.15);
+  --medium-silver: rgba(217,217,217, 0.5);
 }
 
 html {
@@ -48,13 +58,18 @@ body, input, button {
 body {  
   height: 100%;
   width: 100%;
-  background: var(--primary)
+  background: var(--primary);
+  color: var(--silver);
+}
+
+a {
+    cursor: pointer;
 }
 
 .form-input {
   padding: 7px;
   border-radius: 5px;
-  border: 2px solid var(--secondary);
+  border: 2px solid red;
   text-align: center;
 }
 
@@ -62,6 +77,6 @@ body {
   padding: 7px;
   border-radius: 5px;
   color: white;
-  background-color: var(--secondary);
+  background-color: red;
   text-align: center;
 }

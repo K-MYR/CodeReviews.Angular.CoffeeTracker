@@ -1,0 +1,75 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.records__container {
+  width: 100%;
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 10px 25px;
+  border: 1px solid var(--light-silver);
+  border-radius: 20px;
+  box-shadow: 3px 3px 15px 1px rgba(0,0,0,0.4), -5px -5px 15px 1px rgba(255,255,255,0.05);
+}
+
+.records__head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.records__head__add-button {
+  padding: 2px 8px;
+  background: var(--primary);
+  border: 2px solid var(--orange);
+  border-radius: 10px;
+  color: var(--orange);
+  font-weight: 500;
+  transition: 0.15s ease;
+}
+
+.records__head__add-button:hover {
+    background: var(--orange);
+    color: var(--primary);
+}
+
+.records__table {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.records__table__head {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.records__table__column-title {
+  align-content: center;
+  flex-grow: 1;
+}
+
+.records__table__sort-icons {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.records__table__sort-icon {
+   display: block;
+   height: 18px;
+   width: 18px;
+   color: var(--silver);   
+}
+
+.records__table__sort-icon.active {
+    color: var(--orange);
+}
+
+.records__table__cell {
+    text-align: center;
+    padding: 2px 0;
+}
