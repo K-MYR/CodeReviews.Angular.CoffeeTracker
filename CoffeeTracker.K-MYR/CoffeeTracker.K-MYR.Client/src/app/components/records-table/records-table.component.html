@@ -1,1 +1,84 @@
-<p>records-table works!</p>
+<svg width="0" height="0" aria-hidden="true" style="visibility: hidden; position: absolute;">
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 16 16" id="caret-down">
+        <path fill="currentColor" d="M6.1018 8C5.02785 8 4.45387 9.2649 5.16108 10.0731L10.6829 16.3838C11.3801 17.1806 12.6197 17.1806 13.3169 16.3838L18.8388 10.0731C19.5459 9.2649 18.972 8 17.898 8H6.1018Z"></path>
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 16 16" id="caret-up">
+        <path fill="currentColor" d="M6.1018 16.9814C5.02785 16.9814 4.45387 15.7165 5.16108 14.9083L10.6829 8.59762C11.3801 7.80079 12.6197 7.80079 13.3169 8.59762L18.8388 14.9083C19.5459 15.7165 18.972 16.9814 17.898 16.9814H6.1018Z"></path>
+    </symbol>
+</svg>
+<div class="records__container">
+    <div class="records__head">
+        <h2>
+            Latest Brews
+        </h2>
+        <button class="records__head__add-button">
+            Add Record
+        </button>
+    </div>    
+    <table class="records__table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <span class="records__table__head">
+                        <span class="records__table__column-title">Id</span>
+                        <span class="records__table__sort-icons">
+                            <button>
+                                <svg height="20" width="20" class="records__table__sort-icon active">
+                                    <use xlink:href="#caret-up"></use>
+                                </svg>
+                            </button>
+                            <button>
+                                <svg height="20" width="20" class="records__table__sort-icon">
+                                    <use xlink:href="#caret-down"></use>
+                                </svg>
+                            </button>
+                        </span>
+                    </span>                                       
+                </th>
+                <th scope="col">
+                    <span class="records__table__head">
+                        <span class="records__table__column-title">Date & Time</span>
+                        <span class="records__table__sort-icons">
+                            <button>
+                                <svg height="20" width="20" class="records__table__sort-icon">
+                                    <use xlink:href="#caret-up"></use>
+                                </svg>
+                            </button>
+                            <button>
+                                <svg height="20" width="20" class="records__table__sort-icon">
+                                    <use xlink:href="#caret-down"></use>
+                                </svg>
+                            </button>
+                        </span>
+                    </span>
+                </th>
+                <th scope="col">                    
+                    <span class="records__table__head">
+                        <span class="records__table__column-title">Type</span>
+                        <span class="records__table__sort-icons">
+                            <button>
+                                <svg height="20" width="20" class="records__table__sort-icon">
+                                    <use xlink:href="#caret-up"></use>
+                                </svg>
+                            </button>
+                            <button>
+                                <svg height="20" width="20" class="records__table__sort-icon">
+                                    <use xlink:href="#caret-down"></use>
+                                </svg>
+                            </button>
+                        </span>
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (record of records; track record.id) {
+            <tr>
+                <td class="records__table__cell">{{ record.id }}</td>
+                <td class="records__table__cell">{{ record.dateTime | date:"MMMM d, y h:mm" }}</td>
+                <td class="records__table__cell">{{ record.type }}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
