@@ -1,0 +1,48 @@
+.modal::backdrop {
+  background-color: rgb(255, 255, 255, 0);
+  transition:
+      0.4s ease allow-discrete;
+}
+
+.modal[open]::backdrop {
+  background-color: rgb(255, 255, 255, 0.25);
+  }
+
+@starting-style {
+  .modal[open]::backdrop {
+    background-color: rgb(255, 255, 255, 0);
+  }
+}
+
+.modal {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  background-color: var(--primary);
+  border-radius: 20px;
+  color: var(--silver);
+  transform: translateY(-200px);
+  opacity: 0;
+  transition: 0.4s ease allow-discrete;
+}
+
+.modal[open] {
+  opacity: 1;
+  transform: translateY(0);
+
+  @starting-style {
+    transform: translateY(-400px);
+    opacity: 0;
+  }
+}
+
+.modal__head {
+  padding: 15px;
+  border-bottom: var(--blue) 4px solid;
+  font-size: 24px;
+  text-align: center;
+}
+
+.modal__body {
+  padding: 15px;
+}

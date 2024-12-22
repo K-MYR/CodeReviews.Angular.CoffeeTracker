@@ -11,7 +11,7 @@
         <h2>
             Latest Brews
         </h2>
-        <button class="records__head__add-button">
+        <button class="form-button" (click)="openAddRecordModal()">
             Add Record
         </button>
     </div>    
@@ -82,3 +82,4 @@
         </tbody>
     </table>
 </div>
+<app-add-record-modal #addRecordModal></app-add-record-modal>
