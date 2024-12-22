@@ -1,0 +1,36 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form-label {
+  display: block;
+}
+
+.form-input {
+  display: block;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.form-button {
+  padding: 2px 8px;
+  background: var(--primary);
+  border: 2px solid var(--orange);
+  border-radius: 10px;
+  color: var(--orange);
+  font-weight: 500;
+  transition: 0.15s ease;
+}
+
+.form-button:hover {
+  background: var(--orange);
+  color: var(--primary);
+}

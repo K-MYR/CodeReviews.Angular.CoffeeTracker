@@ -1,5 +1,20 @@
-<div class="modal__overlay">
-    <div class="modal">
-
+<dialog #dialog class="modal" (mousedown)="onMouseDown($event)">
+    <div class="modal__head">
+        Add Record
     </div>
-</div>
+    <div class="modal__body">
+        <form class="form" [formGroup]="recordForm">
+            <div class="form-group">
+                <label class="form-label" for="record-type">Type</label>
+                <input class="form-input" id="record-type" formControlName="type" type="text" value="" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="record-dateTime">Date & Time</label>
+                <input class="form-input" id="record-dateTime" formControlName="dateTime" type="datetime-local" value="" />
+            </div>
+            <button class="form-button">
+                Add
+            </button>
+        </form>
+    </div>
+</dialog>
