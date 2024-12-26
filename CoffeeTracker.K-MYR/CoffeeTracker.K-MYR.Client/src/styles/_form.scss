@@ -7,17 +7,28 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  --current: var(--orange);
 }
 
 .form-label {
   display: block;
+  color: var(--current);
+}
+
+.form-group:has(input.ng-dirty.ng-valid) {
+  --current: var(--green);
+}
+
+.form-group:has(input.ng-dirty.ng-invalid) {
+  --current: var(--red);
 }
 
 .form-input {
   display: block;
-  border-radius: 5px;
   padding: 5px 10px;
+  border-radius: 5px;
+  outline: var(--current) 3px solid;
 }
 
 .form-button {
@@ -27,10 +38,16 @@
   border-radius: 10px;
   color: var(--orange);
   font-weight: 500;
+  outline: none;
   transition: 0.15s ease;
 }
 
-.form-button:hover {
+.form-button[disabled] {
+  filter: grayscale(80%);
+  cursor: default;
+}
+
+.form-button:enabled:hover, .form-button:focus-visible {
   background: var(--orange);
   color: var(--primary);
 }

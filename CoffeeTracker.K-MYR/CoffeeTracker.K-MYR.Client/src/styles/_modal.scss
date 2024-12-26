@@ -1,12 +1,12 @@
 .modal::backdrop {
   background-color: rgb(255, 255, 255, 0);
-  transition:
-      0.4s ease allow-discrete;
+  transition: 0.4s ease-in allow-discrete;
 }
 
 .modal[open]::backdrop {
   background-color: rgb(255, 255, 255, 0.25);
-  }
+  transition: 0.4s ease-out allow-discrete;
+}
 
 @starting-style {
   .modal[open]::backdrop {
@@ -21,7 +21,7 @@
   background-color: var(--primary);
   border-radius: 20px;
   color: var(--silver);
-  transform: translateY(-200px);
+  transform: translateY(-300px);
   opacity: 0;
   transition: 0.4s ease allow-discrete;
 }
@@ -31,7 +31,7 @@
   transform: translateY(0);
 
   @starting-style {
-    transform: translateY(-400px);
+    transform: translateY(-300px);
     opacity: 0;
   }
 }
@@ -39,6 +39,7 @@
 .modal__head {
   padding: 15px;
   border-bottom: var(--blue) 4px solid;
+  color: var(--orange);
   font-size: 24px;
   text-align: center;
 }
