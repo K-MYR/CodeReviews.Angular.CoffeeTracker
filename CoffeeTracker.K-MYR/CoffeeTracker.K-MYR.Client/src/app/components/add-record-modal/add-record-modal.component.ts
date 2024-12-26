@@ -1,5 +1,5 @@
 import { Component, ElementRef, Signal, viewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-record-modal',
@@ -11,8 +11,12 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class AddRecordModalComponent {
   private dialog: Signal<ElementRef<HTMLDialogElement>> = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
   recordForm: FormGroup = new FormGroup({
-    type: new FormControl(''),
-    dateTime: new FormControl('')
+    type: new FormControl('', [
+      Validators.required,
+    ]),
+    dateTime: new FormControl('', [
+      Validators.required,
+    ])
   });
 
   open() : void {

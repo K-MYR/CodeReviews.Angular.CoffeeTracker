@@ -14,9 +14,10 @@ button {
   cursor: pointer;
 }
 
-dialog {
+dialog, input {
     border: none;
 }
+
 
 // Typography
 @import 'styles/_typography.scss';
@@ -27,10 +28,11 @@ dialog {
   --blue: #04D9FF;
   --light-blue: rgba(4, 217, 255, 0.5);
   --orange: #FFC628;
-  --medium-orange: rgba(255,198,40, 0.7);
-  --silver: #E3E3E3;
-  --light-silver: rgba(227,227,227, 0.15);
-  --medium-silver: rgba(227,227,227, 0.5);
+  --transparent-orange: rgba(255,198,40, 0.7);
+  --silver: #EBEBEB;
+  --transparent-silver: rgba(227,227,227, 0.15);
+  --green: #00FF00;
+  --red: #FF1646;
 }
 
 html {

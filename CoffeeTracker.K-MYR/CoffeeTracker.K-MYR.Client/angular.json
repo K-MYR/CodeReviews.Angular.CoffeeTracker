@@ -100,7 +100,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/main.scss"
             ],
             "scripts": [],
 	    "karmaConfig": "karma.conf.js"
