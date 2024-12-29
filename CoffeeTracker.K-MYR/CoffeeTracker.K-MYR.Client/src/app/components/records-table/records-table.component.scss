@@ -50,10 +50,23 @@
 }
 
 .records__table__sort-icon.active {
-    color: var(--orange);
+  color: var(--orange);
 }
 
 .records__table__cell {
-    text-align: center;
-    padding: 2px 0;
+  text-align: center;
+  padding: 2px 0;
+}
+
+.records__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.records__footer__pagination-button {
+  display: block;
+  color: var(--silver);
 }

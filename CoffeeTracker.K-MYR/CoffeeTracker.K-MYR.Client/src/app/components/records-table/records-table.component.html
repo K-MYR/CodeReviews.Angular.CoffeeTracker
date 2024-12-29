@@ -5,6 +5,18 @@
     <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 16 16" id="caret-up">
         <path fill="currentColor" d="M6.1018 16.9814C5.02785 16.9814 4.45387 15.7165 5.16108 14.9083L10.6829 8.59762C11.3801 7.80079 12.6197 7.80079 13.3169 8.59762L18.8388 14.9083C19.5459 15.7165 18.972 16.9814 17.898 16.9814H6.1018Z"></path>
     </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-left">
+        <path fill="currentColor" d="M160,212a3.98805,3.98805,0,0,1-2.82861-1.17163l-80-80a4,4,0,0,1,0-5.65674l80-80a4.00009,4.00009,0,0,1,5.65722,5.65674L85.65674,128l77.17187,77.17163A4,4,0,0,1,160,212Z" />
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-right">
+        <path fill="currentColor" d="M96,212a4,4,0,0,1-2.82861-6.82837L170.34326,128,93.17139,50.82837a4.00009,4.00009,0,0,1,5.65722-5.65674l80,80a4,4,0,0,1,0,5.65674l-80,80A3.98805,3.98805,0,0,1,96,212Z" />
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-double-left">
+        <path fill="currentColor" d="M202.82861,205.17139a4.00026,4.00026,0,0,1-5.65722,5.65722l-80-80a4.00058,4.00058,0,0,1,0-5.65722l80-80a4.00026,4.00026,0,0,1,5.65722,5.65722L125.65674,128ZM45.65674,128l77.17187-77.17139a4.00026,4.00026,0,0,0-5.65722-5.65722l-80,80a4.00058,4.00058,0,0,0,0,5.65722l80,80a4.00026,4.00026,0,0,0,5.65722-5.65722Z" />
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-double-right">
+        <path fill="currentColor" d="M138.82861,130.82861l-80,80a4.00026,4.00026,0,0,1-5.65722-5.65722L130.34326,128,53.17139,50.82861a4.00026,4.00026,0,0,1,5.65722-5.65722l80,80A4.0006,4.0006,0,0,1,138.82861,130.82861Zm80-5.65722-80-80a4.00026,4.00026,0,0,0-5.65722,5.65722L210.34326,128l-77.17187,77.17139a4.00026,4.00026,0,0,0,5.65722,5.65722l80-80A4.0006,4.0006,0,0,0,218.82861,125.17139Z" />
+    </symbol>
 </svg>
 <div class="records__container">
     <div class="records__head">
@@ -14,7 +26,7 @@
         <button class="form-button" (click)="openAddRecordModal()">
             Add Record
         </button>
-    </div>    
+    </div>
     <table class="records__table">
         <thead>
             <tr>
@@ -33,7 +45,7 @@
                                 </svg>
                             </button>
                         </span>
-                    </span>                                       
+                    </span>
                 </th>
                 <th scope="col">
                     <span class="records__table__head">
@@ -52,7 +64,7 @@
                         </span>
                     </span>
                 </th>
-                <th scope="col">                    
+                <th scope="col">
                     <span class="records__table__head">
                         <span class="records__table__column-title">Type</span>
                         <span class="records__table__sort-icons">
@@ -81,5 +93,27 @@
             }
         </tbody>
     </table>
+    <div class="records__footer">
+        <button>
+            <svg height="28" width="28" class="records__footer__pagination-button">
+                <use xlink:href="#caret-double-left"></use>
+            </svg>
+        </button>
+        <button>
+            <svg height="28" width="28" class="records__footer__pagination-button">
+                <use xlink:href="#caret-left"></use>
+            </svg>
+        </button>
+        <span>5</span>
+        <button>
+            <svg height="28" width="28" class="records__footer__pagination-button">
+                <use xlink:href="#caret-right"></use>
+            </svg>
+        </button><button>
+            <svg height="28" width="28" class="records__footer__pagination-button">
+                <use xlink:href="#caret-double-right"></use>
+            </svg>
+        </button>
+    </div>
 </div>
 <app-add-record-modal #addRecordModal></app-add-record-modal>
