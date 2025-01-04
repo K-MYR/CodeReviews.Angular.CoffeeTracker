@@ -1,18 +1,24 @@
 ﻿using CoffeeTracker.K_MYR.Server.Application.Interfaces;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
+using CoffeeTracker.K_MYR.Server.Endpoints;
+using CoffeeTracker.K_MYR.Server.Shared;
+using System.ComponentModel.DataAnnotations;
+using LanguageExt.Common;
+using CoffeeTracker.K_MYR.Server.Shared.Enums;
+using System.Linq.Dynamic.Core;
 
 namespace CoffeeTracker.K_MYR.Server.Application.Services;
 
-public interface ICoffeeRecordService
+internal interface ICoffeeRecordService
 {
     ValueTask<CoffeeRecord?> GetCoffeeRecordAsync(int id, CancellationToken ct);
-    Task<List<CoffeeRecord>> GetCoffeeRecordsAsync(DateOnly date, CancellationToken ct);
+    Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, CancellationToken ct);
     Task CreateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
     Task UpdateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
     Task DeleteCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
 }
 
-public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepository) : ICoffeeRecordService
+internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepository) : ICoffeeRecordService
 {
     private readonly ICoffeeRecordRepository _coffeeRecordRepository = coffeeRecordRepository;    
 
@@ -36,8 +42,72 @@ public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepo
         return _coffeeRecordRepository.DeleteAsync(record, ct);
     }
 
-    public Task<List<CoffeeRecord>> GetCoffeeRecordsAsync(DateOnly date, CancellationToken ct)
+    public async Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, CancellationToken ct)
     {
-        return _coffeeRecordRepository.GetAllAsync(date, ct);
+        Func<IQueryable<CoffeeRecord>, IOrderedQueryable<CoffeeRecord>> orderBy = q => q.OrderBy(t => t.Id);
+        Func<IQueryable<CoffeeRecord>, IQueryable<CoffeeRecord>>? filter = null;
+
+        if (request.OrderBy is not null)
+        {
+            if (!OrderingHelpers.IsAllowedProperty(request.OrderBy))
+            {
+                return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"'{request.OrderBy}' is not a valid field for ordering."));
+            }
+
+            bool IsAscendingOrder = (request.OrderDirection == OrderDirection.Ascending) ^ request.IsPrevious;
+            string orderDirection = IsAscendingOrder ? "" : " DESC";
+            string orderString = $"{request.OrderBy}{orderDirection}, Id{orderDirection}";
+            orderBy = q => q.OrderBy(orderString);
+
+            if (request.LastId is not null)
+            {
+                string comparerSymbol = IsAscendingOrder ? ">" : "<";
+
+                if (request.LastValue is not null)
+                {
+                    var type = OrderingHelpers.GetProperty<CoffeeRecord>(request.OrderBy)?.PropertyType;
+
+                    if (type is null)
+                    {
+                        return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"Failed to retrieve the type for the property '{request.OrderBy}'."));
+                    }
+
+                    try
+                    {
+                        var lastValue = Convert.ChangeType(request.LastValue, type);
+                        filter = q => q.Where($"{request.OrderBy} {comparerSymbol} @0 || ({request.OrderBy} == @0 && Id {comparerSymbol} @1)", lastValue, request.LastId);
+                    }
+                    catch
+                    {
+                        return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"Failed to convert '{request.LastValue}' to the expected type '{type.Name}'."));
+                    }
+                }
+                else
+                {
+                    filter = q => q.Where($"Id {comparerSymbol} @0", request.LastId);
+                }
+            }
+        }     
+        var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(request.StartDate, request.EndDate, request.Type, request.PageSize + 1, orderBy, ct, filter);
+        var hasNext = coffeeRecords.Count > request.PageSize;
+
+        if (hasNext)
+        {
+            coffeeRecords.RemoveAt(coffeeRecords.Count - 1);
+        }
+
+        if (request.IsPrevious)
+        {
+            coffeeRecords.Reverse();
+        }
+
+        var paginatedList = new PaginatedList<CoffeeRecord>(
+            coffeeRecords, 
+            hasNext, 
+            request.OrderBy ?? "Id", 
+            request.OrderDirection
+        );
+
+        return paginatedList;
     }
 }

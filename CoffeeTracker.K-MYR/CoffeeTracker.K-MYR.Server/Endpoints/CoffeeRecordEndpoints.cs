@@ -1,5 +1,9 @@
 ﻿using CoffeeTracker.K_MYR.Server.Application.Services;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
+using CoffeeTracker.K_MYR.Server.Shared;
+using CoffeeTracker.K_MYR.Server.Shared.Enums;
+using LanguageExt;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CoffeeTracker.K_MYR.Server.Endpoints;
 
@@ -10,15 +14,15 @@ public static class CoffeeRecordEndpoints
         var group = app.MapGroup("/api/coffees")
             .WithTags("Coffee API");
                       
-        group.MapGet("/{id:int}", async (
+        group.MapGet("/{id:int}", async Task<Results<Ok<CoffeeRecordResponse>, ProblemHttpResult>>(
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             int id) =>
         {
             var record = await coffeeRecordService.GetCoffeeRecordAsync(id, ct);
             return record is not null
-                ? Results.Ok(record)
-                : Results.Problem(
+                ? TypedResults.Ok(CoffeeRecordResponse.FromDomain(record))
+                : TypedResults.Problem(
                     statusCode: StatusCodes.Status404NotFound,
                     detail: $"The record with the id {id} was not found."
                 );
@@ -26,30 +30,44 @@ public static class CoffeeRecordEndpoints
         })
         .WithName("GetCoffeeRecord");
 
-        group.MapGet("/", async (
+        group.MapGet("/", async Task<Results<Ok<PaginatedList<CoffeeRecordResponse>>, ProblemHttpResult>> (
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
-            DateOnly date) =>
+            [AsParameters] GetCoffeeRecordsRequest request) =>
         {
-            var records = await coffeeRecordService.GetCoffeeRecordsAsync(date, ct);
-            return records.Count != 0
-                ? Results.Ok(records)
-                : Results.Problem(
-                    statusCode: StatusCodes.Status404NotFound,
-                    detail: $"No records were found."
-                );
+            var result = await coffeeRecordService.GetCoffeeRecordsAsync(request, ct);
+            
 
+            return result.Match<Results<Ok<PaginatedList<CoffeeRecordResponse>>, ProblemHttpResult>>(
+                succ => succ.Values.Count > 0
+                    ? TypedResults.Ok(new PaginatedList<CoffeeRecordResponse>(
+                        succ.Values
+                            .Select(c => CoffeeRecordResponse.FromDomain(c))
+                            .ToList(),
+                        succ.HasNext,
+                        succ.OrderBy,
+                        succ.OrderDirection
+                    ))
+                    : TypedResults.Problem(
+                        statusCode: StatusCodes.Status404NotFound,
+                        detail: $"No records were found."
+                    ),
+                fail => TypedResults.Problem(
+                        statusCode: StatusCodes.Status400BadRequest,
+                        detail: fail.Message
+                    )
+            );
         })
         .WithName("GetCoffeeRecords");
 
-        group.MapPost("/", async (
+        group.MapPost("/", async Task<CreatedAtRoute<CoffeeRecordResponse>>(
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             CreateCoffeeRecordRequest request) =>
         {
             var record = request.ToDomain();
             await coffeeRecordService.CreateCoffeeRecordAsync(record, ct);
-            return Results.CreatedAtRoute(
+            return TypedResults.CreatedAtRoute(
                 routeName: "GetCoffeeRecord",
                 routeValues: new { id = record.Id },
                 value: CoffeeRecordResponse.FromDomain(record)
@@ -58,7 +76,7 @@ public static class CoffeeRecordEndpoints
         .WithName("PostCoffeeRecord");
         
 
-        group.MapPut("/{id:int}", async (
+        group.MapPut("/{id:int}", async Task<Results<NoContent, ProblemHttpResult >>(
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             UpdateCoffeeRecordRequest request,
@@ -66,28 +84,31 @@ public static class CoffeeRecordEndpoints
         {
             if(id != request.Id)
             {
-                return Results.Problem(
+                return TypedResults.Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     detail: $"The route value '{id}' does not align with the expected record identifier '{request.Id}'."
                 );
             }
+
             var record = await coffeeRecordService.GetCoffeeRecordAsync(id, ct);
+
             if(record is null)
             {
-                return Results.Problem(
+                return TypedResults.Problem(
                     statusCode: StatusCodes.Status404NotFound,
                     detail: $"The record with the id {id} was not found."
                 );
             }
+
             record.DateTime = request.DateTime;
             record.Type = request.Type;
             await coffeeRecordService.UpdateCoffeeRecordAsync(record, ct );
-            return Results.NoContent();
+            return TypedResults.NoContent();
         })
         .WithName("PutCoffeeRecord");
 
 
-        group.MapDelete("/{id:int}", async (
+        group.MapDelete("/{id:int}", async Task<Results<NoContent, ProblemHttpResult>>(
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             int id
@@ -96,18 +117,30 @@ public static class CoffeeRecordEndpoints
             var record = await coffeeRecordService.GetCoffeeRecordAsync(id, ct);
             if (record is null)
             {
-                return Results.Problem(
+                return TypedResults.Problem(
                     statusCode: StatusCodes.Status404NotFound,
                     detail: $"The record with the id {id} was not found."
                 );
             }
             await coffeeRecordService.DeleteCoffeeRecordAsync(record, ct);
-            return Results.NoContent();
+            return TypedResults.NoContent();
         })
         .WithName("DeleteCoffeeRecord");
 
     }
 }
+
+internal sealed record GetCoffeeRecordsRequest(        
+    DateTime? StartDate,
+    DateTime? EndDate,
+    string? Type,
+    string? OrderBy,
+    int? LastId,
+    string? LastValue,
+    int PageSize = 10,
+    bool IsPrevious = false,    
+    OrderDirection OrderDirection = OrderDirection.Ascending
+);
 
 internal sealed record CreateCoffeeRecordRequest(
     DateTime DateTime, 
@@ -119,7 +152,7 @@ internal sealed record CreateCoffeeRecordRequest(
         DateTime = DateTime,
         Type = Type
     };
-};
+}
 
 internal sealed record CoffeeRecordResponse(
     int Id,
@@ -132,7 +165,7 @@ internal sealed record CoffeeRecordResponse(
         record.DateTime,
         record.Type
     );
-};
+}
 
 internal sealed record UpdateCoffeeRecordRequest(
     int Id,
