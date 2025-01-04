@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.Repositories;
 
-public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffeeRecordRepository
+internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffeeRecordRepository
 {
     private readonly CoffeeRecordContext _context = context;    
 
@@ -32,14 +32,38 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
         return _context.SaveChangesAsync(ct);
     }
 
-    public Task<List<CoffeeRecord>> GetAllAsync(DateOnly date, CancellationToken ct)
+    public Task<List<CoffeeRecord>> GetAllAsync(
+        DateTime? startDate, DateTime? endDate, string? type, int pageSize,
+        Func<IQueryable<CoffeeRecord>, IOrderedQueryable<CoffeeRecord>> orderBy,
+        CancellationToken ct,
+        Func<IQueryable<CoffeeRecord>, IQueryable<CoffeeRecord>>? filter = null)
     {
-        var startDate = new DateTime(date.Year, date.Month, date.Day);
-        var endDate = startDate.AddDays(1);
+        IQueryable<CoffeeRecord> query = _context.CoffeeRecords;
 
-        return _context.CoffeeRecords
-                       .Where(cr => cr.DateTime >= startDate && cr.DateTime < endDate)
-                       .AsNoTracking()
-                       .ToListAsync(ct);
+        if(filter is not null)
+        {
+            query = filter(query);
+        }
+
+        if(startDate is not null)
+        {
+            query = query.Where(c => c.DateTime >= startDate);
+        }
+
+        if (endDate is not null)
+        {
+            query = query.Where(c => c.DateTime <= endDate);
+        }
+
+        if(type is not null)
+        {
+            query = query.Where(c => c.Type.Contains(type));
+        }
+
+        query = orderBy(query);
+
+        return  query.Take(pageSize)                      
+                     .AsNoTracking()
+                     .ToListAsync(ct);
     }
 }
