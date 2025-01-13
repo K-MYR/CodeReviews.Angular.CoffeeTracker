@@ -3,7 +3,7 @@
         Add Record
     </div>
     <div class="modal__body">
-        <form class="form" [formGroup]="recordForm">
+        <form class="form" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label class="form-label" for="record-type">Type</label>
                 <input class="form-input" id="record-type" formControlName="type" type="text" value="" required/>

@@ -18,6 +18,10 @@ dialog, input {
     border: none;
 }
 
+svg {
+    display: block;
+}
+
 
 // Typography
 @import 'styles/_typography.scss';

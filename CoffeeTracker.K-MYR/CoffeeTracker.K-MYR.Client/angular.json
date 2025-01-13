@@ -72,7 +72,7 @@
               "buildTarget": "CoffeeTracker.K-MYR.Client:build:production"
             },
             "development": {
-              "buildTarget": "CoffeeTracker.K-MYR.Client:build:development"
+              "buildTarget": "CoffeeTracker.K-MYR.Client:build:development"              
             }
           },
           "defaultConfiguration": "development",
