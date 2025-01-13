@@ -30,61 +30,31 @@
     <table class="records__table">
         <thead>
             <tr>
+                @for(col of columns; track col.property) {
                 <th scope="col">
-                    <span class="records__table__head">
-                        <span class="records__table__column-title">Id</span>
+                    <span class="records__table__column">
+                        <span class="records__table__column-title">{{ col.title }}</span>
                         <span class="records__table__sort-icons">
-                            <button>
-                                <svg height="20" width="20" class="records__table__sort-icon active">
+                            <button [disabled]="records().length < 2" (click)="updateSorting(col.property, 0)" class="records__table__sort-button"
+                                    [class.active]="orderBy() === col.property && orderDirection() === 0">
+                                <svg height="18" width="18" class="records__table__sort-icon active">
                                     <use xlink:href="#caret-up"></use>
                                 </svg>
                             </button>
-                            <button>
-                                <svg height="20" width="20" class="records__table__sort-icon">
+                            <button [disabled]="records().length < 2" (click)="updateSorting(col.property, 1)" class="records__table__sort-button"
+                                    [class.active]="orderBy() === col.property && orderDirection() === 1">
+                                <svg height="18" width="18" class="records__table__sort-icon">
                                     <use xlink:href="#caret-down"></use>
                                 </svg>
                             </button>
                         </span>
                     </span>
                 </th>
-                <th scope="col">
-                    <span class="records__table__head">
-                        <span class="records__table__column-title">Date & Time</span>
-                        <span class="records__table__sort-icons">
-                            <button>
-                                <svg height="20" width="20" class="records__table__sort-icon">
-                                    <use xlink:href="#caret-up"></use>
-                                </svg>
-                            </button>
-                            <button>
-                                <svg height="20" width="20" class="records__table__sort-icon">
-                                    <use xlink:href="#caret-down"></use>
-                                </svg>
-                            </button>
-                        </span>
-                    </span>
-                </th>
-                <th scope="col">
-                    <span class="records__table__head">
-                        <span class="records__table__column-title">Type</span>
-                        <span class="records__table__sort-icons">
-                            <button>
-                                <svg height="20" width="20" class="records__table__sort-icon">
-                                    <use xlink:href="#caret-up"></use>
-                                </svg>
-                            </button>
-                            <button>
-                                <svg height="20" width="20" class="records__table__sort-icon">
-                                    <use xlink:href="#caret-down"></use>
-                                </svg>
-                            </button>
-                        </span>
-                    </span>
-                </th>
+                }                
             </tr>
         </thead>
         <tbody>
-            @for (record of records; track record.id) {
+            @for (record of records(); track record.id) {
             <tr>
                 <td class="records__table__cell">{{ record.id }}</td>
                 <td class="records__table__cell">{{ record.dateTime | date:"MMMM d, y h:mm" }}</td>
@@ -94,26 +64,27 @@
         </tbody>
     </table>
     <div class="records__footer">
-        <button>
-            <svg height="28" width="28" class="records__footer__pagination-button">
+        <button [disabled]="!hasPrevious()" class="records__footer__pagination-button">
+            <svg height="28" width="28">
                 <use xlink:href="#caret-double-left"></use>
             </svg>
         </button>
-        <button>
-            <svg height="28" width="28" class="records__footer__pagination-button">
+        <button [disabled]="!hasPrevious()" class="records__footer__pagination-button">
+            <svg height="28" width="28">
                 <use xlink:href="#caret-left"></use>
             </svg>
         </button>
-        <span>5</span>
-        <button>
-            <svg height="28" width="28" class="records__footer__pagination-button">
+        <span>{{ page() }}</span>
+        <button [disabled]="!hasNext()" class="records__footer__pagination-button">
+            <svg height="28" width="28">
                 <use xlink:href="#caret-right"></use>
             </svg>
-        </button><button>
-            <svg height="28" width="28" class="records__footer__pagination-button">
+        </button>
+        <button [disabled]="!hasNext()" class="records__footer__pagination-button">
+            <svg height="28" width="28">
                 <use xlink:href="#caret-double-right"></use>
             </svg>
         </button>
     </div>
 </div>
-<app-add-record-modal #addRecordModal></app-add-record-modal>
+<app-add-record-modal #addRecordModal (submitCoffeeRecord)="onSubmitCoffeeRecord($event)"></app-add-record-modal>

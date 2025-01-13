@@ -23,7 +23,7 @@
   margin-top: 15px;
 }
 
-.records__table__head {
+.records__table__column {
   display: flex;
   justify-content: center;
   gap: 5px;
@@ -42,15 +42,21 @@
   align-content: center;
 }
 
-.records__table__sort-icon {
-   display: block;
-   height: 18px;
-   width: 18px;
-   color: var(--silver);   
+.records__table__sort-button {
+  color: var(--silver);
 }
 
-.records__table__sort-icon.active {
+.records__table__sort-button.active {
   color: var(--orange);
+}
+
+.records__table__sort-button[disabled] {
+  color: var(--transparent-silver);
+}
+
+.records__table__sort-icon {
+   height: 18px;
+   width: 18px;
 }
 
 .records__table__cell {
@@ -67,6 +73,10 @@
 }
 
 .records__footer__pagination-button {
-  display: block;
   color: var(--silver);
+}
+
+.records__footer__pagination-button[disabled] {
+  cursor: default;
+  color: var(--transparent-silver);
 }

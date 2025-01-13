@@ -89,7 +89,7 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
             }
         }     
         var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(request.StartDate, request.EndDate, request.Type, request.PageSize + 1, orderBy, ct, filter);
-        var hasNext = coffeeRecords.Count > request.PageSize;
+        var hasNext = coffeeRecords.Count > request.PageSize;        
 
         if (hasNext)
         {
