@@ -50,41 +50,30 @@
                         </span>
                     </span>
                 </th>
-                }                
+                }
             </tr>
         </thead>
         <tbody>
             @for (record of records(); track record.id) {
             <tr>
-                <td class="records__table__cell">{{ record.id }}</td>
                 <td class="records__table__cell">{{ record.dateTime | date:"MMMM d, y h:mm" }}</td>
                 <td class="records__table__cell">{{ record.type }}</td>
             </tr>
             }
         </tbody>
     </table>
-    <div class="records__footer">
-        <button [disabled]="!hasPrevious()" class="records__footer__pagination-button">
-            <svg height="28" width="28">
-                <use xlink:href="#caret-double-left"></use>
-            </svg>
-        </button>
-        <button [disabled]="!hasPrevious()" class="records__footer__pagination-button">
+    <div class="records__footer">        
+        <button [disabled]="!hasPrevious()" class="records__footer__pagination-button" (click)="previousPage()">
             <svg height="28" width="28">
                 <use xlink:href="#caret-left"></use>
             </svg>
         </button>
-        <span>{{ page() }}</span>
-        <button [disabled]="!hasNext()" class="records__footer__pagination-button">
+        <span>{{this.page()}}</span>
+        <button [disabled]="!hasNext()" class="records__footer__pagination-button" (click)="nextPage()">
             <svg height="28" width="28">
                 <use xlink:href="#caret-right"></use>
             </svg>
-        </button>
-        <button [disabled]="!hasNext()" class="records__footer__pagination-button">
-            <svg height="28" width="28">
-                <use xlink:href="#caret-double-right"></use>
-            </svg>
-        </button>
+        </button>        
     </div>
 </div>
 <app-add-record-modal #addRecordModal (submitCoffeeRecord)="onSubmitCoffeeRecord($event)"></app-add-record-modal>

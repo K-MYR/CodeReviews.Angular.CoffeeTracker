@@ -1,4 +1,5 @@
-﻿using CoffeeTracker.K_MYR.Server.Domain.Entities;
+﻿using CoffeeTracker.K_MYR.Server.Application.DTOs;
+using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Endpoints;
 
 namespace CoffeeTracker.K_MYR.Server.Application.Interfaces;
@@ -14,5 +15,5 @@ internal interface ICoffeeRecordRepository
     Task CreateAsync(CoffeeRecord coffeeRecord, CancellationToken ct);
     Task UpdateAsync(CoffeeRecord record, CancellationToken ct);
     Task DeleteAsync(CoffeeRecord record, CancellationToken ct);
-    
+    Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct);
 }

@@ -5,6 +5,7 @@ import { PaginatedList } from '../interfaces/paginated-list';
 import { API_ROUTES } from '../../API_ROUTES';
 import { OrderDirection } from '../enums/order-direction';
 import { RecordSearchState } from '../interfaces/record-search-state';
+import { removeUndefinedValuesFromObject } from '../helpers/helpers';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { computed, Injectable, OnInit, signal } from '@angular/core';
@@ -22,18 +23,21 @@ export class CoffeeRecordService {
     type: null,
     lastId: null,
     lastValue: null,
+    isPrevious: false,
+    page: 0,
     pageSize: 10,
-    page: 1,
-    hasPrevious: false,
-    hasNext: false,
     orderBy: "dateTime",
     orderDirection: OrderDirection.Descending,
+    hasPrevious: false,
+    hasNext: false,
+    
     records: [],
   })
   isLoading = computed(() => this.state().isLoading);
   records = computed(() => this.state().records);
-  page = computed(() => this.state().page);
+  isPrevious = computed(() => this.state().isPrevious)
   pageSize = computed(() => this.state().pageSize);
+  page = computed(() => this.state().page);
   orderBy = computed(() => this.state().orderBy);
   orderDirection = computed(() => this.state().orderDirection);
   hasNext = computed(() => this.state().hasNext);
@@ -45,38 +49,34 @@ export class CoffeeRecordService {
     this.filterParameters$.pipe(
       debounceTime(300),
       tap(params => {
-        this.setLoadingIndicator(true);
         this.state.update(state => ({
           ...state,
-          ...params
-        }))
+          ...params,
+          isLoading: true
+        }));
       }),
       switchMap((filters) => this.getCoffeeRecords(filters)),
       takeUntilDestroyed()
-    ).subscribe(records => {
-      this.setRecords(records.values);
-      this.setLoadingIndicator(false);
+    ).subscribe(paginatedList => {
+      this.setState(paginatedList);
     });
   }
 
-  private setRecords(records: CoffeeRecord[]): void {
+  private setState(list: PaginatedList<CoffeeRecord>): void {
     this.state.update(state => ({
       ...state,
-      records: records
-    }));
-  }
-
-  private setLoadingIndicator(isLoading: boolean) {
-    this.state.update(state => ({
-      ...state,
-      isLoading: isLoading
+      records: list.values,
+      hasNext: list.hasNext,
+      hasPrevious: list.hasPrevious,
+      isLoading: false,
+      page: !list.hasPrevious ? 1 : state.lastId == null ? state.page : state.page + (state.isPrevious ? -1 : 1)
     }));
   }
 
   private getCoffeeRecords(searchParams: RecordsSearch): Observable<PaginatedList<CoffeeRecord>>
   {
     return this._httpClient.get<PaginatedList<CoffeeRecord>>(API_ROUTES.GET_RECORDS, {
-      params: new HttpParams({ fromObject: { ...searchParams } })
+      params: new HttpParams({ fromObject: {...removeUndefinedValuesFromObject(searchParams)} })
     })
   }
 
