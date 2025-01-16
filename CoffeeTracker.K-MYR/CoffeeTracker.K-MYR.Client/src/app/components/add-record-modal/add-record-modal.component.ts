@@ -40,6 +40,7 @@ export class AddRecordModalComponent {
   }
   onSubmit() : void {
     if (this.recordForm.valid) {
+      this.close();
       let data = this.recordForm.value;
       if (data.type && data.dateTime) {
         this.submitCoffeeRecord.emit({

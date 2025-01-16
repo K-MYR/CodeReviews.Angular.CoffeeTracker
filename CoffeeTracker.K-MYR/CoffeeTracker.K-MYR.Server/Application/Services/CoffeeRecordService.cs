@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using CoffeeTracker.K_MYR.Server.Shared.Enums;
 using System.Linq.Dynamic.Core;
+using CoffeeTracker.K_MYR.Server.Application.DTOs;
 
 namespace CoffeeTracker.K_MYR.Server.Application.Services;
 
@@ -16,6 +17,7 @@ internal interface ICoffeeRecordService
     Task CreateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
     Task UpdateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
     Task DeleteCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
+    Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct);
 }
 
 internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepository) : ICoffeeRecordService
@@ -42,6 +44,11 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
         return _coffeeRecordRepository.DeleteAsync(record, ct);
     }
 
+    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct)
+    {
+        return _coffeeRecordRepository.GetStatistics(today, ct);
+    }
+
     public async Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, CancellationToken ct)
     {
         Func<IQueryable<CoffeeRecord>, IOrderedQueryable<CoffeeRecord>> orderBy = q => q.OrderBy(t => t.Id);
@@ -63,7 +70,7 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
             {
                 string comparerSymbol = IsAscendingOrder ? ">" : "<";
 
-                if (request.LastValue is not null)
+                if (request.OrderBy != nameof(CoffeeRecord.Id) && request.LastValue is not null)
                 {
                     var type = OrderingHelpers.GetProperty<CoffeeRecord>(request.OrderBy)?.PropertyType;
 
@@ -89,7 +96,8 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
             }
         }     
         var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(request.StartDate, request.EndDate, request.Type, request.PageSize + 1, orderBy, ct, filter);
-        var hasNext = coffeeRecords.Count > request.PageSize;        
+        var hasNext = coffeeRecords.Count > request.PageSize;
+        var hasPrevious = request.LastId is not null;
 
         if (hasNext)
         {
@@ -98,12 +106,14 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
 
         if (request.IsPrevious)
         {
+            (hasNext, hasPrevious) = (hasPrevious, hasNext);
             coffeeRecords.Reverse();
         }
 
         var paginatedList = new PaginatedList<CoffeeRecord>(
             coffeeRecords, 
             hasNext, 
+            hasPrevious,
             request.OrderBy ?? "Id", 
             request.OrderDirection
         );

@@ -1,4 +1,5 @@
-﻿using CoffeeTracker.K_MYR.Server.Application.Services;
+﻿using CoffeeTracker.K_MYR.Server.Application.DTOs;
+using CoffeeTracker.K_MYR.Server.Application.Services;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Shared;
 using CoffeeTracker.K_MYR.Server.Shared.Enums;
@@ -39,19 +40,15 @@ public static class CoffeeRecordEndpoints
             
 
             return result.Match<Results<Ok<PaginatedList<CoffeeRecordResponse>>, ProblemHttpResult>>(
-                succ => succ.Values.Count > 0
-                    ? TypedResults.Ok(new PaginatedList<CoffeeRecordResponse>(
+                succ => TypedResults.Ok(new PaginatedList<CoffeeRecordResponse>(
                         succ.Values
                             .Select(c => CoffeeRecordResponse.FromDomain(c))
                             .ToList(),
                         succ.HasNext,
+                        succ.HasPrevious,
                         succ.OrderBy,
                         succ.OrderDirection
-                    ))
-                    : TypedResults.Problem(
-                        statusCode: StatusCodes.Status404NotFound,
-                        detail: $"No records were found."
-                    ),
+                    )),                   
                 fail => TypedResults.Problem(
                         statusCode: StatusCodes.Status400BadRequest,
                         detail: fail.Message
@@ -59,6 +56,17 @@ public static class CoffeeRecordEndpoints
             );
         })
         .WithName("GetCoffeeRecords");
+
+        group.MapGet("/statistics", async Task<Results<Ok<List<TypeStatisticsDTO>>, ProblemHttpResult>> (
+            ICoffeeRecordService coffeeRecordService,
+            CancellationToken ct,
+            DateTime date) =>
+        {
+            var statisticsDTOs = await coffeeRecordService.GetStatistics(date, ct);
+            return TypedResults.Ok(statisticsDTOs);
+
+        })
+        .WithName("GetCoffeeTypeStatistics");
 
         group.MapPost("/", async Task<CreatedAtRoute<CoffeeRecordResponse>>(
             ICoffeeRecordService coffeeRecordService,

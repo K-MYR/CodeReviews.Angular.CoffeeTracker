@@ -1,4 +1,5 @@
-﻿using CoffeeTracker.K_MYR.Server.Application.Interfaces;
+﻿using CoffeeTracker.K_MYR.Server.Application.DTOs;
+using CoffeeTracker.K_MYR.Server.Application.Interfaces;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -66,4 +67,33 @@ internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICof
                      .AsNoTracking()
                      .ToListAsync(ct);
     }
+    
+    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct)
+    {
+        var todayStart = new DateTime(today.Year, today.Month, today.Day);
+        var todayEnd = todayStart.AddDays(1);
+        var firstDayOfTheWeek = today.AddDays(-(int)today.DayOfWeek);
+        var weekStart = new DateTime(firstDayOfTheWeek.Year, firstDayOfTheWeek.Month, firstDayOfTheWeek.Day);
+        var weekEnd = weekStart.AddDays(7);
+        var monthStart = new DateTime(today.Year, today.Month, 1);
+        var monthEnd = monthStart.AddMonths(1);
+        var yearStart = new DateTime(today.Year, 1, 1);
+        var yearEnd = yearStart.AddYears(1);
+
+        return _context.CoffeeRecords
+            .Where(c => c.DateTime > yearStart && c.DateTime < yearEnd)
+            .GroupBy(c => c.Type)
+            .Select(g => new TypeStatisticsDTO()
+            {
+                CoffeeType = g.Key,
+                YearCount = g.Count(),
+                MonthCount = g.Count(c => c.DateTime > monthStart && c.DateTime < monthEnd),
+                WeekCount = g.Count(c => c.DateTime > weekStart && c.DateTime < weekEnd),
+                DayCount = g.Count(c => c.DateTime > todayStart && c.DateTime < todayEnd)
+            })            
+            .AsNoTracking()
+            .ToListAsync(ct); ;
+        
+    }
+  
 }
