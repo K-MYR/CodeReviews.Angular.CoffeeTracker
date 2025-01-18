@@ -23,7 +23,6 @@ export class AddRecordModalComponent {
   });
   submitCoffeeRecord: OutputEmitterRef<PostCoffeeRecord> = output<PostCoffeeRecord>();
 
-  constructor() { }
 
   open() : void {
     this.dialog().nativeElement.showModal();

@@ -1,0 +1,28 @@
+$container-padding-x: 20px;
+
+:host {
+    display: block;
+    width: 300px;
+    height: 100%;
+}
+
+.search-filters__container {
+  width: 100%;
+  height: 100%;
+  padding: 12px $container-padding-x;
+}
+
+.search-filters__head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-filters__divider {
+  height: 4px;
+  margin: 12px (-$container-padding-x) 0 (-$container-padding-x);
+  background-color: var(--orange);
+}
+
+.search-filters__body {
+  margin-top: 16px;
+}

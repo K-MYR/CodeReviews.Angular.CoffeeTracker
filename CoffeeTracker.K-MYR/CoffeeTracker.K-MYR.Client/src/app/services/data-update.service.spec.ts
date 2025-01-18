@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CoffeeRecordService } from './coffee-record.service';
+import { DataUpdateService } from './data-update.service';
 
-describe('CoffeeRecordService', () => {
-  let service: CoffeeRecordService;
+describe('DataUpdateService', () => {
+  let service: DataUpdateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CoffeeRecordService);
+    service = TestBed.inject(DataUpdateService);
   });
 
   it('should be created', () => {

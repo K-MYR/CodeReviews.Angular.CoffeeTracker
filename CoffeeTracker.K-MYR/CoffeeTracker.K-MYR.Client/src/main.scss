@@ -14,7 +14,11 @@ button {
   cursor: pointer;
 }
 
-dialog, input {
+table {
+    border-collapse: collapse;
+}
+
+dialog, input, hr {
     border: none;
 }
 
@@ -37,6 +41,8 @@ svg {
   --transparent-silver: rgba(227,227,227, 0.15);
   --green: #00FF00;
   --red: #FF1646;
+
+  --navbar-height: 94px;
 }
 
 html {
@@ -62,4 +68,5 @@ a {
 
 @import 'styles/_form.scss';
 @import 'styles/_modal.scss';
+@import 'styles/_shared.scss';
 

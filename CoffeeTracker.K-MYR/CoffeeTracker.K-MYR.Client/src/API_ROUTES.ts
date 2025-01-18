@@ -3,4 +3,5 @@ export class API_ROUTES {
   public static GET_RECORDS: string = `${this.BASE_PATH}`;
   public static GET_RECORD = (id: number): string => `${this.BASE_PATH}/${id}`;
   public static POST_RECORDS: string = `${this.BASE_PATH}`;
+  public static GET_STATISTICS: string = `${this.BASE_PATH}/statistics`;
 }

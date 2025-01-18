@@ -139,8 +139,8 @@ public static class CoffeeRecordEndpoints
 }
 
 internal sealed record GetCoffeeRecordsRequest(        
-    DateTime? StartDate,
-    DateTime? EndDate,
+    DateTime? DateTimeFrom,
+    DateTime? DateTimeTo,
     string? Type,
     string? OrderBy,
     int? LastId,

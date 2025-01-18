@@ -1,21 +1,21 @@
 import { RecordsSearch } from '../interfaces/records-search';
 import { CoffeeRecord } from '../interfaces/coffee-record';
-import { PostCoffeeRecord } from '../interfaces/post-coffee-record';
 import { PaginatedList } from '../interfaces/paginated-list';
-import { API_ROUTES } from '../../API_ROUTES';
-import { OrderDirection } from '../enums/order-direction';
 import { RecordSearchState } from '../interfaces/record-search-state';
-import { removeUndefinedValuesFromObject } from '../helpers/helpers';
+import { OrderDirection } from '../enums/order-direction';
+import { DataUpdateService } from './data-update.service';
+import { CoffeeRecordsService } from './coffee-records.service';
 
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { computed, Injectable, OnInit, signal } from '@angular/core';
-import { debounceTime, Observable, switchMap, BehaviorSubject, tap, shareReplay } from 'rxjs';
+import { computed, inject, Injectable,  signal } from '@angular/core';
+import { debounceTime, switchMap, BehaviorSubject, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CoffeeRecordService {
+export class RecordSearchStateService {
+  private readonly _coffeeRecordsService = inject(CoffeeRecordsService)
+  private readonly _dataUpdateService = inject(DataUpdateService);
   private state = signal<RecordSearchState>({
     isLoading: false,
     startDate: null,
@@ -24,13 +24,12 @@ export class CoffeeRecordService {
     lastId: null,
     lastValue: null,
     isPrevious: false,
-    page: 0,
+    page: 1,
     pageSize: 10,
     orderBy: "dateTime",
     orderDirection: OrderDirection.Descending,
     hasPrevious: false,
-    hasNext: false,
-    
+    hasNext: false,    
     records: [],
   })
   isLoading = computed(() => this.state().isLoading);
@@ -45,9 +44,9 @@ export class CoffeeRecordService {
 
   private readonly filterParameters$ = new BehaviorSubject<RecordsSearch>({ orderBy: 'dateTime', orderDirection: OrderDirection.Descending });
     
-  constructor(private readonly _httpClient: HttpClient) {
-    this.filterParameters$.pipe(
-      debounceTime(300),
+  constructor() {
+    this.filterParameters$.pipe(    
+      debounceTime(150),
       tap(params => {
         this.state.update(state => ({
           ...state,
@@ -55,11 +54,16 @@ export class CoffeeRecordService {
           isLoading: true
         }));
       }),
-      switchMap((filters) => this.getCoffeeRecords(filters)),
+      switchMap((filters) => this._coffeeRecordsService.getCoffeeRecords(filters)),
       takeUntilDestroyed()
     ).subscribe(paginatedList => {
       this.setState(paginatedList);
     });
+
+    this._dataUpdateService.dataChanged$
+      .pipe(
+        takeUntilDestroyed()
+      ).subscribe(_ => this.reload());
   }
 
   private setState(list: PaginatedList<CoffeeRecord>): void {
@@ -73,20 +77,9 @@ export class CoffeeRecordService {
     }));
   }
 
-  private getCoffeeRecords(searchParams: RecordsSearch): Observable<PaginatedList<CoffeeRecord>>
-  {
-    return this._httpClient.get<PaginatedList<CoffeeRecord>>(API_ROUTES.GET_RECORDS, {
-      params: new HttpParams({ fromObject: {...removeUndefinedValuesFromObject(searchParams)} })
-    })
-  }
-
-  postCoffeeRecord(coffeeRecord: PostCoffeeRecord): Observable<CoffeeRecord> {
-    return this._httpClient.post<CoffeeRecord>(API_ROUTES.POST_RECORDS, coffeeRecord);
-  }
-
-  reload() {
+  private reload() {
     this.filterParameters$.next(
-      this.filterParameters$.value,     
+      this.filterParameters$.value,
     );
   }
 
@@ -95,5 +88,5 @@ export class CoffeeRecordService {
       ...this.filterParameters$.value,
       ...params
     });
-  }
+  } 
 }
