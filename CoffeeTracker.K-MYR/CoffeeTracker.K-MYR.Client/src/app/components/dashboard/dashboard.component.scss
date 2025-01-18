@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: 100%;
+  height: calc(100% - var(--navbar-height));
+}
+
+.dashboard__container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  gap: 10px;
+  justify-content: space-around;
+  padding: 20px 10px;
+}

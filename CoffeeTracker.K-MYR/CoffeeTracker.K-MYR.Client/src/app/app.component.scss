@@ -3,3 +3,9 @@
     height: 100%;
     width: 100%;
 }
+
+:host::before{
+    display: block;
+    content: '';
+    height: var(--navbar-height);
+}

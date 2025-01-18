@@ -1,0 +1,24 @@
+<div class="search-filters__container box">
+    <div class="search-filters__head">
+        <h2>Filter</h2>
+        <button class="form-button" (click)="resetFilters()">Reset</button>
+    </div>
+    <hr class="search-filters__divider" />
+    <div class="search-filters__body">
+        <form class="form" [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label class="form-label" for="filters-records-type">Type</label>
+                <input type="text" value="" id="filters-records-type" formControlName="type" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="filters-records-dateTimeFrom">From</label>
+                <input type="datetime-local" value="" id="filters-records-dateTimeFrom" formControlName="dateTimeFrom" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="filters-records-dateTimeTo">To</label>
+                <input type="datetime-local" value="" id="filters-records-dateTimeTo" formControlName="dateTimeTo" class="form-input" />
+            </div>
+            <button class="form-button">Apply</button>
+        </form>            
+    </div>
+</div>

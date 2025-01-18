@@ -1,16 +1,17 @@
+$container-padding-x: 20px;
+
 :host {
   display: block;
-  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  max-width: 700px;
 }
 
 .records__container {
-  width: 100%;
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 10px 25px;
-  border: 1px solid var(--transparent-silver);
-  border-radius: 20px;
-  box-shadow: 5px 5px 15px 1px rgba(0,0,0,0.4), -5px -5px 15px 1px rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px $container-padding-x;
 }
 
 .records__head {
@@ -18,9 +19,23 @@
   justify-content: space-between;
 }
 
+.records__divider {
+  height: 4px;
+  margin: 12px (-$container-padding-x) 0 (-$container-padding-x);
+  background-color: var(--orange);
+}
+
 .records__table {
   width: 100%;
-  margin-top: 15px;
+  margin: 16px 0 auto 0;  
+}
+
+.records__table__col-dateTime {
+  width: 60%;
+}
+
+.records__table__col-type {
+  width: 40%;
 }
 
 .records__table__column {
@@ -55,8 +70,8 @@
 }
 
 .records__table__sort-icon {
-   height: 18px;
-   width: 18px;
+  height: 18px;
+  width: 18px;
 }
 
 .records__table__cell {

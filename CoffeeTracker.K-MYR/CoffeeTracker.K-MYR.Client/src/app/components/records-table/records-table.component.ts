@@ -1,9 +1,12 @@
-import { CoffeeRecordService } from '../../services/coffee-record.service';
+import { RecordSearchStateService } from '../../services/record-search-state.service';
+import { CoffeeRecordsService } from '../../services/coffee-records.service';
+import { DataUpdateService } from '../../services/data-update.service';
 import { AddRecordModalComponent } from '../add-record-modal/add-record-modal.component';
 import { OrderDirection } from '../../enums/order-direction';
 import { CoffeeRecord } from '../../interfaces/coffee-record';
+import { PostCoffeeRecord } from '../../interfaces/post-coffee-record';
 
-import { Component, Signal, viewChild } from '@angular/core';
+import { Component, output, viewChild } from '@angular/core';
 import { DatePipe, AsyncPipe } from '@angular/common';
 import { inject } from '@angular/core';
 
@@ -16,15 +19,19 @@ import { inject } from '@angular/core';
   styleUrl: './records-table.component.scss'
 })
 export class RecordsTableComponent {
-  private dialog: Signal<AddRecordModalComponent> = viewChild.required<AddRecordModalComponent>('addRecordModal'); 
-  private readonly _coffeeRecordService = inject(CoffeeRecordService);
+  private dialog = viewChild.required<AddRecordModalComponent>('addRecordModal'); 
+  private readonly _recordsSearchService = inject(RecordSearchStateService);
+  private readonly _coffeeRecordService = inject(CoffeeRecordsService);
+  private readonly _dataUpdateService = inject(DataUpdateService);
   columns: Column[] = [{ title: 'Date & Time', property: 'dateTime' }, { title: 'Type', property: 'type' }];
-  records = this._coffeeRecordService.records;
-  orderBy = this._coffeeRecordService.orderBy;
-  orderDirection = this._coffeeRecordService.orderDirection;
-  hasNext = this._coffeeRecordService.hasNext;
-  hasPrevious = this._coffeeRecordService.hasPrevious;
-  page = this._coffeeRecordService.page;
+  records = this._recordsSearchService.records;
+  orderBy = this._recordsSearchService.orderBy;
+  orderDirection = this._recordsSearchService.orderDirection;
+  hasNext = this._recordsSearchService.hasNext;
+  hasPrevious = this._recordsSearchService.hasPrevious;
+  page = this._recordsSearchService.page;
+  isLoading = this._recordsSearchService.isLoading;
+  addedRecord = output<PostCoffeeRecord>();
 
   openAddRecordModal(): void {
     this.dialog().open();
@@ -32,7 +39,7 @@ export class RecordsTableComponent {
 
   updateSorting(orderBy: keyof CoffeeRecord, orderDirection: OrderDirection): void {
     if (orderBy !== this.orderBy() || orderDirection !== this.orderDirection()) {
-      this._coffeeRecordService.updateFilter({
+      this._recordsSearchService.updateFilter({
         orderBy: orderBy,
         orderDirection: orderDirection,
         lastId: undefined,
@@ -45,7 +52,7 @@ export class RecordsTableComponent {
   onSubmitCoffeeRecord(record: any) {
     this._coffeeRecordService.postCoffeeRecord(record)
       .subscribe(_ => {
-        this._coffeeRecordService.reload();
+        this._dataUpdateService.notify();
       });
   }
 
@@ -53,7 +60,7 @@ export class RecordsTableComponent {
     var records = this.records();
     var lastRecord = records[0];
     var orderBy = this.orderBy();
-    this._coffeeRecordService.updateFilter({
+    this._recordsSearchService.updateFilter({
       lastId: lastRecord.id,
       lastValue: lastRecord[orderBy].toString(),
       isPrevious: true
@@ -64,7 +71,7 @@ export class RecordsTableComponent {
     var records = this.records();
     var lastRecord = records[records.length - 1];
     var orderBy = this.orderBy();
-    this._coffeeRecordService.updateFilter({
+    this._recordsSearchService.updateFilter({
       lastId: lastRecord.id,
       lastValue: this.orderBy() == 'id' ? undefined : lastRecord[orderBy].toString(),
       isPrevious: false,

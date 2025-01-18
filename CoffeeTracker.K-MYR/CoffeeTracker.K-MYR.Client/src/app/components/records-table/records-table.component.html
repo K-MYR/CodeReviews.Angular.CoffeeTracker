@@ -18,7 +18,7 @@
         <path fill="currentColor" d="M138.82861,130.82861l-80,80a4.00026,4.00026,0,0,1-5.65722-5.65722L130.34326,128,53.17139,50.82861a4.00026,4.00026,0,0,1,5.65722-5.65722l80,80A4.0006,4.0006,0,0,1,138.82861,130.82861Zm80-5.65722-80-80a4.00026,4.00026,0,0,0-5.65722,5.65722L210.34326,128l-77.17187,77.17139a4.00026,4.00026,0,0,0,5.65722,5.65722l80-80A4.0006,4.0006,0,0,0,218.82861,125.17139Z" />
     </symbol>
 </svg>
-<div class="records__container">
+<div class="records__container box">
     <div class="records__head">
         <h2>
             Latest Brews
@@ -27,8 +27,13 @@
             Add Record
         </button>
     </div>
+    <hr class="records__divider" />
     <table class="records__table">
-        <thead>
+        <colgroup>
+            <col span="1" class="records__table__col-dateTime" />
+            <col span="1" class="records__table__col-type" />
+        </colgroup>
+        <thead class="records__table__head">
             <tr>
                 @for(col of columns; track col.property) {
                 <th scope="col">
@@ -63,13 +68,13 @@
         </tbody>
     </table>
     <div class="records__footer">        
-        <button [disabled]="!hasPrevious()" class="records__footer__pagination-button" (click)="previousPage()">
+        <button [disabled]="!hasPrevious() || isLoading()" class="records__footer__pagination-button" (click)="previousPage()">
             <svg height="28" width="28">
                 <use xlink:href="#caret-left"></use>
             </svg>
         </button>
         <span>{{this.page()}}</span>
-        <button [disabled]="!hasNext()" class="records__footer__pagination-button" (click)="nextPage()">
+        <button [disabled]="!hasNext() || isLoading()" class="records__footer__pagination-button" (click)="nextPage()">
             <svg height="28" width="28">
                 <use xlink:href="#caret-right"></use>
             </svg>

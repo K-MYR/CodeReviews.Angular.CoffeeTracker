@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.counter-box__container {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1;
+  min-width: 100px;
+  padding: 5px;
+}
+
+.counter-box__title {
+  text-align: center;
+  font-weight: bold;
+}
+
+.counter-box__counter {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  margin: auto 0;
+}
