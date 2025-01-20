@@ -1,17 +1,19 @@
+import { CoffeeRecordsService } from '../../services/coffee-records.service';
 import { DataUpdateService } from '../../services/data-update.service';
 import { CounterComponent } from '../counter/counter.component';
 import { TypeStatistic } from '../../interfaces/type-statistic'
+import { ChartComponent } from '../chart/chart.component';
+import { ChartData, ChartOptions } from 'chart.js';
 
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { debounceTime, switchMap, takeUntil } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CoffeeRecordsService } from '../../services/coffee-records.service';
 
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [CounterComponent],
+  imports: [CounterComponent, ChartComponent],
   templateUrl: './statistics.component.html',
   styleUrl: './statistics.component.scss'
 })
@@ -36,7 +38,21 @@ export class StatisticsComponent implements OnInit {
       counters.yearCount += typeStats.yearCount;
     });
     return counters;
-  }); 
+  });
+  chartData: Signal<ChartData<'doughnut', number[]>> = computed(() => {
+    return {
+      datasets: [{
+        cutout: '40%',
+        data: this.statistics().map(stats => (stats.yearCount))
+      }],
+      labels: this.statistics().map(stats => (stats.coffeeType))
+    }
+  });
+  chartOptions: ChartOptions = {
+    parsing: false,
+    normalized: true,
+    maintainAspectRatio: false
+  }  
 
   ngOnInit(): void {
     this.year$.pipe(

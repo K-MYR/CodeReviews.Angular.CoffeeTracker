@@ -1,5 +1,24 @@
-.counters__container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+:host {
+  display: block;
+  flex: 1 1 0;
+}
+
+.statistics__container {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: start;
+  gap: 10px;
+}
+
+.counters-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.chart-container {
+  display: flex;
+  min-width: 0;
 }

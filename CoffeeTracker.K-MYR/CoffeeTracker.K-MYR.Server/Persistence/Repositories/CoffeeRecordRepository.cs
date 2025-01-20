@@ -90,7 +90,8 @@ internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICof
                 MonthCount = g.Count(c => c.DateTime > monthStart && c.DateTime < monthEnd),
                 WeekCount = g.Count(c => c.DateTime > weekStart && c.DateTime < weekEnd),
                 DayCount = g.Count(c => c.DateTime > todayStart && c.DateTime < todayEnd)
-            })            
+            })   
+            .OrderBy(t => t.CoffeeType)
             .AsNoTracking()
             .ToListAsync(ct); ;
         

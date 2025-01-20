@@ -2,15 +2,12 @@ $container-padding-x: 20px;
 
 :host {
   display: block;
-  height: 100%;
-  flex-grow: 1;
-  max-width: 700px;
+  flex: 1 1 0;
 }
 
 .records__container {
   display: flex;
   flex-direction: column;
-  height: 100%;
   padding: 12px $container-padding-x;
 }
 
