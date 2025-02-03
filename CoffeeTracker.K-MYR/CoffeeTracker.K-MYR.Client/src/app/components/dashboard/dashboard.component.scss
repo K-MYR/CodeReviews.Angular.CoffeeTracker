@@ -1,3 +1,5 @@
+$dashboard-padding-x: 20px;
+
 :host {
   display: block;
   width: 100%;
@@ -6,9 +8,28 @@
 
 .dashboard__container {
   display: flex;
-  height: 100%;
   width: 100%;
+  position: relative;
   gap: 10px;
   justify-content: space-around;
-  padding: 20px 10px;
+  padding: $dashboard-padding-x 10px;
+}
+
+.dashboard__main-container {
+  display: grid;
+  grid-template-columns: minmax(min-content, 60vh) 1fr;
+  flex: 4 1 0;
+  gap: 10px;
+}
+
+.dashboard__side-bar-container {
+  min-width: 235px;
+  max-width: 320px;
+  flex: 1;
+}
+
+.dashboard__side-bar {
+  position: sticky;
+  top: calc(var(--navbar-height) + $dashboard-padding-x);
+  right: 0;
 }

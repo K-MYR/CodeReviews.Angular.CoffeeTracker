@@ -1,11 +1,18 @@
 :host {
-  display: flex;
+  display: block;
+  height: 100%;
+  width: 100%;
   min-width: 0;
 }
 
 .chart-container {
-  display: flex;
-  min-width: 0;
+  margin: auto auto;
+  max-height: 100%;
+  aspect-ratio: 1 / 1;
   position: relative;
   padding: 5px;
+}
+
+.chart-container__chart {
+    max-width: 100%;
 }

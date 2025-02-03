@@ -1,6 +1,8 @@
 import { PostCoffeeRecord, PostCoffeeRecordForm } from '../../interfaces/post-coffee-record';
+import { ModalComponent } from '../modal/modal.component';
 
-import { Component, ElementRef, output, OutputEmitterRef, Signal, viewChild } from '@angular/core';
+
+import { Component, output, OutputEmitterRef, } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 
@@ -11,8 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './add-record-modal.component.html',
   styleUrl: './add-record-modal.component.scss'
 })
-export class AddRecordModalComponent {
-  private dialog: Signal<ElementRef<HTMLDialogElement>> = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
+export class AddRecordModalComponent extends ModalComponent {
   recordForm = new FormGroup<PostCoffeeRecordForm>({
     type: new FormControl<string|null>(null, [
       Validators.required,
@@ -23,20 +24,13 @@ export class AddRecordModalComponent {
   });
   submitCoffeeRecord: OutputEmitterRef<PostCoffeeRecord> = output<PostCoffeeRecord>();
 
-
-  open() : void {
-    this.dialog().nativeElement.showModal();
+  populate(coffeeType: string, dateTime: Date) {
+    this.recordForm.setValue({
+      type: coffeeType,
+      dateTime: dateTime.toISOString().slice(0, -2)
+    });
   }
 
-  close(): void {
-    this.dialog().nativeElement.close();
-  }
-
-  onMouseDown(event: MouseEvent): void {
-    if (event.target == this.dialog().nativeElement) {
-      this.close();
-    };
-  }
   onSubmit() : void {
     if (this.recordForm.valid) {
       this.close();
@@ -47,6 +41,7 @@ export class AddRecordModalComponent {
           dateTime: data.dateTime
         });
       }
+      this.recordForm.reset();
     }
   }
 }

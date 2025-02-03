@@ -2,7 +2,7 @@ $container-padding-x: 20px;
 
 :host {
   display: block;
-  flex: 1 1 0;
+  min-width: 500px;
 }
 
 .records__container {
@@ -24,22 +24,27 @@ $container-padding-x: 20px;
 
 .records__table {
   width: 100%;
-  margin: 16px 0 auto 0;  
+  margin: 16px 0 auto 0;
+  table-layout: fixed;
 }
 
 .records__table__col-dateTime {
-  width: 60%;
+    width: auto;
 }
 
 .records__table__col-type {
-  width: 40%;
+  width: auto;
+}
+
+.records__table__col-icons {
+    width: 55px;
 }
 
 .records__table__column {
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .records__table__column-title {
@@ -54,15 +59,15 @@ $container-padding-x: 20px;
   align-content: center;
 }
 
-.records__table__sort-button {
+.records__table__button {
   color: var(--silver);
 }
 
-.records__table__sort-button.active {
+.records__table__button.active {
   color: var(--orange);
 }
 
-.records__table__sort-button[disabled] {
+.records__table__button[disabled] {
   color: var(--transparent-silver);
 }
 
@@ -72,12 +77,36 @@ $container-padding-x: 20px;
 }
 
 .records__table__cell {
+  padding: 4px 6px;
   text-align: center;
-  padding: 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+.records__table__icons {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.records__table__icon-button {
+    color: var(--silver);
+}
+
+.records__table-body tr:hover .records__table__icon-button {
+  color: var(--orange);
+}
+
+.records__table-body tr:hover {
+  box-shadow: 0px 0px 1px var(--orange);
 }
 
 .records__footer {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
   gap: 12px;
@@ -91,4 +120,23 @@ $container-padding-x: 20px;
 .records__footer__pagination-button[disabled] {
   cursor: default;
   color: var(--transparent-silver);
+}
+
+.records__footer__page-size-container {
+  position: absolute;    
+  right: 0;
+}
+
+.records__footer__page-size {
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background-color: var(--primary);
+  color: var(--silver);
+  border: none;
+  outline: var(--transparent-silver) 1px solid;
+}
+
+.records__footer__page-size:focus-within {
+  outline: var(--orange) 1px solid;
 }

@@ -42,6 +42,10 @@
   color: var(--orange);
   font-size: 24px;
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  
 }
 
 .modal__body {

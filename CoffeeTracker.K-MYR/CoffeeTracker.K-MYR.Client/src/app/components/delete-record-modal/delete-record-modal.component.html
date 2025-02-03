@@ -1,0 +1,16 @@
+<dialog #dialog class="modal" (mousedown)="onMouseDown($event)">
+    <div class="modal__head">
+        Delete "{{this.record}}"?
+    </div>
+    <div class="modal__body">
+        <form class="form" (submit)="onSubmit($event)">
+            <p>
+                Deleting this record will permanently remove it. This action cannot be undone.
+                Are you sure you want to delete it?
+            </p>
+            <button type="submit" class="form-button">
+                Delete
+            </button>
+        </form>
+    </div>
+</dialog>

@@ -1,0 +1,21 @@
+<dialog #dialog class="modal" (mousedown)="onMouseDown($event)">
+    <div class="modal__head">
+        Edit {{ type }}
+    </div>
+    <div class="modal__body">
+        <form class="form" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
+            <input type="number" class="hidden" value="" formControlName="id" required />
+            <div class="form-group">
+                <label class="form-label" for="modal-edit-record-type">Type</label>
+                <input class="form-input" id="modal-edit-record-type" formControlName="type" type="text" value="" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="modal-edit-record-dateTime">Date & Time</label>
+                <input class="form-input" id="modal-edit-record-dateTime" formControlName="dateTime" type="datetime-local" value="" required />
+            </div>
+            <button type="submit" class="form-button" [disabled]="!recordForm.valid">
+                Add
+            </button>
+        </form>
+    </div>
+</dialog>

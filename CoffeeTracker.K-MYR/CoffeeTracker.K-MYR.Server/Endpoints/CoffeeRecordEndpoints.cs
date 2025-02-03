@@ -46,6 +46,7 @@ public static class CoffeeRecordEndpoints
                             .ToList(),
                         succ.HasNext,
                         succ.HasPrevious,
+                        succ.IsPrevious,
                         succ.OrderBy,
                         succ.OrderDirection
                     )),                   
