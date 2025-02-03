@@ -7,14 +7,21 @@ export interface RecordsSearchForm {
   dateTimeTo: FormControl<string|null>
   type: FormControl<string|null>
 }
-export interface RecordsSearch {
+export interface RecordsSearchFilter {
+  dateTimeFrom?: string,
+  dateTimeTo?: string,
+  type?: string, 
+  orderBy: keyof CoffeeRecord,
+  orderDirection: OrderDirection,
+}
+
+export interface RecordsSearchParameters {
   dateTimeFrom?: string,
   dateTimeTo?: string,
   type?: string,
-  lastId?: number | undefined,
-  lastValue?: string | number | undefined,
   pageSize?: number,
-  isPrevious?: boolean,
   orderBy: keyof CoffeeRecord,
-  orderDirection: OrderDirection,
+  lastId?: number
+  lastValue?: string | number
+  isPrevious: boolean,
 }

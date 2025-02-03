@@ -1,7 +1,7 @@
 import { CoffeeRecord } from '../interfaces/coffee-record';
 import { PaginatedList } from '../interfaces/paginated-list';
 import { PostCoffeeRecord } from '../interfaces/post-coffee-record';
-import { RecordsSearch } from '../interfaces/records-search';
+import {  RecordsSearchParameters } from '../interfaces/records-search';
 import { TypeStatistic } from '../interfaces/type-statistic';
 import { API_ROUTES } from '../../API_ROUTES';
 import { removeUndefinedValuesFromObject } from '../helpers/helpers';
@@ -18,7 +18,7 @@ export class CoffeeRecordsService {
 
   constructor() { }
 
-  getCoffeeRecords(searchParams: RecordsSearch): Observable<PaginatedList<CoffeeRecord>> {
+  getCoffeeRecords(searchParams: RecordsSearchParameters): Observable<PaginatedList<CoffeeRecord>> {
     return this._httpClient.get<PaginatedList<CoffeeRecord>>(API_ROUTES.GET_RECORDS, {
       params: new HttpParams({ fromObject: { ...removeUndefinedValuesFromObject(searchParams) } })
     });
@@ -30,9 +30,19 @@ export class CoffeeRecordsService {
     });
   }
 
-  postCoffeeRecord(coffeeRecord: PostCoffeeRecord): Observable<CoffeeRecord> {
-    return this._httpClient.post<CoffeeRecord>(API_ROUTES.POST_RECORDS, coffeeRecord, {
+  postCoffeeRecord(record: PostCoffeeRecord): Observable<CoffeeRecord> {
+    return this._httpClient.post<CoffeeRecord>(API_ROUTES.POST_RECORD, record, {
       headers: { 'Content-Type': 'application/json' }
     });
+  }
+
+  putCoffeeRecord(record: any) {
+    return this._httpClient.put<CoffeeRecord>(API_ROUTES.PUT_RECORD(record.id), record, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }  
+
+  deleteCoffeeRecord(id: number) {
+    return this._httpClient.delete<number>(API_ROUTES.DELETE_RECORD(id));
   }
 }

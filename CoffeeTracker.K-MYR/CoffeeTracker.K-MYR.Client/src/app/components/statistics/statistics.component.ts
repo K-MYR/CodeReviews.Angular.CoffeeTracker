@@ -3,7 +3,9 @@ import { DataUpdateService } from '../../services/data-update.service';
 import { CounterComponent } from '../counter/counter.component';
 import { TypeStatistic } from '../../interfaces/type-statistic'
 import { ChartComponent } from '../chart/chart.component';
+
 import { ChartData, ChartOptions } from 'chart.js';
+import { generateTruncatedLabels } from '../../chart.defaults';
 
 import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -18,11 +20,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './statistics.component.scss'
 })
 export class StatisticsComponent implements OnInit {
-  private statistics = signal<TypeStatistic[]>([]);
+  private statistics = signal<TypeStatistic[]>
+    ([]);
   private readonly _coffeeRecordService = inject(CoffeeRecordsService);
   private readonly _dataUpdateService = inject(DataUpdateService);
   private readonly destroyRef = inject(DestroyRef);
-  private year$ = new BehaviorSubject<Date>(new Date);
+  private year$ = new BehaviorSubject<Date>
+    (new Date);
   counters = computed(() => {
     var counters: TypeStatistic = {
       coffeeType: 'Overall',
@@ -30,7 +34,7 @@ export class StatisticsComponent implements OnInit {
       weekCount: 0,
       monthCount: 0,
       yearCount: 0
-    } 
+    }
     this.statistics().forEach((typeStats) => {
       counters.dayCount += typeStats.dayCount;
       counters.weekCount += typeStats.weekCount;
@@ -48,11 +52,25 @@ export class StatisticsComponent implements OnInit {
       labels: this.statistics().map(stats => (stats.coffeeType))
     }
   });
-  chartOptions: ChartOptions = {
-    parsing: false,
-    normalized: true,
-    maintainAspectRatio: false
-  }  
+  chartOptions: ChartOptions = {    
+    maintainAspectRatio: true,
+    plugins: {      
+      title: {
+        display: true,
+        text: '# of Cups Per Category'
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => ` ${context?.parsed} Cups`          
+        }
+      },
+      legend: {
+        labels: {
+          generateLabels: generateTruncatedLabels
+        }
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.year$.pipe(

@@ -98,6 +98,7 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
         var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(request.DateTimeFrom, request.DateTimeTo, request.Type, request.PageSize + 1, orderBy, ct, filter);
         var hasNext = coffeeRecords.Count > request.PageSize;
         var hasPrevious = request.LastId is not null;
+        var isPrevious = request.IsPrevious;
 
         if (hasNext)
         {
@@ -114,6 +115,7 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
             coffeeRecords, 
             hasNext, 
             hasPrevious,
+            isPrevious,
             request.OrderBy ?? "Id", 
             request.OrderDirection
         );
