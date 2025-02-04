@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.Migrations
 {
-    [DbContext(typeof(CoffeeRecordContext))]
+    [DbContext(typeof(DatabaseContext.CoffeeRecordContext))]
     [Migration("20250115091552_CreateIndexOnDateTimeColumn")]
     partial class CreateIndexOnDateTimeColumn
     {
