@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.Repositories;
 
-internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffeeRecordRepository
+internal sealed class CoffeeRecordRepository(DatabaseContext.CoffeeRecordContext context) : ICoffeeRecordRepository
 {
-    private readonly CoffeeRecordContext _context = context;    
+    private readonly DatabaseContext.CoffeeRecordContext _context = context;    
 
     public ValueTask<CoffeeRecord?> GetAsync(int id, CancellationToken ct)
     {
