@@ -4,11 +4,7 @@ using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Endpoints;
 using CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 using CoffeeTracker.K_MYR.Server.Persistence.Repositories;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
@@ -44,7 +40,7 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGroup("/api/account/").MapIdentityApi<AppUser>();
-app.MapCoffeeRecordRoutes();
+app.MapAuthEndpoints();
+app.MapCoffeeRecordEndpoints();
 
 app.Run();

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 
-internal sealed class CoffeeRecordContext(DbContextOptions<CoffeeRecordContext> options) : IdentityDbContext(options)
+internal sealed class CoffeeRecordContext(DbContextOptions<CoffeeRecordContext> options) : IdentityDbContext<AppUser>(options)
 {
     internal required DbSet<CoffeeRecord> CoffeeRecords { get; set; }
 
