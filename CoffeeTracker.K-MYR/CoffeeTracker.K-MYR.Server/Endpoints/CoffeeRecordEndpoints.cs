@@ -10,7 +10,7 @@ namespace CoffeeTracker.K_MYR.Server.Endpoints;
 
 public static class CoffeeRecordEndpoints
 {
-    public static void MapCoffeeRecordRoutes(this IEndpointRouteBuilder app)
+    public static void MapCoffeeRecordEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/coffees")
             .WithTags("Coffee API");

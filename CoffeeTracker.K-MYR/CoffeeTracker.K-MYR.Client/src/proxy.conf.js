@@ -7,6 +7,7 @@ const PROXY_CONFIG = [
   {
     context: [
       "/api/coffees",
+      "/api/account",
     ],
     target,
     secure: false
