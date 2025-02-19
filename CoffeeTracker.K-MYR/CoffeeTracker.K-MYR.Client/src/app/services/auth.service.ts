@@ -4,6 +4,7 @@ import { PostLogin } from '../interfaces/post-login';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PostRegister } from '../interfaces/post-register';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,18 @@ export class AuthService {
     return this.httpClient.post<void>(API_ROUTES.POST_LOGIN, credentials, {
       headers: {
         'Content-Type': 'application/json'
-      }     
+      },
+      params: {
+        useCookies: true
+      }
+    })
+  }
+
+  register(credentials: PostRegister): Observable<void> {
+    return this.httpClient.post<void>(API_ROUTES.POST_REGISTER, credentials, {
+      headers: {
+        'Content-Type' : 'application/json'
+      }
     })
   }
 }
