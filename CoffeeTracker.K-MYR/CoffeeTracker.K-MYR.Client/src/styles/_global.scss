@@ -1,0 +1,33 @@
+:root {
+  --primary: #15141A;
+  --blue: #04D9FF;
+  --light-blue: rgba(4, 217, 255, 0.5);
+  --orange: #FFC628;
+  --transparent-orange: rgba(255,198,40, 0.7);
+  --silver: #EBEBEB;
+  --transparent-silver: rgba(227,227,227, 0.15);
+  --green: #00FF00;
+  --red: #FF1646;
+  --navbar-height: 94px;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body, input, button {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 18px;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  color: var(--silver);
+}
+
+a {
+  cursor: pointer;
+}

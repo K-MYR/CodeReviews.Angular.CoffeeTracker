@@ -1,3 +1,8 @@
 import { InjectionToken } from "@angular/core";
 
-export const VIEWPORT_WIDTH = new InjectionToken<number | null>('VIEWPORT_WIDTH');
+export interface ViewportSize {
+  width: number | null,
+  height: number | null
+}
+
+export const VIEWPORT_SIZE = new InjectionToken<ViewportSize>('VIEWPORT_SIZE');

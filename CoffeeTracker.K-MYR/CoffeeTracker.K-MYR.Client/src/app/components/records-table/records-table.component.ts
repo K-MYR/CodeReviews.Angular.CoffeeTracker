@@ -15,7 +15,7 @@ import { inject } from '@angular/core';
 @Component({
   selector: 'app-records-table',
   standalone: true,
-  imports: [ DatePipe, AsyncPipe, AddRecordModalComponent, DeleteRecordModalComponent, EditRecordModalComponent],
+  imports: [ DatePipe, AddRecordModalComponent, DeleteRecordModalComponent, EditRecordModalComponent],
   templateUrl: './records-table.component.html',
   styleUrl: './records-table.component.scss'
 })
