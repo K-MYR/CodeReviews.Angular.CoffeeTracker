@@ -1,10 +1,12 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { VIEWPORT_WIDTH } from './tokens/injectionTokens';
+import { ChartDefaults } from './chart.defaults';
+
+import { ApplicationConfig, Injector, PLATFORM_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration} from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideCharts } from 'ng2-charts';
-import { ChartDefaults } from './chart.defaults';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withFetch()),
-    provideCharts(ChartDefaults)],
+    provideCharts(ChartDefaults),    
+  ]    
 };

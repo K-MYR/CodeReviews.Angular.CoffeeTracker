@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { PostLogin, PostLoginForm } from '../../interfaces/post-login';
 
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
   loginForm = new FormGroup<PostLoginForm>({
     email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
     password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] })
@@ -27,7 +28,7 @@ export class LoginComponent {
     };
     if (data.email && data.password) {
       this.authService.login(credentials)
-        .subscribe(_ => console.log('Login successful'));
+        .subscribe(_ => this.router.navigateByUrl("/"));
     }
   }
 }
