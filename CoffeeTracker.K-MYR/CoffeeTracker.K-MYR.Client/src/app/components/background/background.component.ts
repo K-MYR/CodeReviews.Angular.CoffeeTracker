@@ -1,9 +1,8 @@
 import { resizeObserverToObserverable } from '../../helpers/helpers';
 import { Hexagon } from '../../interfaces/hexagon';
-import { VIEWPORT_WIDTH } from '../../tokens/injectionTokens';
 
 import { throttleTime, distinctUntilChanged, map, Observable} from 'rxjs';
-import { isPlatformBrowser, NgFor } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -11,12 +10,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-background',
   standalone: true,
-  imports: [ NgFor, ],
+  imports: [],
   templateUrl: './background.component.html',
   styleUrl: './background.component.scss'
 })
 export class BackgroundComponent implements OnInit{
-  private viewportWidthHint = inject(VIEWPORT_WIDTH);
   private platformId = inject(PLATFORM_ID);
   private elementRef: ElementRef = inject(ElementRef);
   private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
@@ -52,20 +50,12 @@ export class BackgroundComponent implements OnInit{
           }),
           takeUntilDestroyed(this.destroyRef)
         ).subscribe(({ rows, columns }) => {
-          console.time("as")
           this.createGrid(rows, columns);
           this.hexagons = Array.from(this.hexagonsMap.values());
           this.setSvgViewbox(rows, columns);
           this.changeDetectorRef.detectChanges();
-          console.timeEnd("as")
-          console.log(this.hexagons)
         });
-    } else {
-      console.log('ViewportWidthHint', this.viewportWidthHint);
-      this.createGrid(5, 10);
-      this.hexagons = Array.from(this.hexagonsMap.values());
-      this.setSvgViewbox(5, 10);
-    }
+    }   
   } 
 
   private createGrid(rows: number, columns: number ) {
