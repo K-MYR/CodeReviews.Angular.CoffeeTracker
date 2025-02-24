@@ -2,6 +2,7 @@ $container-padding-x: 20px;
 
 :host {
   display: block;
+  background-color: var(--primary);
 }
 
 .search-filters__container {

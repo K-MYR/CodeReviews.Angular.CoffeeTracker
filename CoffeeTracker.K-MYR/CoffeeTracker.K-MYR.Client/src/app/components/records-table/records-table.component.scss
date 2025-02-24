@@ -8,6 +8,7 @@ $container-padding-x: 20px;
 .records__container {
   display: flex;
   flex-direction: column;
+  background-color: var(--primary);
   padding: 12px $container-padding-x;
 }
 

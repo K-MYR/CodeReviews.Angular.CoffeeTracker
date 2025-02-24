@@ -13,13 +13,13 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (response.status === HttpStatusCode.Ok) {
         return true;
       } else {
-        router.navigateByUrl('/login');
+        router.navigateByUrl('/auth/login');
         return false;
       }
     }),
     catchError((response: HttpErrorResponse) => {
       if (response.status === HttpStatusCode.Unauthorized) {
-        router.navigateByUrl('/login');        
+        router.navigateByUrl('/auth/login');        
       }
       return of(false);
     })
