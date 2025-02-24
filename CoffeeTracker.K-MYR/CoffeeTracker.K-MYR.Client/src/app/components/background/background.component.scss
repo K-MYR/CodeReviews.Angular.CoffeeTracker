@@ -1,7 +1,7 @@
 :host {
     display: block;
     width: 100%;
-    height: 100%;
+    height: 100%;    
 }
 
 .background__container {
@@ -20,10 +20,14 @@
 path {
   stroke: var(--orange);
   fill: var(--primary);
-  stroke-width: 1;
-  transition: scale 0.5s linear(0, 0.149 14.5%, 0.226 19.6%, 0.316 24.2%, 0.561 33%, 0.999 44.7%, 0.735 53.1%, 0.674 56.6%, 0.655 59.9%, 0.672 63%, 0.721 66.2%, 0.999 77.4%, 0.939 81.3%, 0.921 85%, 0.932 88.2%, 0.99 95.6%, 1);
+  stroke-width: 2;
+  transition:
+      0.5s ease,
+      transform 0.5s linear(0, 0.149 14.5%, 0.226 19.6%, 0.316 24.2%, 0.561 33%, 0.999 44.7%, 0.735 53.1%, 0.674 56.6%, 0.655 59.9%, 0.672 63%, 0.721 66.2%, 0.999 77.4%, 0.939 81.3%, 0.921 85%, 0.932 88.2%, 0.99 95.6%, 1);
+  transform: scale(0.8);
 }
 
 path:hover {
   fill: var(--orange);
+  transform: scale(0.95);
 }

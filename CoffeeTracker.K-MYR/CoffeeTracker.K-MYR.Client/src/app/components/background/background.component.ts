@@ -49,7 +49,7 @@ export class BackgroundComponent implements OnInit{
             return prev.columns >= curr.columns && prev.rows >= curr.rows
           }),
           takeUntilDestroyed(this.destroyRef)
-        ).subscribe(({ rows, columns }) => {
+      ).subscribe(({ rows, columns }) => {
           this.createGrid(rows, columns);
           this.hexagons = Array.from(this.hexagonsMap.values());
           this.setSvgViewbox(rows, columns);
@@ -96,5 +96,4 @@ export class BackgroundComponent implements OnInit{
   func(hex: Hexagon) {
     console.log(hex);
   }
-
 }
