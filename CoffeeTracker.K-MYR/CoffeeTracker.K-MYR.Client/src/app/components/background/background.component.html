@@ -1,8 +1,8 @@
 <div class="background__container">
-    <svg  xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="this.svgViewBox" [attr.width]="this.svgWidth" [attr.height]="this.svgHeight" class="background__svg">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="#15141A" [attr.viewBox]="this.svgViewBox()" [attr.width]="this.svgWidth()" [attr.height]="this.svgHeight()" class="background__svg">
         @for(hex of this.hexagons.values();  track hex.key) {
-        <g [attr.transform]="hex.translate">
-            <path (click)="func(hex)" fill="#ff8f27" d="m-30.311 17.5 6.6e-7-35L-.00011162-35l30.311 17.5v35L-.00011163 35z" />
+        <g #hexagon [attr.transform]="hex.translate" [attr.key]="hex.key" stroke-dasharray="210px" style="opacity:1;">
+            <path d="m0 35 30.311-17.5v-35l-30.311-17.5-30.311 17.5v35z" />
         </g>
         }
     </svg>

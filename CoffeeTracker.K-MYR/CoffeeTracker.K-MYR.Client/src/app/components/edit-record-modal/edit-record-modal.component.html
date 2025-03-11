@@ -4,7 +4,7 @@
     </div>
     <div class="modal__body">
         <form class="form" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
-            <input type="number" class="hidden" value="" formControlName="id" required />
+            <input type="number" class="hidden" value="" formControlName="id" id="modal-edit-record-id" required />
             <div class="form-group">
                 <label class="form-label" for="modal-edit-record-type">Type</label>
                 <input class="form-input" id="modal-edit-record-type" formControlName="type" type="text" value="" required />
