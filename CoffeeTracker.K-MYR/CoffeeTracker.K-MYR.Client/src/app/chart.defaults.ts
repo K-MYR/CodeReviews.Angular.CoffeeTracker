@@ -1,7 +1,7 @@
 import { NgChartsConfiguration } from "ng2-charts";
 import { ArcElement, Legend, PieController, Colors, Tooltip, Title, ChartOptions, LegendItem, Chart, ChartTypeRegistry, ChartConfiguration } from 'chart.js';
 
-const MAX_LABEL_WIDTH = 70;
+const maxLabelWidth: number = 70;
 
 const globalChartOptions: ChartOptions = {
   normalized: true,
@@ -20,7 +20,7 @@ const globalChartOptions: ChartOptions = {
   }
 }
 
-export const ChartDefaults: NgChartsConfiguration = {
+export const CHART_DEFAULTS: NgChartsConfiguration = {
   registerables: [PieController, ArcElement, Legend, Colors, Tooltip, Title, {
     id: "emptypiechart",
     beforeInit: function (chart) {
@@ -40,9 +40,9 @@ export function generateTruncatedLabels(chart: Chart): LegendItem[] {
       return label;
     }
     const textWidth = context.measureText(label.text).width;
-    if (textWidth > MAX_LABEL_WIDTH) {
+    if (textWidth > maxLabelWidth) {
       let truncated = label.text;
-      while (context.measureText(truncated + '...').width > MAX_LABEL_WIDTH) {
+      while (context.measureText(truncated + '...').width > maxLabelWidth) {
         truncated = truncated.slice(0, -1);
       }
       label.text = truncated + '...';
