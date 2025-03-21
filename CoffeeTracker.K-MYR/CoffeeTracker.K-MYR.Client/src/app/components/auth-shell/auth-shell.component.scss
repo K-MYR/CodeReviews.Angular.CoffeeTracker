@@ -49,7 +49,7 @@
   transform: translate(-50%, -50%);
   width: 425px;
   height: 385px;
-  background: radial-gradient( circle, color-mix(in srgb, var(--primary), transparent 20%) 0%, color-mix(in srgb, var(--blue), transparent 15%) 70% );
+  background: radial-gradient( circle, color-mix(in srgb, var(--primary), transparent 50%) 0%, color-mix(in srgb, var(--blue), transparent 15%) 70% );
   pointer-events: auto;
   clip-path: fill-box path("M 121.244,0 90.933454,17.5 v 35 L 60.620954,70 v 35 l -30.310547,17.5 v 35 L -1.395166e-4,175 v 35 L 30.310407,227.5 v 35 L 60.620954,280 v 35 l 30.3125,17.5 v 35 L 121.244,385 l 30.31055,-17.5 30.31054,17.5 30.31055,-17.5 30.3125,17.5 30.31055,-17.5 30.31055,17.5 30.31054,-17.5 v -35 L 363.73033,315 v -35 l 30.3125,-17.5 v -35 L 424.35338,210 v -35 l -30.31055,-17.5 v -35 L 363.73033,105 V 70 L 333.41978,52.5 v -35 L 303.10924,0 272.79869,17.5 242.48814,0 212.17564,17.5 181.86509,0 151.55455,17.5 Z");
 }

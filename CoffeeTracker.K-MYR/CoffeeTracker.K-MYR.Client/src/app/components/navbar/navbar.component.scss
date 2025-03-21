@@ -1,5 +1,5 @@
 :host {
-  display: block;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -7,26 +7,43 @@
   width: 100%;
   background: var(--primary);
   z-index: 1;
+  overflow: hidden;
 }
 
-.navbar__list {
-  width: 100%;
-  padding: 20px 15px 20px 15px;
+.navbar__container {
+    height: 100%;
+    padding-left: 1vw;
+    padding-bottom: 5px;
 }
 
-.navbar__item {
-  list-style-type: none;
+.navbar__logo {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 5px);
+}
+
+.navbar__logo__svg {
+    height: 100px;
+    width: 105px;
 }
 
 .navbar__brand {
-  color: var(--orange);
-  font-size: 40px;
-  font-weight: bold;
-  text-shadow: 0px 0px 20px var(--transparent-orange);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 5px);
+}
+
+.navbar__brand__svg {
+    filter: drop-shadow(0 0 8px var(--orange))
 }
 
 .navbar__divider {
   height: 5px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
   background-color: var(--blue);
   border: none;
   box-shadow: 0 0 10px 2px var(--light-blue),
