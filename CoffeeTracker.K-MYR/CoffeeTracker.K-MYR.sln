@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeTracker.K-MYR.Server"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "CoffeeTracker.K-MYR.Client", "CoffeeTracker.K-MYR.Client\CoffeeTracker.K-MYR.Client.esproj", "{884B288E-67CE-438F-82DD-23D6235DCA88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeTracker.K-MYR.RazorClassLib", "CoffeeTracker.K-MYR.RazorClassLib\CoffeeTracker.K-MYR.RazorClassLib.csproj", "{CFD59658-4AC6-46F4-B89B-EDC49E54075D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{884B288E-67CE-438F-82DD-23D6235DCA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{884B288E-67CE-438F-82DD-23D6235DCA88}.Release|Any CPU.Build.0 = Release|Any CPU
 		{884B288E-67CE-438F-82DD-23D6235DCA88}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CFD59658-4AC6-46F4-B89B-EDC49E54075D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFD59658-4AC6-46F4-B89B-EDC49E54075D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFD59658-4AC6-46F4-B89B-EDC49E54075D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFD59658-4AC6-46F4-B89B-EDC49E54075D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,13 +20,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './statistics.component.scss'
 })
 export class StatisticsComponent implements OnInit {
-  private statistics = signal<TypeStatistic[]>
-    ([]);
+  private statistics = signal<TypeStatistic[]>([]);
   private readonly _coffeeRecordService = inject(CoffeeRecordsService);
   private readonly _dataUpdateService = inject(DataUpdateService);
   private readonly destroyRef = inject(DestroyRef);
-  private year$ = new BehaviorSubject<Date>
-    (new Date);
+  private year$ = new BehaviorSubject<Date>(new Date);
   counters = computed(() => {
     var counters: TypeStatistic = {
       coffeeType: 'Overall',
@@ -44,13 +42,19 @@ export class StatisticsComponent implements OnInit {
     return counters;
   });
   chartData: Signal<ChartData<'doughnut', number[]>> = computed(() => {
+    var data = this.statistics().map(stats => (stats.yearCount));
+    if (data.length === 0) {
+      data.push(Number.MIN_VALUE);
+    }    
     return {
       datasets: [{
         cutout: '40%',
-        data: this.statistics().map(stats => (stats.yearCount))
+        data: data,
+        backgroundColor: '#d2dee2'
       }],
       labels: this.statistics().map(stats => (stats.coffeeType))
     }
+    
   });
   chartOptions: ChartOptions = {    
     maintainAspectRatio: true,
@@ -61,7 +65,7 @@ export class StatisticsComponent implements OnInit {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => ` ${context?.parsed} Cups`          
+          label: (context: any) => context?.parsed ? ` ${context.parsed} Cups` : ''      
         }
       },
       legend: {

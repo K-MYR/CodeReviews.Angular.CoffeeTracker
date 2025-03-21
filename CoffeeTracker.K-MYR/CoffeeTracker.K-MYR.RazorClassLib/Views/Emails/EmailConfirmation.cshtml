@@ -1,0 +1,33 @@
+﻿@using CoffeeTracker.K_MYR.RazorClassLib.Views.Models
+@model EmailConfirmation
+
+
+<h1 class="h3 fw-700 ax-center" align="center" style="padding-top: 0; padding-bottom: 0; font-weight: 700 !important; vertical-align: baseline; font-size: 28px; line-height: 33.6px; margin: 0;" align="left">
+    Welcome To CoffeeTracker!
+</h1>
+<table class="s-4 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
+    <tbody>
+        <tr>
+            <td style="line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;" align="left" width="100%" height="16">
+                &#160;
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p class="" style="line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">
+    Hi,<br/>
+    Welcome to CoffeeTracker! We're excited to have you on board. To complete your registration and start using your account, please confirm your email address by clicking the button below.<br/>
+    If you didn’t sign up for an account, you can safely ignore this email.<br/>
+    Welcome aboard!<br/>
+    The CoffeeTracker Team
+</p>
+<table class="s-4 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
+    <tbody>
+        <tr>
+            <td style="line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;" align="left" width="100%" height="16">
+                &#160;
+            </td>
+        </tr>
+    </tbody>
+</table>
+@await Html.PartialAsync("_EmailButton", new EmailButton("Confirm Account", @Model.ConfirmationLink))
