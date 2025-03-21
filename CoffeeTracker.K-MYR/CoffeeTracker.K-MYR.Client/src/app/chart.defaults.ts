@@ -27,7 +27,7 @@ export const CHART_DEFAULTS: NgChartsConfiguration = {
       chart.data.datasets[0].backgroundColor = '#d2dee2';
       chart.data.datasets[0].data.push(Number.MIN_VALUE);
     }
-      }],
+  }],
   defaults: globalChartOptions
 }
 

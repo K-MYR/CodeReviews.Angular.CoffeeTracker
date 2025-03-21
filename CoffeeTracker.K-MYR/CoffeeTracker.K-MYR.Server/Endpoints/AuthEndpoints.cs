@@ -12,7 +12,7 @@ public static class AuthEndpoints
 
         group.MapIdentityApi<AppUser>();
 
-        group.MapGet("/status", Ok() =>
+        group.MapGet("/status", Ok () =>
         {
             return TypedResults.Ok();
         }).RequireAuthorization();

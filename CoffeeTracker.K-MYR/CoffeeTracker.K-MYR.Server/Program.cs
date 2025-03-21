@@ -1,17 +1,19 @@
+using CoffeeTracker.K_MYR.RazorClassLib.Services;
 using CoffeeTracker.K_MYR.Server.Application.Interfaces;
 using CoffeeTracker.K_MYR.Server.Application.Services;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Endpoints;
+using CoffeeTracker.K_MYR.Server.Infrastructure.Email;
 using CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 using CoffeeTracker.K_MYR.Server.Persistence.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication();    
 builder.Services.AddProblemDetails();
-builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = false);
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<CoffeeRecordContext>(options =>
 {
@@ -20,8 +22,25 @@ builder.Services.AddDbContext<CoffeeRecordContext>(options =>
 builder.Services
     .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<CoffeeRecordContext>();
+builder.Services
+    .AddMvcCore()
+    .AddRazorViewEngine();
 builder.Services.AddScoped<ICoffeeRecordService, CoffeeRecordService>();
 builder.Services.AddScoped<ICoffeeRecordRepository, CoffeeRecordRepository>();
+builder.Services.AddTransient<IEmailSender<AppUser>, EmailService>();
+builder.Services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+builder.Services.Configure<EmailConfiguration>(
+    builder.Configuration.GetSection(EmailConfiguration.EmailConfig));
+builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = false);
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    options.SlidingExpiration = true;
+});
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = true;
+});
 
 var app = builder.Build();
 
