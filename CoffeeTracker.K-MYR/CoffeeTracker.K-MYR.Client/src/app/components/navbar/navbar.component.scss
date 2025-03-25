@@ -7,25 +7,32 @@
   width: 100%;
   background: var(--primary);
   z-index: 1;
-  overflow: hidden;
 }
 
 .navbar__container {
-    height: 100%;
-    padding-left: 1vw;
-    padding-bottom: 5px;
+  height: 100%;
+  padding-left: 1vw;
+  padding-bottom: 5px;
 }
 
 .navbar__logo {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - 5px);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .navbar__logo__svg {
-    height: 100px;
-    width: 105px;
+  height: 90px;
+  width: 100px; 
+}
+
+.navbar__logo__svg #steam {
+  filter: drop-shadow(0 0 2px white)
+}
+
+.navbar__logo__svg #cup {
+  filter: drop-shadow(0 0 4px orange)
 }
 
 .navbar__brand {
@@ -36,7 +43,7 @@
 }
 
 .navbar__brand__svg {
-    filter: drop-shadow(0 0 8px var(--orange))
+  filter: drop-shadow(0 0 4px var(--orange))
 }
 
 .navbar__divider {
