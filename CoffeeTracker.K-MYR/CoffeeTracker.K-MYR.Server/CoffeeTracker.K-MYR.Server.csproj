@@ -8,7 +8,7 @@
     <SpaRoot>..\Coffeetracker.K-MYR.Client</SpaRoot>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:56169</SpaProxyServerUrl>
-  </PropertyGroup>  
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
@@ -32,9 +32,13 @@
     <Folder Include="Http\Account\" />
     <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\CoffeeTracker.K-MYR.RazorClassLib\CoffeeTracker.K-MYR.RazorClassLib.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+	<Content Include="Assets\Images\*.*">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
 </Project>
