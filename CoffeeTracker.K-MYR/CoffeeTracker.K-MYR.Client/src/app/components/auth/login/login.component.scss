@@ -6,18 +6,18 @@
 
 .login__container {
   max-height: fit-content;
-  max-width: 300px;
-  border-radius: 12px;
- 
+  max-width: 270px;
+  border-radius: 12px; 
 }
 
-.login__content {
-  padding: 16px;
+.login__content { 
 }
 
 .login__content__title {
   text-align: center;
   color: var(--silver);
+  margin-bottom: 12px;
+  font-size: 32px;
 }
 
 .login__content__register {
@@ -32,6 +32,11 @@
   justify-content: end;
   align-items: center;
   gap: 12px;
+  margin-right: 8px;
+}
+
+.login__content__link-text {
+    font-weight: 800;
 }
 
 .login__content__sign-up-icon {

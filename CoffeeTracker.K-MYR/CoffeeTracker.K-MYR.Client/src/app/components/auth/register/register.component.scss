@@ -6,41 +6,37 @@
 
 .register__container {
   max-height: fit-content;
-  max-width: 300px;
+  max-width: 270px;
   border-radius: 12px;
 }
 
-.register__box {  
-  padding: 16px;
+.register__content {  
 }
 
 .register__content__title {
   text-align: center;
   color: var(--silver);
+  margin-bottom: 12px;
+  font-size: 32px;
 }
 
-.register__login {
+.register__content__login {
   margin-top: 16px;
 }
 
-.register__login-link {
+.register__content__login-link {
   display: flex;
   justify-content: end;
   align-items: center;
   gap: 12px;
+  margin-right: 8px;
 }
 
-.register__sign-up-icon {
+.register__content__link-text {
+  font-weight: 700;
+}
+
+.register__content__login-icon {
   display: inline;
   color: var(--orange);
-}
-
-.background {
-  height: 100%;
-  width: 100%;
-}
-
-.background-svg {
-  height: 100%;
-  width: 100%;
 }

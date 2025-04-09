@@ -1,34 +1,33 @@
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { PostLogin, PostLoginForm } from '../../interfaces/post-login';
+import { AuthService } from '../../../services/auth.service';
+import { PostRegister, PostRegisterForm } from '../../../interfaces/post-register';
 
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss'
 })
-export class LoginComponent {
+export class RegisterComponent {
   private authService = inject(AuthService);
-  private router = inject(Router);
-  loginForm = new FormGroup<PostLoginForm>({
+  registerForm = new FormGroup<PostRegisterForm>({
     email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
     password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] })
   });
 
-  login(): void {
-    var data = this.loginForm.value;
-    var credentials: PostLogin = {
+  register(): void {
+    var data = this.registerForm.value;
+    var credentials: PostRegister = {
       email: data.email ?? '',
       password: data.password ?? ''
     };
     if (data.email && data.password) {
-      this.authService.login(credentials)
-        .subscribe(_ => this.router.navigateByUrl("/"));
+      this.authService.register(credentials)
+        .subscribe(_ => console.log('Sign up successful'));
     }
   }
 }

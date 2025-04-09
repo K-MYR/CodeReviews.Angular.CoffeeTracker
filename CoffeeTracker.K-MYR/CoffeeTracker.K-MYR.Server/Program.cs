@@ -31,6 +31,8 @@ builder.Services.AddTransient<IEmailSender<AppUser>, EmailService>();
 builder.Services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 builder.Services.Configure<EmailConfiguration>(
     builder.Configuration.GetSection(EmailConfiguration.EmailConfig));
+builder.Services.Configure<SpaConfiguration>(
+    builder.Configuration.GetSection(SpaConfiguration.SpaConfig));
 builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = false);
 builder.Services.ConfigureApplicationCookie(options =>
 {

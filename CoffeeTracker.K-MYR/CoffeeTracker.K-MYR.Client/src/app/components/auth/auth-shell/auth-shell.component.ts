@@ -1,6 +1,6 @@
-import { BackgroundComponent } from '../background/background.component';
-import { SvgComponent } from '../svg/svg.component';
-import { AnimationService } from '../../services/animation.service';
+import { BackgroundComponent } from '../../background/background.component';
+import { SvgComponent } from '../../svg/svg.component';
+import { AnimationService } from '../../../services/animation.service';
 
 import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, ApplicationRef, Component, ElementRef, inject, PLATFORM_ID, viewChild } from '@angular/core';
