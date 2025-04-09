@@ -13,6 +13,7 @@
 
 .form-label {
   display: block;
+  font-size: 16px;
   color: var(--current);
 }
 
@@ -35,9 +36,9 @@
   padding: 2px 8px;
   background: var(--primary);
   border: 2px solid var(--orange);
-  border-radius: 10px;
+  border-radius: 5px;
   color: var(--orange);
-  font-weight: 500;
+  font-weight: 600;
   outline: none;
   transition:
       0.15s ease;

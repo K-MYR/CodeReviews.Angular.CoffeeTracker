@@ -5,4 +5,7 @@
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\Coffeetracker.K-MYR.Client\browser\</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\app\components\shared\" />
+  </ItemGroup>
 </Project>
