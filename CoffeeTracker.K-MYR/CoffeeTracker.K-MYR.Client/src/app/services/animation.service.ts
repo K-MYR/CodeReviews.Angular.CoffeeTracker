@@ -13,7 +13,7 @@ export class AnimationService {
     if (isPlatformBrowser(this.platformId)) {
       this.animeTimelineInstance = anime.timeline({
         autoplay: false,
-        duration: 5000,
+        duration: 3000,
         round: 10000,
         easing: 'linear',
       });

@@ -1,4 +1,4 @@
-import { resizeObserverToObserverable } from '../../helpers/helpers';
+import { resizeObserverToObserverable } from '../../helpers/angular-extensions';
 import { GridDimensions, Hexagon } from '../../interfaces/hexagon';
 import { VIEWPORT_SIZE, ViewportSize } from '../../tokens/injectionTokens';
 import { GRID_DIMENSIONS_STATE_KEY, HEXAGONS_STATE_KEY } from '../../tokens/stateKeys';
@@ -110,7 +110,7 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
         if (!hex) {
           return 0;
         }
-        var delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 200;
+        var delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 150;
         return delay
       }
     }, 0);

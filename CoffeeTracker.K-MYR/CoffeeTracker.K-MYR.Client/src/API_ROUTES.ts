@@ -11,4 +11,5 @@ export class API_ROUTES {
   public static GET_ACC_STATUS: string = `${this.ACCOUNT}/status`;
   public static POST_LOGIN: string = `${this.ACCOUNT}/login`;
   public static POST_REGISTER: string = `${this.ACCOUNT}/register`;
+  public static CONFIRM_EMAIL = (userId: string, code: string) : string => `${this.ACCOUNT}/confirmEmail?userId=${userId}&code=${code}`;
 }

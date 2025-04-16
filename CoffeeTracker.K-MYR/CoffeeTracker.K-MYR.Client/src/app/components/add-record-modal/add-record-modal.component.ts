@@ -1,5 +1,5 @@
 import { PostCoffeeRecord, PostCoffeeRecordForm } from '../../interfaces/post-coffee-record';
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '../shared/modal/modal.component';
 
 
 import { Component, output, OutputEmitterRef, } from '@angular/core';

@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
@@ -20,7 +20,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     catchError((response: HttpErrorResponse) => {
       if (response.status === HttpStatusCode.Unauthorized) {
         router.navigateByUrl('/auth/login');        
-      }
+      } 
       return of(false);
     })
   )

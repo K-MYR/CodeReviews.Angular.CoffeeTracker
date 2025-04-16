@@ -2,26 +2,16 @@
   display: block;
 }
 
-.loading-indicator__svg {
-    overflow: visible;
-}
-
-.loading-indicator__svg g {
-}
-
 .loading-indicator__svg path {
   transform-origin: center;
   transform-box: fill-box;
-}
-
-.loading-indicator__svg__center-path {
 }
 
 .loading {
   --_delay: var(--_i, 0);
   animation: loading;
   animation-duration: 3s;
-  animation-delay: calc(0.5s * var(--_delay));
+  animation-delay: calc(0.5s * var(--_delay, 0));
   animation-iteration-count: infinite;
   animation-timing-function: linear(0, 1 44.7%, 0.898 51.8%, 0.874 55.1%, 0.866 58.4%, 0.888 64.3%, 1 77.4%, 0.98 84.5%, 1);
 }
@@ -29,7 +19,7 @@
 @keyframes loading {
   0%, 60%, 100% {
     fill: #15141AD0;
-    transform: scale(0.75);
+    transform: scale(1);
     filter: drop-shadow(0 0 1px var(--primary));
   }
   20% {
