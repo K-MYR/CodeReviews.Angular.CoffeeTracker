@@ -2,7 +2,7 @@ import { CoffeeRecordsService } from '../../services/coffee-records.service';
 import { DataUpdateService } from '../../services/data-update.service';
 import { CounterComponent } from '../counter/counter.component';
 import { TypeStatistic } from '../../interfaces/type-statistic'
-import { ChartComponent } from '../chart/chart.component';
+import { ChartComponent } from '../shared/chart/chart.component';
 
 import { ChartData, ChartOptions } from 'chart.js';
 import { generateTruncatedLabels } from '../../chart.defaults';
@@ -50,7 +50,6 @@ export class StatisticsComponent implements OnInit {
       datasets: [{
         cutout: '40%',
         data: data,
-        backgroundColor: '#d2dee2'
       }],
       labels: this.statistics().map(stats => (stats.coffeeType))
     }
@@ -58,7 +57,7 @@ export class StatisticsComponent implements OnInit {
   });
   chartOptions: ChartOptions = {    
     maintainAspectRatio: true,
-    plugins: {      
+    plugins: {     
       title: {
         display: true,
         text: '# of Cups Per Category'

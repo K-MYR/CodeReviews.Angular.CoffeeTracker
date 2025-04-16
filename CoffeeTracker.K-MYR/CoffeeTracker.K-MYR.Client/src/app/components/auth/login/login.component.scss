@@ -18,6 +18,7 @@
   color: var(--silver);
   margin-bottom: 12px;
   font-size: 32px;
+  text-shadow: 0px 0px 5px var(--silver);
 }
 
 .login__content__register {
@@ -36,7 +37,9 @@
 }
 
 .login__content__link-text {
-    font-weight: 800;
+  font-weight: 800;
+  font-size: 18px;
+  text-shadow: 0px 0px 5px var(--silver), 0px 0px 1px var(--primary);
 }
 
 .login__content__sign-up-icon {

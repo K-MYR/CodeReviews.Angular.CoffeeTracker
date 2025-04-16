@@ -1,4 +1,4 @@
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '../shared/modal/modal.component';
 import { CoffeeRecord } from '../../interfaces/coffee-record';
 import { PutCoffeeRecordForm } from '../../interfaces/put-coffee-record';
 

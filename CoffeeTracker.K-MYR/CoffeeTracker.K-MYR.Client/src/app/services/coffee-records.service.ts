@@ -4,7 +4,7 @@ import { PostCoffeeRecord } from '../interfaces/post-coffee-record';
 import {  RecordsSearchParameters } from '../interfaces/records-search';
 import { TypeStatistic } from '../interfaces/type-statistic';
 import { API_ROUTES } from '../../API_ROUTES';
-import { removeUndefinedValuesFromObject } from '../helpers/helpers';
+import { removeUndefinedValuesFromObject } from '../helpers/general';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';

@@ -1,5 +1,5 @@
 import { Component, output, OutputEmitterRef } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '../shared/modal/modal.component';
 
 @Component({
   selector: 'app-delete-record-modal',
