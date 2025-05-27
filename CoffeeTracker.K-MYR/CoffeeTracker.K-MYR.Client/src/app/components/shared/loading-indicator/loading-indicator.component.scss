@@ -7,7 +7,11 @@
   transform-box: fill-box;
 }
 
-.loading {
+.loading-indicator__svg__outer-path {
+  filter: drop-shadow(0 0 1px var(--primary));
+}
+
+.loading-indicator__svg.loading .loading-indicator__svg__outer-path {
   --_delay: var(--_i, 0);
   animation: loading;
   animation-duration: 3s;

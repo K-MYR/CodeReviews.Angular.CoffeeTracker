@@ -1,7 +1,7 @@
 import { CHART_DEFAULTS } from './chart.defaults';
 import { VIEWPORT_SIZE } from './tokens/injectionTokens';
 
-import { ApplicationConfig, inject, provideZoneChangeDetection, REQUEST } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration} from '@angular/platform-browser';

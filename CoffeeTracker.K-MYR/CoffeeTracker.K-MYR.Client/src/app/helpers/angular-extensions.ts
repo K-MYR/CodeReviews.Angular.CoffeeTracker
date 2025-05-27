@@ -1,9 +1,9 @@
 import { Observable } from "rxjs";
 
 export function resizeObserverToObserverable(element: HTMLElement): Observable<ResizeObserverEntry[]> {
-  return new Observable<ResizeObserverEntry[]>((observer) => {
+  return new Observable<ResizeObserverEntry[]>((subscriber) => {
     var resizeObserver = new ResizeObserver(entries => {
-      observer.next(entries);
+      subscriber.next(entries);
     });
     resizeObserver.observe(element);
     return () => {
