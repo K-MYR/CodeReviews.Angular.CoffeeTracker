@@ -1,4 +1,4 @@
-import { NgFor, PercentPipe } from '@angular/common';
+import { PercentPipe } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 export interface LoadingIndicatorTextPath {
@@ -10,7 +10,7 @@ export interface LoadingIndicatorTextPath {
 @Component({
   selector: 'app-loading-indicator',
   standalone: true,
-  imports: [PercentPipe, NgFor],
+  imports: [PercentPipe],
   templateUrl: './loading-indicator.component.html',
   styleUrl: './loading-indicator.component.scss'
 })

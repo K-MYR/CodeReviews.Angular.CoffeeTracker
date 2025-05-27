@@ -17,7 +17,7 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'register-success', component: RegisterSuccessComponent },
-      { path: 'confirmEmail', component: ConfirmEmailComponent, canActivate: [confirmEmailGuard]},
+      { path: 'confirmEmail', component: ConfirmEmailComponent, canActivate: [confirmEmailGuard] },
   ]},
-  { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+  { path: '**', redirectTo: 'dashboard' }
 ]

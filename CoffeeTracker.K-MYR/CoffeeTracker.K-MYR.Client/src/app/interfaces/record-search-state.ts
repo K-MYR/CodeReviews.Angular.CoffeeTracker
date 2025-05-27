@@ -3,8 +3,8 @@ import { CoffeeRecord } from "./coffee-record";
 
 export interface RecordSearchState {
   isLoading: boolean,
-  startDate: string | null,
-  endDate: string | null,
+  from: string | null,
+  to: string | null,
   type: string | null,
   lastId: number | null,
   lastValue: string | number | null,

@@ -24,7 +24,7 @@ export class AuthShellComponent implements AfterViewInit {
     if (isPlatformBrowser(this.platformId)) {
       this.animationService.addAnimation({
         targets: this.routerElement().nativeElement,
-        opacity: { value: [0,1], delay: 2700, duration: 1000}
+        opacity: { value: [0,1], delay: 2500, duration: 1000}
       }, 0)
       this.applicationRef.isStable.pipe(first(isStable => isStable)).subscribe(() => {
         this.animationService.play();

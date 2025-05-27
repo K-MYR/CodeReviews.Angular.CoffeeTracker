@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import anime, { AnimeAnimParams, AnimeTimelineInstance } from 'animejs';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,8 @@ import anime, { AnimeAnimParams, AnimeTimelineInstance } from 'animejs';
 export class AnimationService {
   private animeTimelineInstance?: AnimeTimelineInstance;
   private platformId = inject(PLATFORM_ID);
+  private animationFinished = new ReplaySubject<void>(1);
+  $animationFinished = this.animationFinished.asObservable();
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
@@ -16,6 +19,9 @@ export class AnimationService {
         duration: 3000,
         round: 10000,
         easing: 'linear',
+        complete: () => {
+          this.animationFinished.next();
+        }
       });
     }    
   }

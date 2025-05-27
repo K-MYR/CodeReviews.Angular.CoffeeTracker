@@ -18,8 +18,8 @@ export class RecordSearchStateService {
   private readonly _dataUpdateService = inject(DataUpdateService);
   private state = signal<RecordSearchState>({
     isLoading: false,
-    startDate: null,
-    endDate: null,
+    from: null,
+    to: null,
     type: null,
     lastId: null,
     lastValue: null,
