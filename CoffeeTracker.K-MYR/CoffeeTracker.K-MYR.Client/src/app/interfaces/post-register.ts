@@ -8,4 +8,5 @@ export interface PostRegister {
 export interface PostRegisterForm {
   email: FormControl<string>,
   password: FormControl<string>
+  confirmPassword: FormControl<string>
 }
