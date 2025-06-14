@@ -9,7 +9,7 @@
     "test": "ng test",
     "prestart": "node aspnetcore-https",
     "serve:ssr:CoffeeTracker.K-MYR.Client": "node dist/coffee-tracker.k-myr.client/server/server.mjs",
-    "start:windows": "ng serve --ssl --ssl-cert \"%APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem\" --ssl-key \"%APPDATA%\\ASP.NET\\https\\%npm_package_name%.key\" --host=127.0.0.1",
+    "start:windows": "ng serve --ssl --ssl-cert \"%APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem\" --ssl-key \"%APPDATA%\\ASP.NET\\https\\%npm_package_name%.key\" --host=127.0.0.1 --no-hmr",
     "start:default": "ng serve --ssl --ssl-cert \"$HOME/.aspnet/https/${npm_package_name}.pem\" --ssl-key \"$HOME/.aspnet/https/${npm_package_name}.key\" --host=127.0.0.1"
   },
   "private": true,
@@ -25,7 +25,7 @@
     "@angular/platform-server": "^19.1.6",
     "@angular/router": "^19.1.6",
     "@angular/ssr": "^19.1.7",
-    "animejs": "^3.2.2",
+    "animejs": "^4.0.2",
     "chart.js": "^4.0.1",
     "express": "^4.18.2",
     "jest-editor-support": "*",

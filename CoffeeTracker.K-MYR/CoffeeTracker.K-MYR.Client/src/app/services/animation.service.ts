@@ -1,39 +1,43 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
-import anime, { AnimeAnimParams, AnimeTimelineInstance } from 'animejs';
+import { AnimationParams, createTimeline, TargetsParam, Timeline} from 'animejs';
 import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnimationService {
-  private animeTimelineInstance?: AnimeTimelineInstance;
+  private animeTimelineInstance?: Timeline;
   private platformId = inject(PLATFORM_ID);
   private animationFinished = new ReplaySubject<void>(1);
   $animationFinished = this.animationFinished.asObservable();
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      this.animeTimelineInstance = anime.timeline({
+      this.animeTimelineInstance = createTimeline({
         autoplay: false,
         duration: 3000,
-        round: 10000,
-        easing: 'linear',
-        complete: () => {
+        onComplete: () => {
           this.animationFinished.next();
         }
       });
     }    
   }
 
-  addAnimation(params: AnimeAnimParams, timelineOffset?: string | number): void {
-    this.animeTimelineInstance?.add(params, timelineOffset);
+  addAnimation(targetsParams: TargetsParam, animationParams: AnimationParams, timelineOffset?: number | string): void {
+    this.animeTimelineInstance?.add(targetsParams, animationParams, timelineOffset);
 
   }
 
   play(): void {
     if (this.animeTimelineInstance?.paused) {
       this.animeTimelineInstance.play();
+    }
+  }
+
+  complete(): void {
+    if (this.animeTimelineInstance) {
+      this.animeTimelineInstance.complete();
     }
   }
 }

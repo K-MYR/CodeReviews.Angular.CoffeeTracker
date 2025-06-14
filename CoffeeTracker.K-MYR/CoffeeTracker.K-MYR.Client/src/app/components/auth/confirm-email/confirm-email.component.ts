@@ -30,9 +30,7 @@ export class ConfirmEmailComponent implements OnInit {
   ngOnInit() {   
     this.route.queryParams.pipe(      
       first(params => {
-        var isValid = hasNoNulls<ConfirmEmail>(
-          params,
-          CONFIRM_EMAIL_QUERY_PARAM_KEYS);
+        var isValid = hasNoNulls<ConfirmEmail>(params, CONFIRM_EMAIL_QUERY_PARAM_KEYS);
         if (isValid) {
           return true;
         }
@@ -44,7 +42,9 @@ export class ConfirmEmailComponent implements OnInit {
       }
       ),
       switchMap((params: unknown) => {
-        return this.authService.confirmEmail(mapKeys<ConfirmEmail, keyof ConfirmEmail>(params as ConfirmEmail, CONFIRM_EMAIL_QUERY_PARAM_KEYS))
+        return this.authService.confirmEmail(
+          mapKeys<ConfirmEmail, keyof ConfirmEmail>(params as ConfirmEmail, CONFIRM_EMAIL_QUERY_PARAM_KEYS)
+        )
       })
     ).subscribe({
       next: response => {
@@ -58,7 +58,7 @@ export class ConfirmEmailComponent implements OnInit {
           }, 1000)
         });   
       },
-      error: error => {
+      error: error => { 
         this.textPaths = [
           { text: '⚠️  Error  ⚠', startOffset: 0, id: "t1" },
           { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },

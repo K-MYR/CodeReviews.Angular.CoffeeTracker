@@ -18,7 +18,7 @@ html {
 
 body, input, button {
   font-family: Orbitron, Roboto, Arial, sans-serif;
-  font-size: 18px;
+  font-size: 1rem;
 }
 
 body {
@@ -30,4 +30,12 @@ body {
 
 a {
   cursor: pointer;
+}
+
+h1 {
+    font-size: 2.2rem;
+}
+
+h2 {
+    font-size: 2rem;
 }

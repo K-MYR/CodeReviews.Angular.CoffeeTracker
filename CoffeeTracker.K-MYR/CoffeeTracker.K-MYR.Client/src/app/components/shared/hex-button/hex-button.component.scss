@@ -1,0 +1,47 @@
+:host {
+  --_clr: var(--clr, var(--orange));
+  --_hover-clr: var(--hover-clr, var(--primary));
+  --_bg-clr: var(--bg-clr, color-mix(in srgb, var(--primary), var(--blue) 15%));
+  --_hover-bg-clr: var(--hover-bg-clr, var(--orange));
+  --_border-clr: var(--border-clr, var(--orange));
+  display: flex;
+  height: 64px;
+  width: 115px;
+  align-items: center;
+  justify-content: center;
+  clip-path: fill-box path("m53.4 15.39h7.3l26.7-15.5 26.7 15.4v30.8l-26.7 15.4-26.7-15.4h-7.3l-26.7 15.5-26.7-15.4v-30.8l26.7-15.4z");
+  background: var(--_border-clr);
+  transition: all 0.2s ease-in-out;
+}
+
+:host:hover {
+  --_clr: var(--_hover-clr);
+  --_bg-clr: var(--_hover-bg-clr);
+}
+
+.hex-button {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  clip-path: fill-box path("M2.4 16.8v28l24.3 14L51 44.7H63.1l24.3 14 24.3-14v-28L87.4 2.7 63.1 16.8H51L26.7 2.8Z");
+  background: var(--_bg-clr);
+  transition: inherit;
+}
+
+.hex-button__link {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 0 6px 0;
+  transition: inherit;
+}
+
+.hex-button__link-text {
+  color: var(--_clr);
+  font-weight: 800;
+  transition: inherit;
+}

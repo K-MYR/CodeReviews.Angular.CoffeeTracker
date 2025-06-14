@@ -97,28 +97,34 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
 
   private addStartUpAnimation() {
     var center = { x: 0, y: 0 };
-    this.animationService.addAnimation({
-      targets: this.hexagonElements(),
-      strokeDashoffset: { value: [210, 0], duration: 500 },
-      opacity: { value: [0, 1], duration: 300 },
-      delay: (el: any, i: number, l: number) => {
-        var key = el.getAttribute('key');
-        if (!key) {
-          return 0;
+    this.animationService.addAnimation(
+      this.hexagonElements(),
+      {
+        strokeDashoffset: { from: 210, to: 0, duration: 500 },
+        opacity: { from: 0, to: 1, duration: 300 },
+        delay: (el: any, i: number, l: number) => {
+          var key = el.getAttribute('key');
+          if (!key) {
+            return 0;
+          }
+          var hex = this.hexagonsMap.get(key);
+          if (!hex) {
+            return 0;
+          }
+          var delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 150;
+          return delay
         }
-        var hex = this.hexagonsMap.get(key);
-        if (!hex) {
-          return 0;
-        }
-        var delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 150;
-        return delay
-      }
-    }, 0);
-    this.animationService.addAnimation({
-      targets: this.elementRef.nativeElement,
-      opacity: [0, 1],
-      duration: 1
-    }, 0);
+      },
+      0
+    );
+    this.animationService.addAnimation(
+      this.elementRef.nativeElement,
+      {
+        opacity: [0, 1],
+        duration: 1
+      },
+    0
+    );
   }
 
   private setUpGrid(gridDimensions: GridDimensions): void {
