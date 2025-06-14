@@ -1,12 +1,6 @@
 import { PercentPipe } from '@angular/common';
 import { Component, input } from '@angular/core';
 
-export interface LoadingIndicatorTextPath {
-  text: string,
-  startOffset: number,
-  id: string,
-}
-
 @Component({
   selector: 'app-loading-indicator',
   standalone: true,
@@ -16,4 +10,10 @@ export interface LoadingIndicatorTextPath {
 })
 export class LoadingIndicatorComponent {
   paths = input<LoadingIndicatorTextPath[]>([]);
+}
+
+export interface LoadingIndicatorTextPath {
+  text: string,
+  startOffset: number,
+  id: string,
 }

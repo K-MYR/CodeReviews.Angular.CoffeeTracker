@@ -6,6 +6,7 @@ import { ConfirmEmailComponent } from './components/auth/confirm-email/confirm-e
 import { authGuard } from './route-guards/auth.guard';
 import { RegisterSuccessComponent } from './components/auth/register-success/register-success.component';
 import { confirmEmailGuard } from './route-guards/query-params.guard';
+import { ResendEmailComponent } from './components/auth/resend-email/resend-email.component';
 
 import { Routes } from '@angular/router';
 
@@ -17,7 +18,8 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'register-success', component: RegisterSuccessComponent },
-      { path: 'confirmEmail', component: ConfirmEmailComponent, canActivate: [confirmEmailGuard] },
+      { path: 'confirm-email', component: ConfirmEmailComponent, canActivate: [confirmEmailGuard] },
+      { path: 'resend-email', component: ResendEmailComponent},
   ]},
   { path: '**', redirectTo: 'dashboard' }
 ]

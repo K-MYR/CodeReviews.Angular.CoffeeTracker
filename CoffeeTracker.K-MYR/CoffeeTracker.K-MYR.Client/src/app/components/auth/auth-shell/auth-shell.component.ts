@@ -22,10 +22,13 @@ export class AuthShellComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.animationService.addAnimation({
-        targets: this.routerElement().nativeElement,
-        opacity: { value: [0,1], delay: 2500, duration: 1000}
-      }, 0)
+      this.animationService.addAnimation(
+        this.routerElement().nativeElement,
+        {
+          opacity: { from: 0, to: 1, delay: 2400, duration: 1000 }
+        },
+        0
+      );
       this.applicationRef.isStable.pipe(first(isStable => isStable)).subscribe(() => {
         this.animationService.play();
       });

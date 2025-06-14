@@ -1,7 +1,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .form-group {
@@ -13,7 +13,7 @@
 
 .form-label {
   display: block;
-  font-size: 20px;
+  font-size: 1.1rem;
   color: var(--current);
   text-shadow: 0px 0px 5px var(--current), 0px 0px 1px var(--primary);
 }
@@ -26,9 +26,13 @@
   --current: var(--red);
 }
 
+.form-group.invalid:has(input.ng-dirty) {
+  --current: var(--red) !important;
+}
+
 .form-input {
   display: block;
-  padding: 5px 10px;
+  padding: 4px 10px;
   border-radius: 5px;
   outline: var(--current) 3px solid;
 }

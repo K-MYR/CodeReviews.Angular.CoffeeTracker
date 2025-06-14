@@ -38,19 +38,26 @@
   overflow: clip;  
 }
 
-.auth-shell__router{
-  opacity: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.auth-shell__router-background {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, calc(-50% + 26px));
   width: 425px;
-  height: 385px;
+  height: 438px;
   background: radial-gradient( circle, color-mix(in srgb, var(--primary), transparent 50%) 0%, color-mix(in srgb, var(--blue), transparent 15%) 70% );
   pointer-events: auto;
   clip-path: fill-box path("M 121.244,0 90.933454,17.5 v 35 L 60.620954,70 v 35 l -30.310547,17.5 v 35 L -1.395166e-4,175 v 35 L 30.310407,227.5 v 35 L 60.620954,280 v 35 l 30.3125,17.5 v 35 L 121.244,385 l 30.31055,-17.5 30.31054,17.5 30.31055,-17.5 30.3125,17.5 30.31055,-17.5 30.31055,17.5 30.31054,-17.5 v -35 L 363.73033,315 v -35 l 30.3125,-17.5 v -35 L 424.35338,210 v -35 l -30.31055,-17.5 v -35 L 363.73033,105 V 70 L 333.41978,52.5 v -35 L 303.10924,0 272.79869,17.5 242.48814,0 212.17564,17.5 181.86509,0 151.55455,17.5 Z");
+}
+
+.auth-shell__router {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 26px));
+  width: 425px;
+  height: 438px;
+  pointer-events: auto;
+  clip-path: fill-box path("M121.2441 0 90.9336 17.5v35L60.6211 70v35L30.3105 122.5v35L0 175v35l30.3105 17.5v35L60.6211 280v35l30.3125 17.5v35L121.2441 385l30.3105-17.5L181.8652 385l30.3106-17.5L242.4883 385v35l30.3106 17.5L303.1094 420l30.3105 17.5L363.7305 420V385l-30.3106-17.5v-35L363.7305 315V280l30.3125-17.5v-35L424.3535 210V175L394.043 157.5v-35L363.7305 105V70L333.4199 52.5v-35L303.1094 0 272.7988 17.5 242.4883 0 212.1758 17.5 181.8652 0 151.5547 17.5 121.2441 0z");
 }
 

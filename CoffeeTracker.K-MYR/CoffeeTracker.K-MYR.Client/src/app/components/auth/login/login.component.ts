@@ -1,14 +1,15 @@
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { PostLogin, PostLoginForm } from '../../../interfaces/post-login';
+import { HexButtonComponent } from '../../shared/hex-button/hex-button.component';
 
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, HexButtonComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
