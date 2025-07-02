@@ -1,60 +1,24 @@
-﻿using CoffeeTracker.K_MYR.RazorClassLib.Services;
-using CoffeeTracker.K_MYR.RazorClassLib.Views.Models;
-using CoffeeTracker.K_MYR.Server.Domain.Entities;
-using MailKit.Net.Smtp;
+﻿using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using MimeKit;
+using System.Threading.Channels;
 
 namespace CoffeeTracker.K_MYR.Server.Infrastructure.Email;
 
-public class EmailService(IOptions<EmailConfiguration> emailConfiguration, IRazorViewToStringRenderer renderer) : IEmailSender<AppUser>
+internal class EmailService(
+    Channel<EmailChannelRequest> channel,
+    ILogger<EmailService> logger) : IEmailSender<AppUser>
 {
-    private readonly EmailConfiguration _configuration = emailConfiguration.Value;
-    private readonly IRazorViewToStringRenderer _renderer = renderer;
+    private readonly Channel<EmailChannelRequest> _channel = channel;
+    private readonly ILogger<EmailService> _logger = logger;
 
     public async Task SendConfirmationLinkAsync(AppUser user, string email, string confirmationLink)
-    {        
-        MimeMessage message = new();
-        message.From.Add(new MailboxAddress(_configuration.SenderName, _configuration.SenderEmail));
-        message.To.Add(new MailboxAddress(user.UserName, email));
-        message.Subject = "Welcome to CoffeeTracker! Please Confirm Your Email";
-
-        var body = await _renderer.RenderViewToStringAsync("Views/Emails/EmailConfirmation.cshtml", new EmailConfirmation(confirmationLink));
-        var builder = new BodyBuilder()
-        {
-            HtmlBody = body
-        };
-
-        var brandPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", "coffee-tracker-brand-with-glow.png");
-        var brand = new MimePart("image", "png")
-        {
-            Content = new MimeContent(File.OpenRead(brandPath)),
-            ContentId = "brand",
-            ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
-            ContentTransferEncoding = ContentEncoding.Base64
-        };
-        builder.LinkedResources.Add(brand);
-        var logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", "coffee-logo-with-glow.png");
-        var logo = new MimePart("image", "png")
-        {
-            Content = new MimeContent(File.OpenRead(logoPath)),
-            ContentId = "logo",
-            ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
-            ContentTransferEncoding = ContentEncoding.Base64
-        };
-        builder.LinkedResources.Add(logo);
-        message.Body = builder.ToMessageBody();         
-        
-        using var client = new SmtpClient();
-        await client.ConnectAsync(_configuration.SmtpServer, _configuration.SmtpPort);       
-        await client.SendAsync(message);
-        client.Disconnect(true);
+    {
+        await _channel.Writer.WriteAsync(new EmailChannelRequest(user.UserName ?? email, email, confirmationLink, EmailTypes.EmailConfirmation));
     }
 
-    public Task SendPasswordResetCodeAsync(AppUser user, string email, string resetCode)
+    public async Task SendPasswordResetCodeAsync(AppUser user, string email, string resetCode)
     {
-        throw new NotImplementedException();
+        await _channel.Writer.WriteAsync(new EmailChannelRequest(user.UserName ?? email, email, resetCode, EmailTypes.PasswordResetCode));
     }
 
     public Task SendPasswordResetLinkAsync(AppUser user, string email, string resetLink)

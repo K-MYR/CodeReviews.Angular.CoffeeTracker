@@ -8,6 +8,7 @@ using CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 using CoffeeTracker.K_MYR.Server.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Channels;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
@@ -39,6 +40,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.SlidingExpiration = true;
 });
+builder.Services.AddHostedService<EmailProcessor>();
+builder.Services.AddSingleton(Channel.CreateBounded<EmailChannelRequest>(
+    new BoundedChannelOptions(1000)
+    {
+        SingleReader = true,
+        AllowSynchronousContinuations = false,
+        FullMode = BoundedChannelFullMode.Wait,
+    }
+));
 
 var app = builder.Build();
 

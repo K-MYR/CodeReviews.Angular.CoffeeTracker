@@ -35,7 +35,7 @@ export class ConfirmEmailComponent implements OnInit {
           return true;
         }
         this.textPaths = [
-          { text: '⚠️  Error  ⚠', startOffset: 0, id: "t1" },
+          { text: '⚠️  Error  ⚠️', startOffset: 0, id: "t1" },
           { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },
         ];
         return false;
@@ -60,7 +60,7 @@ export class ConfirmEmailComponent implements OnInit {
       },
       error: error => { 
         this.textPaths = [
-          { text: '⚠️  Error  ⚠', startOffset: 0, id: "t1" },
+          { text: '⚠️  Error  ⚠️', startOffset: 0, id: "t1" },
           { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },
         ];
       }
