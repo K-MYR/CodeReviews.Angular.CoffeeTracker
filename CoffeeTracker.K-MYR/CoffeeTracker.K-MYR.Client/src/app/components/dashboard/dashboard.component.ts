@@ -1,7 +1,6 @@
 import { RecordsTableComponent } from '../records-table/records-table.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
 import { SearchFiltersComponent } from '../search-filters/search-filters.component';
-
 import { Component } from '@angular/core';
 
 @Component({

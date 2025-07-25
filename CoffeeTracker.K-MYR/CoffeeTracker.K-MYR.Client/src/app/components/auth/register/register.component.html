@@ -1,6 +1,8 @@
 <div class="register__container">
     <div class="register__content">
+        @if(!this.isRegistered()) {
         <div class="register__content__container">
+
             <h2 class="register__content__title">Sign Up</h2>
             <form [formGroup]="registerForm" (ngSubmit)="register()" class="form">
                 <div class="form-group">
@@ -18,6 +20,21 @@
                 <button class="form-button register-form__submit-button" [disabled]="!registerForm.valid">Sign Up</button>
             </form>
         </div>
+        }
+
+        @else {
+        <div class="register-success__content__container">
+            <h2 class="register-success__content__title">WELCOME</h2>
+            <p class="register-success__content__body">
+                Thanks for signing up! We've just sent a confirmation email to:
+            </p>
+            <span class="register-success__content__email">{{ confirmationEmail() }}</span>
+            <p class="register-success__content__body">
+                ⚠️ Important: You won't be able to recover your account until your email address is confirmed.
+            </p>
+            <button class="form-button register-success__content__resend-button">Resend</button>        
+         </div>
+    }
     </div>
-    <app-hex-button [text]="'Login'" [routerLink]="'/auth/login'" class="register__login-button"></app-hex-button>   
+    <app-hex-button [text]="'Login'" [routerLink]="'/auth/login'" class="register__login-button"></app-hex-button>    
 </div>

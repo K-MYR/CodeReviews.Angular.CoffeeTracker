@@ -3,10 +3,8 @@ import { DataUpdateService } from '../../services/data-update.service';
 import { CounterComponent } from '../counter/counter.component';
 import { TypeStatistic } from '../../interfaces/type-statistic'
 import { ChartComponent } from '../shared/chart/chart.component';
-
 import { ChartData, ChartOptions } from 'chart.js';
 import { generateTruncatedLabels } from '../../chart.defaults';
-
 import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { switchMap } from 'rxjs';

@@ -5,7 +5,6 @@ import { RecordSearchState } from '../interfaces/record-search-state';
 import { OrderDirection } from '../enums/order-direction';
 import { DataUpdateService } from './data-update.service';
 import { CoffeeRecordsService } from './coffee-records.service';
-
 import { computed, inject, Injectable,  signal } from '@angular/core';
 import { switchMap, BehaviorSubject, tap, Subject, combineLatest, distinctUntilChanged, throttleTime, startWith, map, debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

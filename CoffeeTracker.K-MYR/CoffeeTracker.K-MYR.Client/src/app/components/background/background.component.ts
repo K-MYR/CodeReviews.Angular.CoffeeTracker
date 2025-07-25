@@ -5,7 +5,6 @@ import { GRID_DIMENSIONS_STATE_KEY, HEXAGONS_STATE_KEY } from '../../tokens/stat
 import { NAVBAR_HEIGHT } from '../../css.constants';
 import { AnimationService } from '../../services/animation.service';
 import { doubledWidthDistance } from '../../helpers/hexagon-grid.helpers';
-
 import { throttleTime, distinctUntilChanged, map, Observable} from 'rxjs';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, computed, DestroyRef, ElementRef, inject, OnInit, PLATFORM_ID, signal, TransferState, viewChildren } from '@angular/core';

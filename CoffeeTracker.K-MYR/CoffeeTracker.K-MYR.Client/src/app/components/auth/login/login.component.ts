@@ -2,7 +2,6 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { AuthService } from '../../../services/auth.service';
 import { PostLogin, PostLoginForm } from '../../../interfaces/post-login';
 import { HexButtonComponent } from '../../shared/hex-button/hex-button.component';
-
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -22,12 +21,12 @@ export class LoginComponent {
   });
 
   login(): void {
-    var data = this.loginForm.value;
-    var credentials: PostLogin = {
-      email: data.email ?? '',
-      password: data.password ?? ''
-    };
+    var data = this.loginForm.value;    
     if (data.email && data.password) {
+      var credentials: PostLogin = {
+        email: data.email,
+        password: data.password
+      };
       this.authService.login(credentials)
         .subscribe(_ => this.router.navigateByUrl("/"));
     }

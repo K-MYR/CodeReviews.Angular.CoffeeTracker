@@ -12,15 +12,17 @@
 
 .register__content {
   max-height: 365px;
-  max-width: 240px;
-  margin: 0 auto 0 auto;
+  width: 100%;
+  margin: 0 auto;
   overflow: auto;
 }
 
 .register__content__container {  
-  width: 100%;
+  max-width: 240px;
+  margin: 0 auto;
   padding: 25px 3px 3px 3px;
 }
+
 
 .register__content__title {
   text-align: center;
@@ -30,7 +32,53 @@
 }
 
 .register-form__submit-button {
-    margin-top: 16px;
+  margin-top: 16px;
+}
+
+.register-success__content__container {
+  width: 100%;
+  padding: 25px 3px 3px 3px;
+}
+
+.register-success__content__title {
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--silver);
+  text-shadow: 0px 0px 5px var(--silver);
+}
+
+.register-success__content__body {
+  width: 100%;
+  max-width: 270px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-shadow: 0px 0px 4px var(--silver);
+  text-align: center;
+}
+
+.register-success__content__email {
+  display: block;
+  max-width: 340px;
+  margin: 16px auto 16px auto;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-style: italic;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 4px;
+  text-decoration-color: orange;
+  text-shadow: 0px 0px 4px var(--silver);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.register-success__content__resend-button {
+  display: block;  
+  width: 100%;
+  max-width: 230px;
+  margin: 16px auto 0 auto;
 }
 
 .register__login-button {

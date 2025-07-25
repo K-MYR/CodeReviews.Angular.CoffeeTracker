@@ -1,7 +1,6 @@
 import { ModalComponent } from '../shared/modal/modal.component';
 import { CoffeeRecord } from '../../interfaces/coffee-record';
 import { PutCoffeeRecordForm } from '../../interfaces/put-coffee-record';
-
 import { Component, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
 

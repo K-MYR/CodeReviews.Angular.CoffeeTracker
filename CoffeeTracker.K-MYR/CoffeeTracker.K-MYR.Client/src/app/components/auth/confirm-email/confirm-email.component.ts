@@ -5,7 +5,6 @@ import { ConfirmEmail } from '../../../interfaces/confirm-email';
 import { LoadingIndicatorTextPath } from '../../shared/loading-indicator/loading-indicator.component'
 import { LoadingIndicatorComponent } from '../../shared/loading-indicator/loading-indicator.component';
 import { AnimationService } from '../../../services/animation.service';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, inject, OnInit} from '@angular/core';
 import { first,switchMap } from 'rxjs';

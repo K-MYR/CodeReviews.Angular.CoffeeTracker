@@ -1,5 +1,4 @@
 import { VIEWPORT_SIZE } from './tokens/injectionTokens';
-
 import { mergeApplicationConfig, ApplicationConfig, REQUEST } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
 import { provideServerRouting } from '@angular/ssr';

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { RecordSearchStateService } from './record-search-state.service';
 
 describe('CoffeeRecordService', () => {

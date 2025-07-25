@@ -7,7 +7,6 @@ import { OrderDirection } from '../../enums/order-direction';
 import { CoffeeRecord } from '../../interfaces/coffee-record';
 import { PostCoffeeRecord } from '../../interfaces/post-coffee-record';
 import { EditRecordModalComponent } from '../edit-record-modal/edit-record-modal.component';
-
 import { Component, output, viewChild } from '@angular/core';
 import { DatePipe, AsyncPipe } from '@angular/common';
 import { inject } from '@angular/core';

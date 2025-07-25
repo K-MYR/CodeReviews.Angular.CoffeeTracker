@@ -190,7 +190,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             ([FromBody] ResendConfirmationEmailRequest resendRequest, HttpContext context, [FromServices] IServiceProvider sp, IOptions<SpaConfiguration> config) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
-            if (await userManager.FindByEmailAsync(resendRequest.Email) is not { } user)
+            if (await userManager.FindByEmailAsync(resendRequest.Email) is not { } user 
+            || await userManager.IsEmailConfirmedAsync(user))
             {
                 return TypedResults.Ok();
             }

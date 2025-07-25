@@ -21,7 +21,10 @@ builder.Services.AddDbContext<CoffeeRecordContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 builder.Services
-    .AddIdentityApiEndpoints<AppUser>()
+    .AddIdentityApiEndpoints<AppUser>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+    })
     .AddEntityFrameworkStores<CoffeeRecordContext>();
 builder.Services
     .AddMvcCore()
@@ -69,5 +72,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapAuthEndpoints();
 app.MapCoffeeRecordEndpoints();
-
 app.Run();

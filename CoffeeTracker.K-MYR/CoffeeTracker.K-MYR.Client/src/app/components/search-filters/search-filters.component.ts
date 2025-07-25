@@ -1,6 +1,5 @@
 import { RecordsSearchForm } from '../../interfaces/records-search';
 import { RecordSearchStateService } from '../../services/record-search-state.service';
-
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 

@@ -1,6 +1,5 @@
 import { CHART_DEFAULTS } from './chart.defaults';
 import { VIEWPORT_SIZE } from './tokens/injectionTokens';
-
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
