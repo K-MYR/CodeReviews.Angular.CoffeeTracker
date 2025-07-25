@@ -2,6 +2,11 @@
 
 namespace CoffeeTracker.K_MYR.Server.Domain.Entities;
 
-public class AppUser : IdentityUser
+internal sealed class AppUser : IdentityUser<Guid>
+{
+    public ICollection<CoffeeRecord> CoffeeRecords { get; set; } = [];
+}
+
+internal sealed class AppRole : IdentityRole<Guid>
 {
 }

@@ -10,13 +10,12 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },  
-  {
-    path: 'auth', component: AuthShellComponent, children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'confirm-email', component: ConfirmEmailComponent, canActivate: [confirmEmailGuard] },
-      { path: 'resend-email', component: ResendEmailComponent},
+  { path: 'auth', component: AuthShellComponent, children: [
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'confirm-email', component: ConfirmEmailComponent, canActivate: [confirmEmailGuard] },
+    { path: 'resend-email', component: ResendEmailComponent},
   ]},
   { path: '**', redirectTo: 'dashboard' }
 ]

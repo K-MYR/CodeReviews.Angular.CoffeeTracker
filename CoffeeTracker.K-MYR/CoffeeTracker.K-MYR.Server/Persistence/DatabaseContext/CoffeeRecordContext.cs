@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 
-internal sealed class CoffeeRecordContext(DbContextOptions<CoffeeRecordContext> options) : IdentityDbContext<AppUser>(options)
+internal sealed class CoffeeRecordContext(DbContextOptions<CoffeeRecordContext> options) : IdentityDbContext<AppUser, AppRole, Guid>(options)
 {
     internal required DbSet<CoffeeRecord> CoffeeRecords { get; set; }
 
@@ -13,6 +13,14 @@ internal sealed class CoffeeRecordContext(DbContextOptions<CoffeeRecordContext> 
         base.OnModelCreating(modelBuilder);
         modelBuilder
             .Entity<CoffeeRecord>()
-            .HasIndex(c => c.DateTime);            
+            .HasIndex(c => c.DateTime);
+
+        modelBuilder
+            .Entity<CoffeeRecord>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.CoffeeRecords)
+            .HasForeignKey(u => u.UserId)
+            .IsRequired();
+
     }
 }

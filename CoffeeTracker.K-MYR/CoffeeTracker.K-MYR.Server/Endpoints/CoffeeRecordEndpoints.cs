@@ -4,7 +4,9 @@ using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Shared;
 using CoffeeTracker.K_MYR.Server.Shared.Enums;
 using LanguageExt;
+using LanguageExt.Pipes;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Security.Claims;
 
 namespace CoffeeTracker.K_MYR.Server.Endpoints;
 
@@ -16,11 +18,13 @@ public static class CoffeeRecordEndpoints
             .WithTags("Coffee API");
                       
         group.MapGet("/{id:int}", async Task<Results<Ok<CoffeeRecordResponse>, ProblemHttpResult>>(
+            ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             int id) =>
         {
-            var record = await coffeeRecordService.GetCoffeeRecordAsync(id, ct);
+            var userId = user.GetUserId(); 
+            var record = await coffeeRecordService.GetCoffeeRecordAsync(id, userId, ct);
             return record is not null
                 ? TypedResults.Ok(CoffeeRecordResponse.FromDomain(record))
                 : TypedResults.Problem(
@@ -29,15 +33,17 @@ public static class CoffeeRecordEndpoints
                 );
             
         })
-        .WithName("GetCoffeeRecord");
+        .WithName("GetCoffeeRecord")
+        .RequireAuthorization();
 
         group.MapGet("/", async Task<Results<Ok<PaginatedList<CoffeeRecordResponse>>, ProblemHttpResult>> (
+            ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             [AsParameters] GetCoffeeRecordsRequest request) =>
         {
-            var result = await coffeeRecordService.GetCoffeeRecordsAsync(request, ct);
-            
+            var userId = user.GetUserId();
+            var result = await coffeeRecordService.GetCoffeeRecordsAsync(request, userId, ct);            
 
             return result.Match<Results<Ok<PaginatedList<CoffeeRecordResponse>>, ProblemHttpResult>>(
                 succ => TypedResults.Ok(new PaginatedList<CoffeeRecordResponse>(
@@ -56,25 +62,31 @@ public static class CoffeeRecordEndpoints
                     )
             );
         })
-        .WithName("GetCoffeeRecords");
+        .WithName("GetCoffeeRecords")
+        .RequireAuthorization();
 
         group.MapGet("/statistics", async Task<Results<Ok<List<TypeStatisticsDTO>>, ProblemHttpResult>> (
+            ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             DateTime date) =>
         {
-            var statisticsDTOs = await coffeeRecordService.GetStatistics(date, ct);
+            var userId = user.GetUserId();
+            var statisticsDTOs = await coffeeRecordService.GetStatistics(date, userId, ct);
             return TypedResults.Ok(statisticsDTOs);
 
         })
-        .WithName("GetCoffeeTypeStatistics");
+        .WithName("GetCoffeeTypeStatistics")
+        .RequireAuthorization();
 
         group.MapPost("/", async Task<CreatedAtRoute<CoffeeRecordResponse>>(
+            ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             CreateCoffeeRecordRequest request) =>
         {
-            var record = request.ToDomain();
+            var userId = user.GetUserId();
+            var record = request.ToDomain(userId);
             await coffeeRecordService.CreateCoffeeRecordAsync(record, ct);
             return TypedResults.CreatedAtRoute(
                 routeName: "GetCoffeeRecord",
@@ -82,10 +94,12 @@ public static class CoffeeRecordEndpoints
                 value: CoffeeRecordResponse.FromDomain(record)
             );
         })
-        .WithName("PostCoffeeRecord");
+        .WithName("PostCoffeeRecord")
+        .RequireAuthorization();
         
 
         group.MapPut("/{id:int}", async Task<Results<NoContent, ProblemHttpResult >>(
+            ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             UpdateCoffeeRecordRequest request,
@@ -99,7 +113,8 @@ public static class CoffeeRecordEndpoints
                 );
             }
 
-            var record = await coffeeRecordService.GetCoffeeRecordAsync(id, ct);
+            var userId = user.GetUserId();
+            var record = await coffeeRecordService.GetCoffeeRecordAsync(id, userId, ct);
 
             if(record is null)
             {
@@ -114,16 +129,19 @@ public static class CoffeeRecordEndpoints
             await coffeeRecordService.UpdateCoffeeRecordAsync(record, ct );
             return TypedResults.NoContent();
         })
-        .WithName("PutCoffeeRecord");
+        .WithName("PutCoffeeRecord")
+        .RequireAuthorization();
 
 
         group.MapDelete("/{id:int}", async Task<Results<NoContent, ProblemHttpResult>>(
+            ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             int id
             ) =>
         {
-            var record = await coffeeRecordService.GetCoffeeRecordAsync(id, ct);
+            var userId = user.GetUserId();
+            var record = await coffeeRecordService.GetCoffeeRecordAsync(id, userId, ct);
             if (record is null)
             {
                 return TypedResults.Problem(
@@ -134,7 +152,8 @@ public static class CoffeeRecordEndpoints
             await coffeeRecordService.DeleteCoffeeRecordAsync(record, ct);
             return TypedResults.NoContent();
         })
-        .WithName("DeleteCoffeeRecord");
+        .WithName("DeleteCoffeeRecord")
+        .RequireAuthorization();
 
     }
 }
@@ -156,10 +175,11 @@ internal sealed record CreateCoffeeRecordRequest(
     string Type
 )
 {
-    internal CoffeeRecord ToDomain() => new()
+    internal CoffeeRecord ToDomain(Guid userId) => new()
     {
         DateTime = DateTime,
-        Type = Type
+        Type = Type,
+        UserId = userId
     };
 }
 
@@ -181,11 +201,12 @@ internal sealed record UpdateCoffeeRecordRequest(
     DateTime DateTime,
     string Type
 )
-{    internal CoffeeRecord ToDomain() => new()
+{    internal CoffeeRecord ToDomain(Guid userId) => new()
     {
         Id = Id,
         DateTime = DateTime,
-        Type = Type
+        Type = Type,
+        UserId = userId
     };
 }
 

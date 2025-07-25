@@ -60,16 +60,17 @@
 .register-success__content__email {
   display: block;
   max-width: 340px;
-  margin: 16px auto 16px auto;
+  margin: 12px auto 12px auto;
   text-align: center;
-  font-size: 1.3rem;
+  line-height: 2.4rem;
+  font-size: 1.3rem;  
   font-weight: 700;
   font-style: italic;
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 8px;
   text-decoration-thickness: 4px;
   text-decoration-color: orange;
-  text-shadow: 0px 0px 4px var(--silver);
+  text-shadow: 0px 0px 3px var(--silver);
   overflow: hidden;
   text-overflow: ellipsis;
 }

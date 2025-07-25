@@ -27,11 +27,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Http\Account\" />
-    <Folder Include="Persistence\Migrations\" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoffeeTracker.K-MYR.RazorClassLib\CoffeeTracker.K-MYR.RazorClassLib.csproj" />
   </ItemGroup>
@@ -39,6 +34,12 @@
 	<Content Include="Assets\Images\*.*">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Http\Account\**" />
+    <Content Remove="Http\Account\**" />
+    <EmbeddedResource Remove="Http\Account\**" />
+    <None Remove="Http\Account\**" />
   </ItemGroup>
 
 </Project>

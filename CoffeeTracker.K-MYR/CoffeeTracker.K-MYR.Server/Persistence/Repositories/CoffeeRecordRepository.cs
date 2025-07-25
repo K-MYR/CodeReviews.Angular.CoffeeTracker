@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.Repositories;
 
-internal sealed class CoffeeRecordRepository(DatabaseContext.CoffeeRecordContext context) : ICoffeeRecordRepository
+internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffeeRecordRepository
 {
-    private readonly DatabaseContext.CoffeeRecordContext _context = context;    
+    private readonly CoffeeRecordContext _context = context;
 
-    public ValueTask<CoffeeRecord?> GetAsync(int id, CancellationToken ct)
+    public Task<CoffeeRecord?> GetAsync(int id, Guid userId, CancellationToken ct)
     {
-        return _context.CoffeeRecords.FindAsync([id, ct], cancellationToken: ct);
+        return _context.CoffeeRecords.FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId, ct);
     }
 
     public Task CreateAsync(CoffeeRecord coffeeRecord, CancellationToken ct)
@@ -36,17 +36,17 @@ internal sealed class CoffeeRecordRepository(DatabaseContext.CoffeeRecordContext
     public Task<List<CoffeeRecord>> GetAllAsync(
         DateTime? startDate, DateTime? endDate, string? type, int pageSize,
         Func<IQueryable<CoffeeRecord>, IOrderedQueryable<CoffeeRecord>> orderBy,
-        CancellationToken ct,
+        Guid userId, CancellationToken ct,
         Func<IQueryable<CoffeeRecord>, IQueryable<CoffeeRecord>>? filter = null)
     {
-        IQueryable<CoffeeRecord> query = _context.CoffeeRecords;
+        IQueryable<CoffeeRecord> query = _context.CoffeeRecords.Where(c => c.UserId == userId);
 
-        if(filter is not null)
+        if (filter is not null)
         {
             query = filter(query);
         }
 
-        if(startDate is not null)
+        if (startDate is not null)
         {
             query = query.Where(c => c.DateTime >= startDate);
         }
@@ -56,19 +56,19 @@ internal sealed class CoffeeRecordRepository(DatabaseContext.CoffeeRecordContext
             query = query.Where(c => c.DateTime <= endDate);
         }
 
-        if(type is not null)
+        if (type is not null)
         {
             query = query.Where(c => c.Type.Contains(type));
         }
 
         query = orderBy(query);
 
-        return  query.Take(pageSize)                      
+        return query.Take(pageSize)
                      .AsNoTracking()
                      .ToListAsync(ct);
     }
-    
-    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct)
+
+    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, Guid userId, CancellationToken ct)
     {
         var todayStart = new DateTime(today.Year, today.Month, today.Day);
         var todayEnd = todayStart.AddDays(1);
@@ -81,7 +81,11 @@ internal sealed class CoffeeRecordRepository(DatabaseContext.CoffeeRecordContext
         var yearEnd = yearStart.AddYears(1);
 
         return _context.CoffeeRecords
-            .Where(c => c.DateTime > yearStart && c.DateTime < yearEnd)
+            .Where(c => 
+                c.UserId == userId && 
+                c.DateTime > yearStart && 
+                c.DateTime < yearEnd
+            )
             .GroupBy(c => c.Type)
             .Select(g => new TypeStatisticsDTO()
             {
@@ -90,11 +94,11 @@ internal sealed class CoffeeRecordRepository(DatabaseContext.CoffeeRecordContext
                 MonthCount = g.Count(c => c.DateTime > monthStart && c.DateTime < monthEnd),
                 WeekCount = g.Count(c => c.DateTime > weekStart && c.DateTime < weekEnd),
                 DayCount = g.Count(c => c.DateTime > todayStart && c.DateTime < todayEnd)
-            })   
+            })
             .OrderBy(t => t.CoffeeType)
             .AsNoTracking()
             .ToListAsync(ct); ;
-        
+
     }
-  
+
 }

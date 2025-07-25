@@ -40,8 +40,8 @@ export class RegisterComponent {
         .pipe(
           switchMap(() => this.authService.login(credentials)
             .pipe(
-              catchError(() => {
-                console.warn("automatic login failed");
+              catchError((error) => {
+                console.warn(`automatic login failed: ${error}`);
                 return EMPTY;
               })
             )
@@ -53,5 +53,17 @@ export class RegisterComponent {
         }
       );
     }
+  }
+
+  resendConfirmationEmail(): void {
+    var emailAddress = this.confirmationEmail();
+    if (!emailAddress) {
+      return;
+    }
+    this.authService.resendEmail({
+      email: emailAddress
+    }).subscribe(_ => {
+      console.log("email has been resend");
+    })    
   }
 }

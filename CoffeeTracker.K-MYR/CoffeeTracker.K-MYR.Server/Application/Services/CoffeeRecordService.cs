@@ -12,21 +12,21 @@ namespace CoffeeTracker.K_MYR.Server.Application.Services;
 
 internal interface ICoffeeRecordService
 {
-    ValueTask<CoffeeRecord?> GetCoffeeRecordAsync(int id, CancellationToken ct);
-    Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, CancellationToken ct);
+   Task<CoffeeRecord?> GetCoffeeRecordAsync(int id, Guid userId, CancellationToken ct);
+    Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, Guid userId, CancellationToken ct);
     Task CreateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
     Task UpdateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
     Task DeleteCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct);
-    Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct);
+    Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, Guid userId, CancellationToken ct);
 }
 
 internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepository) : ICoffeeRecordService
 {
     private readonly ICoffeeRecordRepository _coffeeRecordRepository = coffeeRecordRepository;    
 
-    public ValueTask<CoffeeRecord?> GetCoffeeRecordAsync(int id, CancellationToken ct)
+    public Task<CoffeeRecord?> GetCoffeeRecordAsync(int id, Guid userId, CancellationToken ct)
     {
-        return _coffeeRecordRepository.GetAsync(id, ct);
+        return _coffeeRecordRepository.GetAsync(id, userId, ct);
     }
 
     public Task CreateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct)
@@ -44,12 +44,12 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
         return _coffeeRecordRepository.DeleteAsync(record, ct);
     }
 
-    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, CancellationToken ct)
+    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, Guid userId, CancellationToken ct)
     {
-        return _coffeeRecordRepository.GetStatistics(today, ct);
+        return _coffeeRecordRepository.GetStatistics(today, userId, ct);
     }
 
-    public async Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, CancellationToken ct)
+    public async Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(GetCoffeeRecordsRequest request, Guid userId, CancellationToken ct)
     {
         Func<IQueryable<CoffeeRecord>, IOrderedQueryable<CoffeeRecord>> orderBy = q => q.OrderBy(t => t.Id);
         Func<IQueryable<CoffeeRecord>, IQueryable<CoffeeRecord>>? filter = null;
@@ -95,7 +95,7 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
                 }
             }
         }     
-        var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(request.DateTimeFrom, request.DateTimeTo, request.Type, request.PageSize + 1, orderBy, ct, filter);
+        var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(request.DateTimeFrom, request.DateTimeTo, request.Type, request.PageSize + 1, orderBy, userId, ct, filter);
         var hasNext = coffeeRecords.Count > request.PageSize;
         var hasPrevious = request.LastId is not null;
         var isPrevious = request.IsPrevious;
