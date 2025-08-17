@@ -1,9 +1,9 @@
 import { FormControl } from "@angular/forms"
 
-export interface ResendEmail {
+export interface Email {
   email: string
 }
 
-export interface ResendEmailForm {
+export interface EmailForm {
   email: FormControl<string>
 }

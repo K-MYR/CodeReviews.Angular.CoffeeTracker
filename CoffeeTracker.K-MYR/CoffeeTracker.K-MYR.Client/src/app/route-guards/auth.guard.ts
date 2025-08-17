@@ -6,8 +6,8 @@ import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  var authService = inject(AuthService);
-  var router = inject(Router);
+  const authService = inject(AuthService);
+  const router = inject(Router);
   return authService.isLoggedIn().pipe(
     map(response => {
       if (response.status === HttpStatusCode.Ok) {

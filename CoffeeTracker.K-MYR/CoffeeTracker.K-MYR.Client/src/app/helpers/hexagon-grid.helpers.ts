@@ -22,9 +22,9 @@ export function scaleVector(vector: HexagonVector, factor: number): HexagonVecto
 }
 
 export function traverseRing(center: HexagonVector, radius: number, callback: (vector: HexagonVector) => void): void {
-  var coordinates = addVector(center, scaleVector(HexagonVectors[4], radius));
-  for (var i = 0; i < 6; i++) {
-    for (var j = 0; j < radius; j++) {
+  let coordinates = addVector(center, scaleVector(HexagonVectors[4], radius));
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < radius; j++) {
       coordinates = getVectorNeighbor(coordinates, i as keyof HexagonVectors)
       callback(coordinates);
     }
@@ -32,9 +32,9 @@ export function traverseRing(center: HexagonVector, radius: number, callback: (v
 }
 
 export function doubledToCube(vector: HexagonVector): HexagonCubeVector {
-  var q = (vector.x - vector.y) / 2;
-  var r = vector.y;
-  var s = -q - r;
+  const q = (vector.x - vector.y) / 2;
+  const r = vector.y;
+  const s = -q - r;
   return {
     q: q,
     r: r,
@@ -58,7 +58,7 @@ export function roate60Deg(vector: HexagonCubeVector): HexagonCubeVector {
 }
 
 export function doubledWidthDistance(a: HexagonVector, b: HexagonVector): number {
-  var deltaCol = Math.abs(a.x - b.x);
-  var deltaRow = Math.abs(a.y - b.y);
+  const deltaCol = Math.abs(a.x - b.x);
+  const deltaRow = Math.abs(a.y - b.y);
   return deltaRow + Math.max(0, (deltaCol - deltaRow) / 2);
 }

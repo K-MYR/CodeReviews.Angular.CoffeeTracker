@@ -3,12 +3,12 @@ import { AuthService } from '../../../services/auth.service';
 import { PostLogin, PostLoginForm } from '../../../interfaces/post-login';
 import { HexButtonComponent } from '../../shared/hex-button/hex-button.component';
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, HexButtonComponent],
+  imports: [ReactiveFormsModule, HexButtonComponent, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -17,18 +17,18 @@ export class LoginComponent {
   private router = inject(Router);
   loginForm = new FormGroup<PostLoginForm>({
     email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-    password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] })
+    password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    rememberMe: new FormControl<boolean>(false, { nonNullable: true })
   });
 
-  login(): void {
-    var data = this.loginForm.value;    
-    if (data.email && data.password) {
-      var credentials: PostLogin = {
-        email: data.email,
-        password: data.password
-      };
-      this.authService.login(credentials)
-        .subscribe(_ => this.router.navigateByUrl("/"));
-    }
+  login(): void {   
+    const data = this.loginForm.getRawValue(); 
+    const credentials: PostLogin = {
+      email: data.email,
+      password: data.password,
+      rememberMe: data.rememberMe
+    };
+    this.authService.login(credentials)
+      .subscribe(_ => this.router.navigateByUrl("/dashboard"));    
   }
 }

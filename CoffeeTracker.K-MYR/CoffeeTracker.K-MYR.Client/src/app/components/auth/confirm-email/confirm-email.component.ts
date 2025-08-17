@@ -1,13 +1,12 @@
 import { AuthService } from '../../../services/auth.service';
-import { hasNoNulls, mapKeys } from '../../../helpers/general';
-import { CONFIRM_EMAIL_QUERY_PARAM_KEYS } from '../../../route-guards/query-params.guard';
-import { ConfirmEmail } from '../../../interfaces/confirm-email';
+import { getPropertyFromMap, hasNoNullsFromMap } from '../../../helpers/general';
+import { EMAIL_QUERY_PARAM_KEYS } from '../../../route-guards/query-params.guard';
+import { EmailQueryParams } from '../../../interfaces/email-query-params';
 import { LoadingIndicatorTextPath } from '../../shared/loading-indicator/loading-indicator.component'
 import { LoadingIndicatorComponent } from '../../shared/loading-indicator/loading-indicator.component';
 import { AnimationService } from '../../../services/animation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, inject, OnInit} from '@angular/core';
-import { first,switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-email',
@@ -26,44 +25,40 @@ export class ConfirmEmailComponent implements OnInit {
     { text: 'Confirming Email .  .  .', startOffset: 0.5, id: "t2" },
   ];
 
-  ngOnInit() {   
-    this.route.queryParams.pipe(      
-      first(params => {
-        var isValid = hasNoNulls<ConfirmEmail>(params, CONFIRM_EMAIL_QUERY_PARAM_KEYS);
-        if (isValid) {
-          return true;
+  ngOnInit() {
+    const paramMap = this.route.snapshot.queryParamMap;   
+    const isValid = hasNoNullsFromMap<EmailQueryParams>(paramMap, EMAIL_QUERY_PARAM_KEYS);
+    if (!isValid) {
+      this.textPaths = [
+        { text: '⚠️  Error  ⚠️', startOffset: 0, id: "t1" },
+        { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },
+      ]
+      return;
+    };
+    const confirmEmail: EmailQueryParams = {
+      userId: getPropertyFromMap<EmailQueryParams>(paramMap, 'userId')!,
+      code: getPropertyFromMap<EmailQueryParams>(paramMap, 'code')!
+    };
+    this.authService.confirmEmail(confirmEmail)
+      .subscribe({
+        next: response => {
+          this.textPaths = [
+            { text: 'Success . . .', startOffset: 0, id: "t1" },
+            { text: 'Redirecting . . .', startOffset: 0.5, id: "t2" },
+          ];
+          this.animationService.$animationFinished.subscribe(() => {
+            setTimeout(() => {
+              this.router.navigateByUrl("auth/login");
+            }, 1000)
+          });
+        },
+        error: error => {
+          this.textPaths = [
+            { text: '⚠️  Error  ⚠️', startOffset: 0, id: "t1" },
+            { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },
+          ];
         }
-        this.textPaths = [
-          { text: '⚠️  Error  ⚠️', startOffset: 0, id: "t1" },
-          { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },
-        ];
-        return false;
-      }
-      ),
-      switchMap((params: unknown) => {
-        return this.authService.confirmEmail(
-          mapKeys<ConfirmEmail, keyof ConfirmEmail>(params as ConfirmEmail, CONFIRM_EMAIL_QUERY_PARAM_KEYS)
-        )
-      })
-    ).subscribe({
-      next: response => {
-        this.textPaths = [
-          { text: 'Success . . .', startOffset: 0, id: "t1" },
-          { text: 'Redirecting . . .', startOffset: 0.5, id: "t2" },
-        ];
-        this.animationService.$animationFinished.subscribe(() => {
-          setTimeout(() => {
-            this.router.navigateByUrl("auth/login");
-          }, 1000)
-        });   
-      },
-      error: error => { 
-        this.textPaths = [
-          { text: '⚠️  Error  ⚠️', startOffset: 0, id: "t1" },
-          { text: '⚠️  Error  ⚠️', startOffset: 0.5, id: "t2" },
-        ];
-      }
-    });
+      });    
   }    
 }
 

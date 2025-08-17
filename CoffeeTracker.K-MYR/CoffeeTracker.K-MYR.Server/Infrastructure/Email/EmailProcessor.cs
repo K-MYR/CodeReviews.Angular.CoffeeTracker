@@ -28,15 +28,15 @@ internal sealed class EmailProcessor(
                 var request = await _channel.Reader.ReadAsync(stoppingToken);
                 MimeMessage message = request.EmailType switch
                 {
-                    EmailTypes.EmailConfirmation => await GenerateEmailConfirmationBody(request.UserName, request.Email, request.Code),
-                    EmailTypes.PasswordResetCode => throw new NotImplementedException(),
+                    EmailTypes.EmailConfirmation => await GenerateEmailConfirmationBody(request.UserName, request.Email, request.Link),
+                    EmailTypes.PasswordResetCode => await GeneratePasswordResetBody(request.UserName, request.Email, request.Link),
                     _ => throw new InvalidEnumArgumentException("Invalid enum value", (int)request.EmailType, typeof(EmailTypes)),
                 };
 
                 await SendEmailAsync(message, stoppingToken);                
             }
         }
-    }
+    }    
 
     private async Task SendEmailAsync(MimeMessage message, CancellationToken stoppingToken)   
     {
@@ -56,12 +56,12 @@ internal sealed class EmailProcessor(
                 client.Disconnect(true, stoppingToken);
                 return;
             }
-            catch
+            catch (Exception ex) 
             {
                 attempts++;
                 if (attempts == RetryPolicyConstants.MaxRetryCount)
                 {
-                    _logger.LogError("Failed to send email confirmation link after multiple attempts");
+                    _logger.LogError("Failed to send email confirmation link after multiple attempts: {exception}", ex);
                 }
             }
         }
@@ -101,6 +101,41 @@ internal sealed class EmailProcessor(
         message.Body = builder.ToMessageBody();
         return message;
     }
+
+    private async Task<MimeMessage> GeneratePasswordResetBody(string userName, string userEmail, string resetLink)
+    {
+        MimeMessage message = new();
+        message.From.Add(new MailboxAddress(_configuration.SenderName, _configuration.SenderEmail));
+        message.To.Add(new MailboxAddress(userName, userEmail));
+        message.Subject = "Your Password Reset Link";
+
+        var body = await _renderer.RenderViewToStringAsync("Views/Emails/PasswordReset.cshtml", new PasswordReset(resetLink));
+        var builder = new BodyBuilder()
+        {
+            HtmlBody = body
+        };
+
+        var brandPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", "coffee-tracker-brand-with-glow.png");
+        var brand = new MimePart("image", "png")
+        {
+            Content = new MimeContent(File.OpenRead(brandPath)),
+            ContentId = "brand",
+            ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
+            ContentTransferEncoding = ContentEncoding.Base64
+        };
+        builder.LinkedResources.Add(brand);
+        var logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", "coffee-logo-with-glow.png");
+        var logo = new MimePart("image", "png")
+        {
+            Content = new MimeContent(File.OpenRead(logoPath)),
+            ContentId = "logo",
+            ContentDisposition = new ContentDisposition(ContentDisposition.Inline),
+            ContentTransferEncoding = ContentEncoding.Base64
+        };
+        builder.LinkedResources.Add(logo);
+        message.Body = builder.ToMessageBody();
+        return message;
+    }
 }
 
-internal record EmailChannelRequest(string UserName, string Email, string Code, EmailTypes EmailType);
+internal record EmailChannelRequest(string UserName, string Email, string Link, EmailTypes EmailType);

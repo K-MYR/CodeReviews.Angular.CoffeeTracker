@@ -3,3 +3,9 @@ export interface CoffeeRecord {
   dateTime: Date,
   type: string
 }
+
+export interface CoffeeRecordResponse {
+  id: number,
+  dateTime: string,
+  type: string
+}

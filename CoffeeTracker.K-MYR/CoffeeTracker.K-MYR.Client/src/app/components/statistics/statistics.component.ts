@@ -24,7 +24,7 @@ export class StatisticsComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private year$ = new BehaviorSubject<Date>(new Date);
   counters = computed(() => {
-    var counters: TypeStatistic = {
+    const counters: TypeStatistic = {
       coffeeType: 'Overall',
       dayCount: 0,
       weekCount: 0,
@@ -40,14 +40,18 @@ export class StatisticsComponent implements OnInit {
     return counters;
   });
   chartData: Signal<ChartData<'doughnut', number[]>> = computed(() => {
-    var data = this.statistics().map(stats => (stats.yearCount));
+    const data = this.statistics().map(stats => (stats.yearCount));
+    let backgroundColors = undefined;
     if (data.length === 0) {
       data.push(Number.MIN_VALUE);
-    }    
+      backgroundColors = ['#d2dee2'];
+    }
+    
     return {
       datasets: [{
+        backgroundColor: backgroundColors,
         cutout: '40%',
-        data: data,
+        data:  data,
       }],
       labels: this.statistics().map(stats => (stats.coffeeType))
     }

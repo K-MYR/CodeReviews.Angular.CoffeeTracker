@@ -5,13 +5,20 @@
             <form [formGroup]="loginForm" (ngSubmit)="login()" class="form">
                 <div class="form-group">
                     <label class="form-label" for="login-form__email">Email</label>
-                    <input type="email" value="" formControlName="email" class="form-input" id="login-form__email" autocomplete="email" required />
+                    <input type="email" value="" formControlName="email" class="form-input" id="login-form__email" autocomplete="email"/>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="login-form__password">Password</label>
-                    <input type="password" value="" formControlName="password" class="form-input" id="login-form__password" autocomplete="current-password" required />
-                </div>               
-                <button class="form-button login-form__submit-button" [disabled]="!loginForm.valid">Login</button>
+                    <input type="password" value="" formControlName="password" class="form-input" id="login-form__password" autocomplete="current-password"/>
+                    <a class="login__content__forgot-password" routerLink="/auth/forgot-password">
+                        <span>Forgot Password ?</span>
+                    </a>
+                </div>
+                <div class="login__content__remember-me">
+                    <input type="checkbox" value="" formControlName="rememberMe" class="form-input" id="login-form__rememberMe" autocomplete="on"/>
+                    <label class="" for="login-form__rememberMe">Remember Me</label>
+                </div>
+                <button class="form-button login__content__submit-button" [disabled]="!loginForm.valid">Login</button>
             </form>
         </div>
     </div>

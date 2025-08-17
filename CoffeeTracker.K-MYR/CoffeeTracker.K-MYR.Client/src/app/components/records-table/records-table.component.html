@@ -6,17 +6,11 @@
         <path fill="currentColor" d="M6.1018 16.9814C5.02785 16.9814 4.45387 15.7165 5.16108 14.9083L10.6829 8.59762C11.3801 7.80079 12.6197 7.80079 13.3169 8.59762L18.8388 14.9083C19.5459 15.7165 18.972 16.9814 17.898 16.9814H6.1018Z"></path>
     </symbol>
     <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-left">
-        <path fill="currentColor" d="M160,212a3.98805,3.98805,0,0,1-2.82861-1.17163l-80-80a4,4,0,0,1,0-5.65674l80-80a4.00009,4.00009,0,0,1,5.65722,5.65674L85.65674,128l77.17187,77.17163A4,4,0,0,1,160,212Z" />
+        <path stroke="currentColor" stroke-width="4" fill="currentColor" d="M160,212a3.98805,3.98805,0,0,1-2.82861-1.17163l-80-80a4,4,0,0,1,0-5.65674l80-80a4.00009,4.00009,0,0,1,5.65722,5.65674L85.65674,128l77.17187,77.17163A4,4,0,0,1,160,212Z" />
     </symbol>
     <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-right">
-        <path fill="currentColor" d="M96,212a4,4,0,0,1-2.82861-6.82837L170.34326,128,93.17139,50.82837a4.00009,4.00009,0,0,1,5.65722-5.65674l80,80a4,4,0,0,1,0,5.65674l-80,80A3.98805,3.98805,0,0,1,96,212Z" />
-    </symbol>
-    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-double-left">
-        <path fill="currentColor" d="M202.82861,205.17139a4.00026,4.00026,0,0,1-5.65722,5.65722l-80-80a4.00058,4.00058,0,0,1,0-5.65722l80-80a4.00026,4.00026,0,0,1,5.65722,5.65722L125.65674,128ZM45.65674,128l77.17187-77.17139a4.00026,4.00026,0,0,0-5.65722-5.65722l-80,80a4.00058,4.00058,0,0,0,0,5.65722l80,80a4.00026,4.00026,0,0,0,5.65722-5.65722Z" />
-    </symbol>
-    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="caret-double-right">
-        <path fill="currentColor" d="M138.82861,130.82861l-80,80a4.00026,4.00026,0,0,1-5.65722-5.65722L130.34326,128,53.17139,50.82861a4.00026,4.00026,0,0,1,5.65722-5.65722l80,80A4.0006,4.0006,0,0,1,138.82861,130.82861Zm80-5.65722-80-80a4.00026,4.00026,0,0,0-5.65722,5.65722L210.34326,128l-77.17187,77.17139a4.00026,4.00026,0,0,0,5.65722,5.65722l80-80A4.0006,4.0006,0,0,0,218.82861,125.17139Z" />
-    </symbol>
+        <path stroke="currentColor" stroke-width="4" fill="currentColor" d="M96,212a4,4,0,0,1-2.82861-6.82837L170.34326,128,93.17139,50.82837a4.00009,4.00009,0,0,1,5.65722-5.65674l80,80a4,4,0,0,1,0,5.65674l-80,80A3.98805,3.98805,0,0,1,96,212Z" />
+    </symbol>    
 </svg>
 <div class="records__container box">
     <div class="records__head">
@@ -28,83 +22,94 @@
         </button>
     </div>
     <hr class="records__divider" />
-    <table class="records__table">
-        <colgroup>
-            <col span="1" class="records__table__col-dateTime" />
-            <col span="1" class="records__table__col-type" />
-            <col span="1" class="records__table__col-icons" />
-        </colgroup>
-        <thead class="records__table__head">
-            <tr>
-                @for(col of columns; track col.property) {
-                <th scope="col">
-                    <span class="records__table__column">
-                        <span class="records__table__column-title">{{ col.title }}</span>
-                        <span class="records__table__sort-icons">
-                            <button [disabled]="records().length < 1" (click)="updateSorting(col.property, 0)" class="records__table__button"
-                                    [class.active]="orderBy() === col.property && orderDirection() === 0">
-                                <svg height="18" width="18" class="records__table__sort-icon active">
-                                    <use xlink:href="#caret-up"></use>
+    <div class="records__table-container">
+        <table class="records__table">
+            <colgroup>
+                <col span="1" class="records__table__col-dateTime" />
+                <col span="1" class="records__table__col-type" />
+                <col span="1" class="records__table__col-icons" />
+            </colgroup>
+            <thead class="records__table__head">
+                <tr>
+                    @for(col of columns; track col.property) {
+                    <th scope="col">
+                        <span class="records__table__column">
+                            <span class="records__table__column-title">{{ col.title }}</span>
+                            <span class="records__table__sort-icons">
+                                <button [disabled]="records().length < 1" (click)="updateSorting(col.property, 0)" class="records__table__button"
+                                        [class.active]="orderBy() === col.property && orderDirection() === 0">
+                                    <svg height="18" width="18" class="records__table__sort-icon">
+                                        <use xlink:href="#caret-up"></use>
+                                    </svg>
+                                </button>
+                                <button [disabled]="records().length < 1" (click)="updateSorting(col.property, 1)" class="records__table__button"
+                                        [class.active]="orderBy() === col.property && orderDirection() === 1">
+                                    <svg height="18" width="18" class="records__table__sort-icon">
+                                        <use xlink:href="#caret-down"></use>
+                                    </svg>
+                                </button>
+                            </span>
+                        </span>
+                    </th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="records__table-body">
+                @for (record of records(); track record.id) {
+                <tr class="records__table__row">
+                    <td class="records__table__cell">{{ record.dateTime | date:"MMMM d, y H:mm" }}</td>
+                    <td class="records__table__cell">{{ record.type }}</td>
+                    <td class="records__table__cell">
+                        <span class="records__table__icons">
+                            <button class="records__table__icon-button" (click)="openEditRecordModal($event, record)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill='currentColor' class="records__table__icon" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                 </svg>
                             </button>
-                            <button [disabled]="records().length < 1" (click)="updateSorting(col.property, 1)" class="records__table__button"
-                                    [class.active]="orderBy() === col.property && orderDirection() === 1">
-                                <svg height="18" width="18" class="records__table__sort-icon">
-                                    <use xlink:href="#caret-down"></use>
+                            <button class="records__table__icon-button" (click)="openDeleteRecordModal($event, record)">
+                                <svg width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill='currentColor' class="records__table__icon">
+                                    <path d="M18.87 6h1.007l-.988 16.015A1.051 1.051 0 0 1 17.84 23H6.158a1.052 1.052 0 0 1-1.048-.984v-.001L4.123 6h1.003l.982 15.953a.05.05 0 0 0 .05.047h11.683zM9.5 19a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-1 0v10a.5.5 0 0 0 .5.5zm5 0a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-1 0v10a.5.5 0 0 0 .5.5zM5.064 5H3V4h5v-.75A1.251 1.251 0 0 1 9.25 2h5.5A1.251 1.251 0 0 1 16 3.25V4h5v1H5.064zM9 4h6v-.75a.25.25 0 0 0-.25-.25h-5.5a.25.25 0 0 0-.25.25z" />
+                                    <path fill="none" d="M0 0h24v24H0z" />
                                 </svg>
                             </button>
                         </span>
-                    </span>
-                </th>
+                    </td>
+                </tr>
                 }
-            </tr>
-        </thead>
-        <tbody class="records__table-body">
-            @for (record of records(); track record.id) {
-            <tr>
-                <td class="records__table__cell">{{ record.dateTime | date:"MMMM d, y h:mm" }}</td>
-                <td class="records__table__cell">{{ record.type }}</td>
-                <td class="records__table__cell">
-                    <span class="records__table__icons">
-                        <button class="records__table__icon-button" (click)="openEditRecordModal($event, record)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill='currentColor' class="records__table__icon" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                            </svg>
-                        </button>
-                        <button class="records__table__icon-button" (click)="openDeleteRecordModal($event, record)">
-                            <svg width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill='currentColor' class="records__table__icon">
-                                <path d="M18.87 6h1.007l-.988 16.015A1.051 1.051 0 0 1 17.84 23H6.158a1.052 1.052 0 0 1-1.048-.984v-.001L4.123 6h1.003l.982 15.953a.05.05 0 0 0 .05.047h11.683zM9.5 19a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-1 0v10a.5.5 0 0 0 .5.5zm5 0a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-1 0v10a.5.5 0 0 0 .5.5zM5.064 5H3V4h5v-.75A1.251 1.251 0 0 1 9.25 2h5.5A1.251 1.251 0 0 1 16 3.25V4h5v1H5.064zM9 4h6v-.75a.25.25 0 0 0-.25-.25h-5.5a.25.25 0 0 0-.25.25z" />
-                                <path fill="none" d="M0 0h24v24H0z" />
-                            </svg>
-                        </button>
-                    </span>                    
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+                <tr [class.hidden]="records().length !== 0">
+                    <td colspan="2" class="records__table__not-found">No Records Were Found.</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="records__table-container__overlay" [class.active]="isLoading()">
+            <div class="records__table-container__loading-indicator">
+                <app-loading-indicator [paths]="textPaths"></app-loading-indicator>
+            </div>
+        </div>
+    </div>
     <div class="records__footer">        
         <button [disabled]="!hasPrevious() || isLoading()" class="records__footer__pagination-button" (click)="changePage(true)">
-            <svg height="28" width="28">
+            <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" class="records__footer__pagination-icon">
                 <use xlink:href="#caret-left"></use>
             </svg>
         </button>
-        <span>{{this.page()}}</span>
+        <span>{{ page() }}</span>
         <button [disabled]="!hasNext() || isLoading()" class="records__footer__pagination-button" (click)="changePage()">
-            <svg height="28" width="28">
+            <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" class="records__footer__pagination-icon">
                 <use xlink:href="#caret-right"></use>
             </svg>
         </button>
         <div class="records__footer__page-size-container">
-            <select id="records-page-size" class="records__footer__page-size" (change)="onSelectPageSize($event)">
+            <select [disabled]="records().length === 0" id="records-page-size" class="records__footer__page-size" (change)="onSelectPageSize($event)">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
             </select>
         </div>
-    </div>
+    </div>    
 </div>
+
 <app-add-record-modal #addRecordModal (submitCoffeeRecord)="onSubmitCoffeeRecord($event)"></app-add-record-modal>
 <app-delete-record-modal #deleteRecordModal (deleteCoffeeRecord)="onDeleteCoffeeRecord($event)"></app-delete-record-modal>
 <app-edit-record-modal #editRecordModal (putCoffeeRecord)="onPutCoffeeRecord($event)"></app-edit-record-modal>

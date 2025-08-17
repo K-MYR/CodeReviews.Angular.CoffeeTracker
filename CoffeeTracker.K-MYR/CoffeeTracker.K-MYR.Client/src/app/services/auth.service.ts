@@ -1,17 +1,19 @@
 import { API_ROUTES } from '../../API_ROUTES';
 import { PostLogin } from '../interfaces/post-login';
-import { ConfirmEmail } from '../interfaces/confirm-email';
+import { EmailQueryParams } from '../interfaces/email-query-params';
 import { PostRegister } from '../interfaces/post-register';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ResendEmail } from '../interfaces/resend-email';
+import { Email } from '../interfaces/email';
 import { AccountInfo } from '../interfaces/account-info';
+import { PostResetPassword } from '../interfaces/post-reset-password';
+import { Credentials } from '../interfaces/credentials';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService { 
+export class AuthService {  
   private httpClient = inject(HttpClient);
 
   constructor() { }
@@ -22,13 +24,18 @@ export class AuthService {
       { observe: 'response' });      
   }
 
-  login(credentials: PostLogin): Observable<HttpResponse<void>> {
+  login(postLogin: PostLogin): Observable<HttpResponse<void>> {
+    const credentials: Credentials = {
+      email: postLogin.email,
+      password: postLogin.password
+    };
     return this.httpClient.post<void>(API_ROUTES.POST_LOGIN, credentials, {
       headers: {
         'Content-Type': 'application/json'
       },
       params: {
-        useCookies: true
+        useCookies: true,
+        useSessionCookies: postLogin.rememberMe
       },
       observe: 'response'
     });
@@ -43,15 +50,15 @@ export class AuthService {
     });
   }
 
-  confirmEmail(confirmEmail: ConfirmEmail): Observable<HttpResponse<void>> {
+  confirmEmail(confirmEmail: EmailQueryParams): Observable<HttpResponse<void>> {
     return this.httpClient.get<void>(
       API_ROUTES.CONFIRM_EMAIL(confirmEmail.userId, confirmEmail.code),
       { observe: 'response' }
     );
   }
 
-  resendEmail(resendEmail: ResendEmail): Observable<HttpResponse<void>> {
-    return this.httpClient.post<void>(API_ROUTES.RESEND_EMAIL, resendEmail, {
+  resendConfirmationEmail(email: Email): Observable<HttpResponse<void>> {
+    return this.httpClient.post<void>(API_ROUTES.RESEND_CONFIRMATION_EMAIL, email, {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -63,5 +70,23 @@ export class AuthService {
     return this.httpClient.get<AccountInfo>(API_ROUTES.ACCOUNT_INFO,
       { observe: 'response' }
     );
+  }
+
+  forgotPassword(email: Email): Observable<HttpResponse<void>> {
+    return this.httpClient.post<void>(API_ROUTES.FORGOT_PASSWORD, email, {
+      headers: {
+        'ContentType': 'application/json'
+      },
+      observe: 'response'
+    });
+  }
+
+  resetPassword(resetPassword: PostResetPassword): Observable<HttpResponse<void>> {
+    return this.httpClient.post<void>(API_ROUTES.RESET_PASSWORD, resetPassword, {
+      headers: {
+        'ContentType': 'application/json'
+      },
+      observe: 'response'
+    });
   }
 }

@@ -8,13 +8,14 @@ import { CoffeeRecord } from '../../interfaces/coffee-record';
 import { PostCoffeeRecord } from '../../interfaces/post-coffee-record';
 import { EditRecordModalComponent } from '../edit-record-modal/edit-record-modal.component';
 import { Component, output, viewChild } from '@angular/core';
-import { DatePipe, AsyncPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { inject } from '@angular/core';
+import { LoadingIndicatorComponent, LoadingIndicatorTextPath } from '../shared/loading-indicator/loading-indicator.component';
 
 @Component({
   selector: 'app-records-table',
   standalone: true,
-  imports: [ DatePipe, AddRecordModalComponent, DeleteRecordModalComponent, EditRecordModalComponent],
+  imports: [ DatePipe, AddRecordModalComponent, DeleteRecordModalComponent, EditRecordModalComponent, LoadingIndicatorComponent],
   templateUrl: './records-table.component.html',
   styleUrl: './records-table.component.scss'
 })
@@ -25,6 +26,10 @@ export class RecordsTableComponent {
   private readonly _recordsSearchService = inject(RecordSearchStateService);
   private readonly _coffeeRecordService = inject(CoffeeRecordsService);
   private readonly _dataUpdateService = inject(DataUpdateService);
+  textPaths: LoadingIndicatorTextPath[] = [
+    { text: 'Loading .  .  .', startOffset: 0, id: "t1" },
+    { text: 'Loading .  .  .', startOffset: 0.5, id: "t2" },
+  ];
   columns: Column[] = [{ title: 'Date & Time', property: 'dateTime' }, { title: 'Type', property: 'type' }];
   records = this._recordsSearchService.records;
   orderBy = this._recordsSearchService.orderBy;
@@ -84,8 +89,8 @@ export class RecordsTableComponent {
   } 
 
   onSelectPageSize(event: Event): void {
-    var selectedValue = (event.target as HTMLSelectElement).value;
-    var number = Number(selectedValue);
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const number = Number(selectedValue);
     if (!isNaN(number)) {
       this.updatePageSize(number);
     }

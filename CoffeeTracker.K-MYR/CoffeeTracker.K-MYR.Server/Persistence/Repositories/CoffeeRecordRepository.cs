@@ -2,6 +2,7 @@
 using CoffeeTracker.K_MYR.Server.Application.Interfaces;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
+using CoffeeTracker.K_MYR.Server.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeTracker.K_MYR.Server.Persistence.Repositories;
@@ -68,16 +69,19 @@ internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICof
                      .ToListAsync(ct);
     }
 
-    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, Guid userId, CancellationToken ct)
+    public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime dateTime, Guid userId, CancellationToken ct)
     {
-        var todayStart = new DateTime(today.Year, today.Month, today.Day);
+        var todayStart = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
         var todayEnd = todayStart.AddDays(1);
-        var firstDayOfTheWeek = today.AddDays(-(int)today.DayOfWeek);
+        var elapsedDaysOfWeek = dateTime.ElapsedDaysOfWeek(DayOfWeek.Monday);
+        var firstDayOfTheWeek = TimeSpan.TicksPerDay * elapsedDaysOfWeek <= dateTime.Ticks 
+            ? dateTime.AddDays(-elapsedDaysOfWeek)
+            : DateTime.MinValue;
         var weekStart = new DateTime(firstDayOfTheWeek.Year, firstDayOfTheWeek.Month, firstDayOfTheWeek.Day);
         var weekEnd = weekStart.AddDays(7);
-        var monthStart = new DateTime(today.Year, today.Month, 1);
+        var monthStart = new DateTime(dateTime.Year, dateTime.Month, 1);
         var monthEnd = monthStart.AddMonths(1);
-        var yearStart = new DateTime(today.Year, 1, 1);
+        var yearStart = new DateTime(dateTime.Year, 1, 1);
         var yearEnd = yearStart.AddYears(1);
 
         return _context.CoffeeRecords
@@ -91,9 +95,9 @@ internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICof
             {
                 CoffeeType = g.Key,
                 YearCount = g.Count(),
-                MonthCount = g.Count(c => c.DateTime > monthStart && c.DateTime < monthEnd),
-                WeekCount = g.Count(c => c.DateTime > weekStart && c.DateTime < weekEnd),
-                DayCount = g.Count(c => c.DateTime > todayStart && c.DateTime < todayEnd)
+                MonthCount = g.Count(c => c.DateTime >= monthStart && c.DateTime < monthEnd),
+                WeekCount = g.Count(c => c.DateTime >= weekStart && c.DateTime < weekEnd),
+                DayCount = g.Count(c => c.DateTime >= todayStart && c.DateTime < todayEnd)
             })
             .OrderBy(t => t.CoffeeType)
             .AsNoTracking()

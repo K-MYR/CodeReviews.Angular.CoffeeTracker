@@ -69,9 +69,9 @@ export class RecordSearchStateService {
     combineLatest([filters$, page$, reload$])
       .pipe(
         debounceTime(100),
-        tap(() => this.setLoading()),
+        tap(() => this.setLoading(true)),
         switchMap(([filters, page]) => {
-          var searchParams: RecordsSearchParameters = {
+          const searchParams: RecordsSearchParameters = {
             ...filters,
             lastId: page.lastId ?? undefined,
             lastValue: page.lastValue ?? undefined,
@@ -80,10 +80,15 @@ export class RecordSearchStateService {
           }
           return this._coffeeRecordsService
             .getCoffeeRecords(searchParams).pipe(
-              map(paginatedList => {
-                paginatedList.values.forEach(record => {
-                  record.dateTime = new Date(record.dateTime);
-                });
+              map(paginatedListResponse => {
+                const values: CoffeeRecord[] = paginatedListResponse.values.map(record => ({
+                  ...record,
+                  dateTime: new Date(record.dateTime)
+                }));
+                const paginatedList: PaginatedList<CoffeeRecord> = {
+                  ...paginatedListResponse,
+                  values: values
+                }
                 return {
                   paginatedList,
                   page,
@@ -120,7 +125,7 @@ export class RecordSearchStateService {
     }))
   }
 
-  private setLoading(isLoading: boolean = false) {
+  private setLoading(isLoading: boolean) {
     this.state.update(state => ({
       ...state,
       isLoading: isLoading
@@ -142,15 +147,15 @@ export class RecordSearchStateService {
   }
 
   changePage(isPrevious: boolean = false): void {
-    var state = this.state();
+    const state = this.state();
     if (state.isLoading || isPrevious ? !state.hasPrevious : !state.hasNext) {
       return;
     }
 
-    var index = isPrevious ? 0 : state.records.length - 1;
-    var pageNumber = state.page + (isPrevious ? -1 : 1);
-    var lastRecord = state.records[index];
-    var lastValue = null;
+    const index = isPrevious ? 0 : state.records.length - 1;
+    const pageNumber = state.page + (isPrevious ? -1 : 1);
+    const lastRecord = state.records[index];
+    let lastValue = null;
     if (!(state.orderBy === 'id')) {
       lastValue = state.orderBy === 'dateTime' ? lastRecord.dateTime.toISOString() : lastRecord[state.orderBy].toString()
     }
@@ -168,9 +173,9 @@ export class RecordSearchStateService {
     if (pageSize < 1) {
       return;
     }
-    var state = this.state();
-    var numberOfRecordsBefore = (state.page - 1) * state.pageSize;
-    var pageNumber = Math.floor(numberOfRecordsBefore / pageSize) + 1;
+    const state = this.state();
+    const numberOfRecordsBefore = (state.page - 1) * state.pageSize;
+    const pageNumber = Math.floor(numberOfRecordsBefore / pageSize) + 1;
     this.page$.next({
       lastId: pageNumber === 1 ? null : state.lastId ?? null,
       lastValue: pageNumber === 1 ? null : state.lastValue ?? null,

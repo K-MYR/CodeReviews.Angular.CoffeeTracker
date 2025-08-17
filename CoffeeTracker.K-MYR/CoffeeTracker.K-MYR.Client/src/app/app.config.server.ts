@@ -12,10 +12,10 @@ const serverConfig: ApplicationConfig = {
     {
       provide: VIEWPORT_SIZE,
       useFactory: (request: Request) => {
-        var widthHint = request?.headers.get('Sec-CH-Viewport-Width');
-        var width = widthHint ? parseFloat(widthHint) : null;
-        var heightHint = request?.headers.get('Sec-CH-Viewport-Height');
-        var height = heightHint ? parseFloat(heightHint) : null;
+        const widthHint = request?.headers.get('Sec-CH-Viewport-Width');
+        const width = widthHint ? parseFloat(widthHint) : null;
+        const heightHint = request?.headers.get('Sec-CH-Viewport-Height');
+        const height = heightHint ? parseFloat(heightHint) : null;
         return { width: width, height: height }        
       },
       deps: [ REQUEST ]

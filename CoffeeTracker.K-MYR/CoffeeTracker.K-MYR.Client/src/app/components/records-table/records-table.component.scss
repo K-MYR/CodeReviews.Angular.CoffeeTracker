@@ -23,14 +23,47 @@ $container-padding-x: 20px;
   background-color: var(--orange);
 }
 
+.records__table-container {
+  width: 100%;
+  min-height: 290px;
+  position: relative;
+  margin-top: 16px
+}
+
+.records__table-container__overlay {
+  width: 100%;
+  height: calc(100% - 41px);
+  position: absolute;
+  top: 41px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255,255,255,0.1);
+  backdrop-filter: blur(1.5px);
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.records__table-container__overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.records__table-container__loading-indicator {
+  height: 100%;
+  max-height: 240px;
+  aspect-ratio: 1;
+}
+
 .records__table {
   width: 100%;
-  margin: 16px 0 auto 0;
   table-layout: fixed;
 }
 
 .records__table__col-dateTime {
-    width: auto;
+  width: auto;
 }
 
 .records__table__col-type {
@@ -38,7 +71,7 @@ $container-padding-x: 20px;
 }
 
 .records__table__col-icons {
-    width: 55px;
+  width: 55px;
 }
 
 .records__table__column {
@@ -62,6 +95,12 @@ $container-padding-x: 20px;
 
 .records__table__button {
   color: var(--silver);
+  transition: 0.2s ease-in-out;
+}
+
+.records__table__button:enabled:hover > .records__table__sort-icon {
+  stroke-width: 2px;
+  stroke: var(--orange);
 }
 
 .records__table__button.active {
@@ -77,12 +116,16 @@ $container-padding-x: 20px;
   width: 18px;
 }
 
+.records__table__not-found {
+    text-align: center;
+}
+
 .records__table__cell {
   padding: 4px 6px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .records__table__icons {
@@ -94,14 +137,20 @@ $container-padding-x: 20px;
 }
 
 .records__table__icon-button {
-    color: var(--silver);
+  color: var(--silver);
+  transition: 0.2s ease-in-out;
 }
 
-.records__table-body tr:hover .records__table__icon-button {
+.records__table__icon-button:hover {
+  transform: scale(1.1);
   color: var(--orange);
 }
 
-.records__table-body tr:hover {
+.records__table__icon {
+  transition: 0.2s ease-in-out;
+}
+
+.records__table__row:hover {
   box-shadow: 0px 0px 1px 1px var(--orange);
 }
 
@@ -118,8 +167,11 @@ $container-padding-x: 20px;
   color: var(--silver);
 }
 
+.records__footer__pagination-button:hover {
+  color: var(--orange);
+}
+
 .records__footer__pagination-button[disabled] {
-  cursor: default;
   color: var(--transparent-silver);
 }
 

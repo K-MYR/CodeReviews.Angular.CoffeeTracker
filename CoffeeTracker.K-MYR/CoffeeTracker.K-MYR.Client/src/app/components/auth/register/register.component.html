@@ -7,15 +7,15 @@
             <form [formGroup]="registerForm" (ngSubmit)="register()" class="form">
                 <div class="form-group">
                     <label class="form-label" for="register-form__email">Email</label>
-                    <input type="email" value="" formControlName="email" class="form-input" id="register-form__email" autocomplete="email" required />
+                    <input type="email" value="" formControlName="email" class="form-input" id="register-form__email" autocomplete="email"/>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="register-form__password">Password</label>
-                    <input type="password" value="" formControlName="password" class="form-input" id="register-form__password" autocomplete="new-password" required />
+                    <input type="password" value="" formControlName="password" class="form-input" id="register-form__password" autocomplete="new-password"/>
                 </div>
                 <div class="form-group" [class.invalid]="this.registerForm.hasError(nonidenticalValueErrorKey)">
                     <label class="form-label" for="register-form__confirm-password">Confirm Password</label>
-                    <input type="password" value="" formControlName="confirmPassword" class="form-input" id="register-form__confirm-password" autocomplete="new-password" required />
+                    <input type="password" value="" formControlName="confirmPassword" class="form-input" id="register-form__confirm-password" autocomplete="new-password"/>
                 </div>
                 <button class="form-button register-form__submit-button" [disabled]="!registerForm.valid">Sign Up</button>
             </form>

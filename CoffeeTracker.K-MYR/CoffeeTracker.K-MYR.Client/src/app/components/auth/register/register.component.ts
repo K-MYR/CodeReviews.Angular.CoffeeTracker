@@ -1,12 +1,10 @@
 import { AuthService } from '../../../services/auth.service';
 import { PostRegister, PostRegisterForm } from '../../../interfaces/post-register';
-import { identicalValueValidator, nonidenticalValueErrorKey } from '../../../validators/same-value.validator';
+import { identicalValueValidator, NONIDENTICAL_VALUE_ERROR_KEY } from '../../../validators/same-value.validator';
 import { HexButtonComponent } from '../../shared/hex-button/hex-button.component';
 
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Component, inject, Signal, signal } from '@angular/core';
-import { Router, } from '@angular/router';
-import { HttpStatusCode } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { EMPTY} from 'rxjs';
 
@@ -19,48 +17,49 @@ import { EMPTY} from 'rxjs';
 })
 export class RegisterComponent {
   private authService = inject(AuthService);
-  private router: Router = inject(Router);
   isRegistered = signal<boolean>(false);
   confirmationEmail = signal<string|null>(null);
-  nonidenticalValueErrorKey = nonidenticalValueErrorKey;
+  nonidenticalValueErrorKey = NONIDENTICAL_VALUE_ERROR_KEY;
   registerForm = new FormGroup<PostRegisterForm>({
     email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
     password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     confirmPassword: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] })
-  }, { validators: identicalValueValidator('password', 'confirmPassword') });
+  }, { validators: identicalValueValidator<PostRegisterForm>('password', 'confirmPassword') });
 
-  register(): void {
-    var data = this.registerForm.value;    
-    if (data.email && data.password) {
-      var credentials: PostRegister = {
-        email: data.email,
-        password: data.password
-      };
-      this.authService.register(credentials)
-        .pipe(
-          switchMap(() => this.authService.login(credentials)
-            .pipe(
-              catchError((error) => {
-                console.warn(`automatic login failed: ${error}`);
-                return EMPTY;
-              })
-            )
+  register(): void {   
+    const data = this.registerForm.getRawValue();
+    const credentials: PostRegister = {
+      email: data.email,
+      password: data.password
+    };
+    this.authService.register(credentials)
+      .pipe(
+        switchMap(() => this.authService.login({
+          email: credentials.email,
+          password: credentials.password,
+          rememberMe: false
+        })
+          .pipe(
+            catchError((error) => {
+              console.warn(`automatic login failed: ${error}`);
+              return EMPTY;
+            })
           )
         )
-        .subscribe(_ => {
-          this.confirmationEmail.set(credentials.email);
-          this.isRegistered.set(true);
-        }
-      );
-    }
+      )
+      .subscribe(_ => {
+        this.confirmationEmail.set(credentials.email);
+        this.isRegistered.set(true);
+      }
+    );    
   }
 
   resendConfirmationEmail(): void {
-    var emailAddress = this.confirmationEmail();
+    const emailAddress = this.confirmationEmail();
     if (!emailAddress) {
       return;
     }
-    this.authService.resendEmail({
+    this.authService.resendConfirmationEmail({
       email: emailAddress
     }).subscribe(_ => {
       console.log("email has been resend");

@@ -4,6 +4,7 @@ using CoffeeTracker.K_MYR.Server.Application.Services;
 using CoffeeTracker.K_MYR.Server.Domain.Entities;
 using CoffeeTracker.K_MYR.Server.Endpoints;
 using CoffeeTracker.K_MYR.Server.Infrastructure.Email;
+using CoffeeTracker.K_MYR.Server.Infrastructure.Spa;
 using CoffeeTracker.K_MYR.Server.Persistence.DatabaseContext;
 using CoffeeTracker.K_MYR.Server.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();    
 builder.Services.AddProblemDetails();
-builder.Services.AddOpenApi();
 builder.Services.AddDbContext<CoffeeRecordContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
@@ -34,9 +34,13 @@ builder.Services.AddScoped<ICoffeeRecordRepository, CoffeeRecordRepository>();
 builder.Services.AddTransient<IEmailSender<AppUser>, EmailService>();
 builder.Services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 builder.Services.Configure<EmailConfiguration>(
-    builder.Configuration.GetSection(EmailConfiguration.EmailConfig));
+    builder.Configuration.GetSection(EmailConfiguration.Key))
+    .AddOptionsWithValidateOnStart<EmailConfiguration>()
+    .ValidateDataAnnotations();
 builder.Services.Configure<SpaConfiguration>(
-    builder.Configuration.GetSection(SpaConfiguration.SpaConfig));
+    builder.Configuration.GetSection(SpaConfiguration.Key))
+    .AddOptionsWithValidateOnStart<SpaConfiguration>()
+    .ValidateDataAnnotations();
 builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = false);
 builder.Services.ConfigureApplicationCookie(options =>
 {

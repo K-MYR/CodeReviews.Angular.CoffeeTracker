@@ -12,7 +12,9 @@ export class API_ROUTES {
   public static POST_LOGIN: string = `${this.ACCOUNT}/login`;
   public static POST_REGISTER: string = `${this.ACCOUNT}/register`;
   public static CONFIRM_EMAIL = (userId: string, code: string): string => `${this.ACCOUNT}/confirmEmail?userId=${userId}&code=${code}`;
-  public static RESEND_EMAIL: string = `${this.ACCOUNT}/resendConfirmationEmail`;
+  public static RESEND_CONFIRMATION_EMAIL: string = `${this.ACCOUNT}/resendConfirmationEmail`;
   public static ACCOUNT_INFO: string = `${this.ACCOUNT}/manage/info`;
+  public static FORGOT_PASSWORD: string = `${this.ACCOUNT}/forgotPassword`;
+  public static RESET_PASSWORD: string = `${this.ACCOUNT}/resetPassword`;
 }
 

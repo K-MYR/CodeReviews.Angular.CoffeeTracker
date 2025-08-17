@@ -14,5 +14,5 @@ internal interface ICoffeeRecordRepository
     Task CreateAsync(CoffeeRecord coffeeRecord, CancellationToken ct);
     Task UpdateAsync(CoffeeRecord record, CancellationToken ct);
     Task DeleteAsync(CoffeeRecord record, CancellationToken ct);
-    Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, Guid userId, CancellationToken ct);
+    Task<List<TypeStatisticsDTO>> GetStatistics(DateTime dateTime, Guid userId, CancellationToken ct);
 }

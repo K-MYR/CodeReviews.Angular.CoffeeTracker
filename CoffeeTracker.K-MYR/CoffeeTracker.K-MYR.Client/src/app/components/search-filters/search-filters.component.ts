@@ -28,9 +28,9 @@ export class SearchFiltersComponent {
   }    
 
   updateFilters(): void {
-    var data = this.filtersForm.value;
-    var dateTimeFrom = data.dateTimeFrom === "" ? null : data.dateTimeFrom;
-    var dateTimeTo = data.dateTimeTo === "" ? null : data.dateTimeTo;
+    const data = this.filtersForm.value;
+    const dateTimeFrom = data.dateTimeFrom === "" ? null : data.dateTimeFrom;
+    const dateTimeTo = data.dateTimeTo === "" ? null : data.dateTimeTo;
     this._recordsSearchService.updateFilter({
       type: data.type ?? undefined,
       dateTimeFrom: dateTimeFrom ?? undefined,

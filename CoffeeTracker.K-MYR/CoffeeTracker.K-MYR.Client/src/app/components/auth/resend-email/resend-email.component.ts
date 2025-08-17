@@ -1,9 +1,8 @@
 import { HexButtonComponent } from '../../shared/hex-button/hex-button.component';
-import { ResendEmail, ResendEmailForm } from '../../../interfaces/resend-email';
+import { Email, EmailForm } from '../../../interfaces/email';
 import { AuthService } from '../../../services/auth.service';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AccountInfo } from '../../../interfaces/account-info';
 
 @Component({
   selector: 'app-resend-email',
@@ -14,21 +13,19 @@ import { AccountInfo } from '../../../interfaces/account-info';
 })
 export class ResendEmailComponent {
   private authService = inject(AuthService);
-  resendEmailForm = new FormGroup<ResendEmailForm>({
+  resendEmailForm = new FormGroup<EmailForm>({
     email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] })
   });
 
-  resendEmail(): void {  
-    var data = this.resendEmailForm.value;
-    if (data.email) {
-      var resendEmail: ResendEmail = {
-        email: data.email
-      }
-      this.authService.resendEmail(resendEmail)
-        .subscribe({
-          next: _ => console.log("Email resend!"),
-          error: _ => console.log("Error resending the mail")
-        });
+  resendEmail(): void { 
+     const data = this.resendEmailForm.getRawValue();    
+     const resendEmail: Email = {
+      email: data.email
     }
+    this.authService.resendConfirmationEmail(resendEmail)
+      .subscribe({
+        next: _ => console.log("Email resent!"),
+        error: (error) => console.log(`An error occured resending the mail: ${error}`)
+      });    
   }
 }

@@ -8,7 +8,7 @@
             <form [formGroup]="resendEmailForm" (ngSubmit)="resendEmail()" class="form resend-email__content__form">
                 <div class="form-group">
                     <label class="form-label" for="resend-email-form__email">Email</label>
-                    <input type="email" value="" formControlName="email" class="form-input" id="resend-email-form__email" autocomplete="email" required />
+                    <input type="email" value="" formControlName="email" class="form-input" id="resend-email-form__email" autocomplete="email"/>
                 </div>                
                 <button class="form-button resend-email-form__submit-button" [disabled]="!resendEmailForm.valid">Resend</button>
             </form>

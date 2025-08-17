@@ -1,32 +1,32 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, GuardResult, MaybeAsync, Router, CanActivateFn } from '@angular/router';
-import { hasNoNulls } from '../helpers/general';
-import { ConfirmEmail } from '../interfaces/confirm-email';
+import { hasNoNullsFromMap } from '../helpers/general';
+import { EmailQueryParams } from '../interfaces/email-query-params';
 
-const CONFIRM_EMAIL_QUERY_PARAMS: ConfirmEmail = {
+const EMAIL_QUERY_PARAMS: EmailQueryParams = {
   userId: "",
   code: ""
 }
 
-export const CONFIRM_EMAIL_QUERY_PARAM_KEYS: Array<keyof ConfirmEmail> = Object.keys(CONFIRM_EMAIL_QUERY_PARAMS) as Array<keyof ConfirmEmail>;
+export const EMAIL_QUERY_PARAM_KEYS: Array<keyof EmailQueryParams> = Object.keys(EMAIL_QUERY_PARAMS) as Array<keyof typeof EMAIL_QUERY_PARAMS>;
 
-function confirmEmailGuardFn(
+function emailQueryParamsGuardFn(
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ): MaybeAsync<GuardResult> {
-  var isValidModel = hasNoNulls<ConfirmEmail>(
-    route.queryParams,
-    CONFIRM_EMAIL_QUERY_PARAM_KEYS
+  const isValidModel = hasNoNullsFromMap<EmailQueryParams>(
+    route.queryParamMap,
+   EMAIL_QUERY_PARAM_KEYS
   );
 
   if (isValidModel) {    
     return true;
   }
-  var router = inject(Router);
+  const router = inject(Router);
   router.navigateByUrl('/dashboard');
   return false;
 }
 
-export const confirmEmailGuard: CanActivateFn = confirmEmailGuardFn;
+export const emailQueryParamsGuard: CanActivateFn = emailQueryParamsGuardFn;
 
 

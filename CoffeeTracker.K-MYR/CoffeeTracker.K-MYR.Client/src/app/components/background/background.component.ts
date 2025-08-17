@@ -38,23 +38,23 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
   svgHeight = computed<number>(() => ((this.grid().rows - 1) * this.hexagonHeight + this.hexagonHeight));
   svgWidth = computed<number>(() => (this.grid().columns * this.hexagonWidth));
   svgViewBox = computed<string>(() => {
-    var width = this.svgWidth();
-    var height = this.svgHeight();
+    const width = this.svgWidth();
+    const height = this.svgHeight();
     return `${-width * 0.5} ${-height * 0.5} ${width} ${height}`
   });
   hexagons: Hexagon[] = [];
    
   ngOnInit(): void {
     if (isPlatformServer(this.platformId) && this.viewportHint.height && this.viewportHint.width) {
-      var height = this.viewportHint.height - NAVBAR_HEIGHT;
-      var gridDimensions = this.getGridDimensions(height, this.viewportHint.width);
+      const height = this.viewportHint.height - NAVBAR_HEIGHT;
+      const gridDimensions = this.getGridDimensions(height, this.viewportHint.width);
       this.setUpGrid(gridDimensions);
       this.transferState.set(HEXAGONS_STATE_KEY, this.hexagons);
       this.transferState.set(GRID_DIMENSIONS_STATE_KEY, this.grid());
     }
     if (isPlatformBrowser(this.platformId)) {
-      var storedHexagons = this.transferState.get(HEXAGONS_STATE_KEY, null);
-      var storedGridDimensions = this.transferState.get(GRID_DIMENSIONS_STATE_KEY, null)
+      const storedHexagons = this.transferState.get(HEXAGONS_STATE_KEY, null);
+      const storedGridDimensions = this.transferState.get(GRID_DIMENSIONS_STATE_KEY, null)
       if (storedHexagons && storedGridDimensions) {
         this.hexagons = storedHexagons;
         storedHexagons.forEach((hex) => this.hexagonsMap.set(`${hex.coordinates.x},${hex.coordinates.y}`, hex));
@@ -62,8 +62,8 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
         this.transferState.remove(HEXAGONS_STATE_KEY);
         this.transferState.remove(GRID_DIMENSIONS_STATE_KEY);
       } else {
-        var height = window.innerHeight - NAVBAR_HEIGHT;
-        var gridDimensions = this.getGridDimensions(height, window.innerWidth);
+        const height = window.innerHeight - NAVBAR_HEIGHT;
+        const gridDimensions = this.getGridDimensions(height, window.innerWidth);
         this.setUpGrid(gridDimensions);
       }
       this.attachResizeHandler();
@@ -85,7 +85,7 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
       distinctUntilChanged((prev, curr) => prev.columns >= curr.columns && prev.rows >= curr.rows),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(({ rows, columns }) => {
-      var dimensions = this.grid();
+      const dimensions = this.grid();
       if (rows === dimensions.rows && columns === dimensions.columns) {
         return;
       }
@@ -95,22 +95,22 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
   }
 
   private addStartUpAnimation() {
-    var center = { x: 0, y: 0 };
+    const center = { x: 0, y: 0 };
     this.animationService.addAnimation(
       this.hexagonElements(),
       {
         strokeDashoffset: { from: 210, to: 0, duration: 500 },
         opacity: { from: 0, to: 1, duration: 300 },
         delay: (el: any, i: number, l: number) => {
-          var key = el.getAttribute('key');
+          const key = el.getAttribute('key');
           if (!key) {
             return 0;
           }
-          var hex = this.hexagonsMap.get(key);
+          const hex = this.hexagonsMap.get(key);
           if (!hex) {
             return 0;
           }
-          var delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 150;
+          const delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 150;
           return delay
         }
       },
@@ -133,10 +133,10 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
   }
 
   private createGrid(rows: number, columns: number ) {
-    var maxY = Math.floor(rows / 2);    
-    for (var r = -maxY; r <= maxY; r++) {
-      var offset = (r ^ 1) & 1;    
-      for (var c = -columns+offset; c <= columns; c += 2) {
+    const maxY = Math.floor(rows / 2);    
+    for (let r = -maxY; r <= maxY; r++) {
+      const offset = (r ^ 1) & 1;    
+      for (let c = -columns+offset; c <= columns; c += 2) {
         this.hexagonsMap.set(`${c},${r}`, {
           coordinates: {
             y: r,
@@ -150,8 +150,8 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
   }
 
   private getGridDimensions(height: number, width: number): GridDimensions {
-    var rows = Math.ceil((height - this.hexagonSize) / this.verticalOffset + 1);
-    var columns = Math.ceil(width / this.hexagonWidth) | 1;
+    const rows = Math.ceil((height - this.hexagonSize) / this.verticalOffset + 1);
+    const columns = Math.ceil(width / this.hexagonWidth) | 1;
     return { rows, columns };
   }
 

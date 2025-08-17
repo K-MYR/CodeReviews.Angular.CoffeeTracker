@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CoffeeTracker.K_MYR.Server.Infrastructure.Email;
+using CoffeeTracker.K_MYR.Server.Infrastructure.Spa;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;
@@ -20,7 +20,7 @@ namespace CoffeeTracker.K_MYR.Server.Endpoints;
 /// <summary>
 /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add identity endpoints.
 /// </summary>
-public static class IdentityApiEndpointRouteBuilderExtensions
+public static class CustomIdentityApiEndpointRouteBuilderExtensions
 {    
     // Validate the email address using DataAnnotations like the UserValidator does when RequireUniqueEmail = true.
     private static readonly EmailAddressAttribute _emailAddressAttribute = new();
@@ -201,17 +201,14 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         });
 
         routeGroup.MapPost("/forgotPassword", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] ForgotPasswordRequest resetRequest, [FromServices] IServiceProvider sp) =>
+            ([FromBody] ForgotPasswordRequest resetRequest, [FromServices] IServiceProvider sp, IOptions<SpaConfiguration> config) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             var user = await userManager.FindByEmailAsync(resetRequest.Email);
 
             if (user is not null && await userManager.IsEmailConfirmedAsync(user))
             {
-                var code = await userManager.GeneratePasswordResetTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                await emailSender.SendPasswordResetCodeAsync(user, resetRequest.Email, HtmlEncoder.Default.Encode(code));
+                await SendPasswordResetEmailAsync(user, userManager, resetRequest.Email, config.Value.ResetPasswordUri);
             }
 
             // Don't reveal that the user does not exist or is not confirmed, so don't return a 200 if we would have
@@ -220,11 +217,11 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         });
 
         routeGroup.MapPost("/resetPassword", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] ResetPasswordRequest resetRequest, [FromServices] IServiceProvider sp) =>
+            ([FromBody] CustomResetPasswordRequest resetRequest, [FromServices] IServiceProvider sp) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
-            var user = await userManager.FindByEmailAsync(resetRequest.Email);
+            var user = await userManager.FindByIdAsync(resetRequest.UserId);
 
             if (user is null || !(await userManager.IsEmailConfirmedAsync(user)))
             {
@@ -410,6 +407,27 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
         }
 
+        async Task SendPasswordResetEmailAsync(TUser user, UserManager<TUser> userManager, string email, string path)
+        {
+            if (confirmEmailEndpointName is null)
+            {
+                throw new NotSupportedException("No email confirmation endpoint was registered!");
+            }
+
+            var code = await userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            var userId = await userManager.GetUserIdAsync(user);
+            var routeValues = new Dictionary<string, string?>()
+            {
+                ["userId"] = userId,
+                ["code"] = code,
+            };
+           
+            var resetPasswordUrl = QueryHelpers.AddQueryString(path, routeValues);
+            await emailSender.SendPasswordResetLinkAsync(user, email, HtmlEncoder.Default.Encode(resetPasswordUrl));
+        }
+
         return new IdentityEndpointsConventionBuilder(routeGroup);
     }
 
@@ -479,5 +497,14 @@ public static class IdentityApiEndpointRouteBuilderExtensions
     private sealed class FromQueryAttribute : Attribute, IFromQueryMetadata
     {
         public string? Name => null;
+    }
+
+    private sealed class CustomResetPasswordRequest
+    {        
+        public required string UserId { get; init; }
+        
+        public required string ResetCode { get; init; }
+
+        public required string NewPassword { get; init; }
     }
 }

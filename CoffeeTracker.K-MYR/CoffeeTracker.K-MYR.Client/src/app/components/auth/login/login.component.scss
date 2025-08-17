@@ -20,7 +20,7 @@
 .login__content__container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
   height: 100%;
   width: 100%;
   padding: 25px 3px 3px 3px;
@@ -32,7 +32,22 @@
   text-shadow: 0px 0px 5px var(--silver);
 }
 
-.login-form__submit-button {
+.login__content__forgot-password {
+  padding-top: 4px;
+}
+
+.login__content__forgot-password:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px; 
+}
+
+.login__content__remember-me {
+    display: flex;
+    justify-content: start;
+    gap: 12px;
+}
+
+.login__content__submit-button {
   margin-top: 16px;
 }
 

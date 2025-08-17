@@ -1,4 +1,4 @@
-import { CoffeeRecord } from '../interfaces/coffee-record';
+import { CoffeeRecord, CoffeeRecordResponse } from '../interfaces/coffee-record';
 import { PaginatedList } from '../interfaces/paginated-list';
 import { PostCoffeeRecord } from '../interfaces/post-coffee-record';
 import {  RecordsSearchParameters } from '../interfaces/records-search';
@@ -17,8 +17,8 @@ export class CoffeeRecordsService {
 
   constructor() { }
 
-  getCoffeeRecords(searchParams: RecordsSearchParameters): Observable<PaginatedList<CoffeeRecord>> {
-    return this._httpClient.get<PaginatedList<CoffeeRecord>>(API_ROUTES.GET_RECORDS, {
+  getCoffeeRecords(searchParams: RecordsSearchParameters): Observable<PaginatedList<CoffeeRecordResponse>> {
+    return this._httpClient.get<PaginatedList<CoffeeRecordResponse>>(API_ROUTES.GET_RECORDS, {
       params: new HttpParams({ fromObject: { ...removeUndefinedValuesFromObject(searchParams) } })
     });
   }

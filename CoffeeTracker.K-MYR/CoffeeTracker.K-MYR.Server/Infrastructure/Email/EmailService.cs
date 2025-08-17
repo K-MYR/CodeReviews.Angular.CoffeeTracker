@@ -16,13 +16,13 @@ internal class EmailService(
         await _channel.Writer.WriteAsync(new EmailChannelRequest(user.UserName ?? email, email, confirmationLink, EmailTypes.EmailConfirmation));
     }
 
-    public async Task SendPasswordResetCodeAsync(AppUser user, string email, string resetCode)
-    {
-        await _channel.Writer.WriteAsync(new EmailChannelRequest(user.UserName ?? email, email, resetCode, EmailTypes.PasswordResetCode));
-    }
-
-    public Task SendPasswordResetLinkAsync(AppUser user, string email, string resetLink)
+    public Task SendPasswordResetCodeAsync(AppUser user, string email, string resetCode)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task SendPasswordResetLinkAsync(AppUser user, string email, string resetLink)
+    {
+        await _channel.Writer.WriteAsync(new EmailChannelRequest(user.UserName ?? email, email, resetLink, EmailTypes.PasswordResetCode));
     }
 }
