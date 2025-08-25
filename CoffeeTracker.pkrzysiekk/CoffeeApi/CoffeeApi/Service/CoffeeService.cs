@@ -13,6 +13,11 @@ public class CoffeeService :ICoffeeService
     {
        _coffeeRepository = coffeeConsumptionRepository; 
     }
+
+    public async Task<CoffeeConsumption?> GetById(int id)
+    {
+        return await _coffeeRepository.GetById(id);
+    }
     public async Task Add(CoffeeConsumption coffeeConsumption)
     {
         try
