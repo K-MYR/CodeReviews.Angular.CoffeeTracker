@@ -27,10 +27,10 @@ public class CoffeeController : ControllerBase
     }
     [HttpGet]
     public async Task<IEnumerable<CoffeeConsumption>> 
-        GetPaginatedResult([FromQuery] int page, [FromQuery] int size)
+        GetPaginatedResult([FromQuery] int page, [FromQuery] int pageSize)
     {
         var paginatedResult= await 
-            _coffeeService.GetPaginatedList(page, size);
+            _coffeeService.GetPaginatedList(page, pageSize);
         return paginatedResult;
     }
 
@@ -46,7 +46,7 @@ public class CoffeeController : ControllerBase
         await _coffeeService.Update(coffeeConsumption);
     }
 
-    [HttpDelete("id")]
+    [HttpDelete("{id}")]
     public async Task Delete(int id)
     {
         await _coffeeService.Delete(id);
