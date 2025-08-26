@@ -22,4 +22,10 @@ export class IndexComponent implements OnInit {
         console.log(data);
       });
   }
+  deleteCoffee(id: number) {
+    this.coffeeService.delete(id).subscribe((response) => {
+      this.coffeeList = this.coffeeList.filter((item) => item.id != id);
+      console.log('deleted');
+    });
+  }
 }
