@@ -45,10 +45,10 @@ public class CoffeeRepository :IRepository<CoffeeConsumption>
         await SaveChanges();
     }
 
-    public async Task Delete(CoffeeConsumption item)
+    public async Task Delete(int id)
     {
        var itemToDelete = 
-           await _context.CoffeeConsumption.FindAsync(item.Id);
+           await _context.CoffeeConsumption.FindAsync(id);
        if(itemToDelete == null)
            return;
        try

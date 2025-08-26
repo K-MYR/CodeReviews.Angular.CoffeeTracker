@@ -42,11 +42,11 @@ public class CoffeeService :ICoffeeService
         }
     }
 
-    public async Task Delete(CoffeeConsumption coffeeConsumption)
+    public async Task Delete(int id)
     {
         try
         {
-            await _coffeeRepository.Delete(coffeeConsumption);
+            await _coffeeRepository.Delete(id);
         }
         catch (Exception ex)
         {

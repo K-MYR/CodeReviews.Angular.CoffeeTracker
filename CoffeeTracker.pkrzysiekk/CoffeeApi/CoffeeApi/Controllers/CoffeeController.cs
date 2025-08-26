@@ -46,9 +46,9 @@ public class CoffeeController : ControllerBase
         await _coffeeService.Update(coffeeConsumption);
     }
 
-    [HttpDelete]
-    public async Task Delete( [FromBody] CoffeeConsumption coffeeConsumption )
+    [HttpDelete("id")]
+    public async Task Delete(int id)
     {
-        await _coffeeService.Delete(coffeeConsumption);
+        await _coffeeService.Delete(id);
     }
 }
