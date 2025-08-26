@@ -38,12 +38,10 @@ export class CoffeeService {
       .pipe(catchError(this.errorHandler));
   }
 
-  delete(coffeeConsumption: CoffeeConsumption): Observable<any> {
+  delete(id: number): Observable<any> {
+    const deleteUrl = `${this.apiURL}/${id}`;
     return this.httpClient
-      .request('DELETE', this.apiURL, {
-        body: coffeeConsumption,
-        headers: this.httpOptions.headers,
-      })
+      .delete(deleteUrl)
       .pipe(catchError(this.errorHandler));
   }
 
