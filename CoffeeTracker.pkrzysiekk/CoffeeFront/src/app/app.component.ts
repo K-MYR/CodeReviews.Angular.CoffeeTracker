@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, RouterOutlet, Routes } from '@angular/router';
+import { CoffeeModule } from './coffee/coffee.module';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { routes } from './app.routes';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CoffeeModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

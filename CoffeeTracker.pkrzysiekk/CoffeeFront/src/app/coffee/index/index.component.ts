@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CoffeeConsumption } from '../coffee-consumption';
+import { NgForOf } from '@angular/common';
 import { CoffeeService } from '../coffee.service';
+import { CreateComponent } from '../create/create.component';
+import { ViewComponent } from '../view/view.component';
+import { EditComponent } from '../edit/edit.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-index',
-  imports: [],
+  imports: [NgForOf, RouterLink],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })

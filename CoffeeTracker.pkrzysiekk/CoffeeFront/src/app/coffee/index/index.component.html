@@ -1,1 +1,40 @@
-<p>index works!</p>
+<div class="container">
+  <h1>Your Favorite Coffee tracking app!</h1>
+  <a href="#" routerLink="/coffee/create" class="btn btn-success"
+    >Add new coffee consumption</a
+  >
+  <table class="table table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Caffeine</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let coffee of coffeeList">
+      <td>{{ coffee.typeOfCoffee }}</td>
+      <td>{{ coffee.consumedAt }}</td>
+      <td>{{ coffee.caffeine }}</td>
+      <td>
+        <a
+          href="#"
+          [routerLink]="['/coffee/', coffee.id, 'view']"
+          class="btn btn-info"
+          >View</a
+        >
+        <a
+          href="#"
+          [routerLink]="['/coffee/', coffee.id, 'edit']"
+          class="btn btn-primary"
+          >Edit</a
+        >
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="deleteCoffee(coffee.id)"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
