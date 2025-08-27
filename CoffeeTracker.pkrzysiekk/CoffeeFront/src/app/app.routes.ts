@@ -4,10 +4,4 @@ import { CreateComponent } from './coffee/create/create.component';
 import { ViewComponent } from './coffee/view/view.component';
 import { EditComponent } from './coffee/edit/edit.component';
 
-export const routes: Routes = [
-  { path: '', redirectTo: 'coffee/index', pathMatch: 'full' },
-  { path: 'coffee/index', component: IndexComponent },
-  { path: 'coffee/:coffeeId/view', component: ViewComponent },
-  { path: 'coffee/create', component: CreateComponent },
-  { path: 'coffee/:coffeeId/edit', component: EditComponent },
-];
+export const routes: Routes = [];
