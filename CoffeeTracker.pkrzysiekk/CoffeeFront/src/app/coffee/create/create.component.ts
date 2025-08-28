@@ -9,9 +9,10 @@ import {
 import { CoffeeService } from '../coffee.service';
 import { Router, RouterLink } from '@angular/router';
 import { title } from 'process';
+import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-create',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, NgIf],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })
@@ -24,7 +25,12 @@ export class CreateComponent implements OnInit {
     this.form = new FormGroup({
       typeOfCoffee: new FormControl('', [Validators.required]),
       consumedAt: new FormControl('', Validators.required),
-      caffeine: new FormControl('', Validators.required),
+      amount: new FormControl('', [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(100000),
+      ]),
+      caffeine: new FormControl('', [Validators.required, Validators.min(0)]),
     });
   }
   get f() {

@@ -5,13 +5,25 @@
     <div class="form-group">
       <div class="row">
         <div class="col">
-          <label for="typeOfCoffee">Coffee type drunk</label>
+          <label for="typeOfCoffee">Coffee type drank</label>
           <input
             formControlName="typeOfCoffee"
             id="typeOfCoffee"
             type="text"
             class="form-control"
           />
+          <div
+            *ngIf="f['typeOfCoffee'].touched && f['typeOfCoffee'].invalid"
+            class="alert alert-danger"
+          >
+            <div
+              *ngIf="
+                f['typeOfCoffee'].errors && f['typeOfCoffee'].errors['required']
+              "
+            >
+              Field required
+            </div>
+          </div>
         </div>
         <div class="col">
           <label for="caffeine">Caffeine consumed:</label>
@@ -20,7 +32,18 @@
             id="caffeine"
             type="text"
             class="form-control"
+            min="0"
           />
+          <div
+            *ngIf="f['caffeine'].touched && f['caffeine'].invalid"
+            class="alert alert-danger"
+          >
+            <div
+              *ngIf="f['caffeine'].errors && f['caffeine'].errors['required']"
+            >
+              Field required
+            </div>
+          </div>
         </div>
       </div>
       <div class="row mb-3">
@@ -32,6 +55,36 @@
             id="consumedAt"
             class="form-control"
           />
+          <div
+            *ngIf="f['consumedAt'].touched && f['consumedAt'].invalid"
+            class="alert alert-danger"
+          >
+            <div
+              *ngIf="
+                f['consumedAt'].errors && f['consumedAt'].errors['required']
+              "
+            >
+              Field required
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <label for="amount">Amount Drank:</label>
+          <input
+            type="number"
+            formControlName="amount"
+            id="amount"
+            class="form-control"
+            min="1"
+          />
+          <div
+            *ngIf="f['amount'].touched && f['amount'].invalid"
+            class="alert alert-danger"
+          >
+            <div *ngIf="f['amount'].errors && f['amount'].errors['required']">
+              Field required
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">

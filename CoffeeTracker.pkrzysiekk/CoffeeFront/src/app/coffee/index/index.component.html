@@ -6,12 +6,14 @@
     <tr>
       <th>Name</th>
       <th>Date</th>
+      <th>Amount</th>
       <th>Caffeine (g)</th>
       <th>Action</th>
     </tr>
     <tr *ngFor="let coffee of coffeeList">
       <td>{{ coffee.typeOfCoffee }}</td>
       <td>{{ coffee.consumedAt }}</td>
+      <td>{{ coffee.amount }}</td>
       <td>{{ coffee.caffeine }}</td>
       <td>
         <a
@@ -29,7 +31,7 @@
         <button
           type="button"
           class="btn btn-danger"
-          (click)="deleteCoffee(coffee.id)"
+          (click)="deleteCoffee(coffee.id!)"
         >
           Delete
         </button>
