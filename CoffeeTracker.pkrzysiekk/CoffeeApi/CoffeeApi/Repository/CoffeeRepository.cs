@@ -31,6 +31,7 @@ public class CoffeeRepository :IRepository<CoffeeConsumption>
         if (itemToUpdate == null)
             return;
         itemToUpdate.TypeOfCoffee=item.TypeOfCoffee;
+        itemToUpdate.Amount=item.Amount;
         itemToUpdate.Caffeine=item.Caffeine;
         itemToUpdate.ConsumedAt=item.ConsumedAt;
         try

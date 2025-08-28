@@ -37,13 +37,18 @@ public class CoffeeController : ControllerBase
     [HttpPost]
     public async Task Create([FromBody] CoffeeConsumption coffeeConsumption)
     {
+        if (!ModelState.IsValid)
+            BadRequest(ModelState);
+        
         await _coffeeService.Add(coffeeConsumption);
     }
 
     [HttpPut]
     public async Task Update( [FromBody] CoffeeConsumption coffeeConsumption)
     {
-        await _coffeeService.Update(coffeeConsumption);
+       if (!ModelState.IsValid)
+           BadRequest(ModelState);
+       await _coffeeService.Update(coffeeConsumption);
     }
 
     [HttpDelete("{id}")]
