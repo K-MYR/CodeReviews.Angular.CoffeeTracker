@@ -12,29 +12,31 @@
     </tr>
     <tr *ngFor="let coffee of coffeeList">
       <td>{{ coffee.typeOfCoffee }}</td>
-      <td>{{ coffee.consumedAt }}</td>
+      <td>{{ coffee.consumedAt | date : "short" }}</td>
       <td>{{ coffee.amount }}</td>
       <td>{{ coffee.caffeine }}</td>
       <td>
-        <a
-          href="#"
-          [routerLink]="['/coffee/', coffee.id, 'view']"
-          class="btn btn-info"
-          >View</a
-        >
-        <a
-          href="#"
-          [routerLink]="['/coffee/', coffee.id, 'edit']"
-          class="btn btn-primary"
-          >Edit</a
-        >
-        <button
-          type="button"
-          class="btn btn-danger"
-          (click)="deleteCoffee(coffee.id!)"
-        >
-          Delete
-        </button>
+        <div class="btn-group">
+          <a
+            href="#"
+            [routerLink]="['/coffee/', coffee.id, 'view']"
+            class="btn btn-info"
+            >View</a
+          >
+          <a
+            href="#"
+            [routerLink]="['/coffee/', coffee.id, 'edit']"
+            class="btn btn-primary"
+            >Edit</a
+          >
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="deleteCoffee(coffee.id!)"
+          >
+            Delete
+          </button>
+        </div>
       </td>
     </tr>
   </table>

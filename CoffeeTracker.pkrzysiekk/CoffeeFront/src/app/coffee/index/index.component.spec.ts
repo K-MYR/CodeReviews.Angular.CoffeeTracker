@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IndexComponent } from './index.component';
+import { DatePipe } from '@angular/common';
 
 describe('IndexComponent', () => {
   let component: IndexComponent;
@@ -8,9 +9,8 @@ describe('IndexComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IndexComponent]
-    })
-    .compileComponents();
+      imports: [IndexComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IndexComponent);
     component = fixture.componentInstance;

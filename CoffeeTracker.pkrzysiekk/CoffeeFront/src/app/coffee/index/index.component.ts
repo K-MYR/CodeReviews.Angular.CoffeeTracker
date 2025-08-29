@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoffeeConsumption } from '../coffee-consumption';
-import { NgForOf } from '@angular/common';
+import { DatePipe, NgForOf } from '@angular/common';
 import { CoffeeService } from '../coffee.service';
 import { CreateComponent } from '../create/create.component';
 import { ViewComponent } from '../view/view.component';
@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-index',
-  imports: [NgForOf, RouterLink],
+  imports: [NgForOf, RouterLink, DatePipe],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })
