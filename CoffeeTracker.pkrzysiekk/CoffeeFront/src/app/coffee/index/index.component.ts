@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CoffeeConsumption } from '../coffee-consumption';
-import { DatePipe, NgForOf } from '@angular/common';
+import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { CoffeeService } from '../coffee.service';
 import { CreateComponent } from '../create/create.component';
 import { ViewComponent } from '../view/view.component';
 import { EditComponent } from '../edit/edit.component';
 import { RouterLink } from '@angular/router';
+import { response } from 'express';
 
 @Component({
   selector: 'app-index',
-  imports: [NgForOf, RouterLink, DatePipe],
+  imports: [NgForOf, RouterLink, DatePipe, NgIf],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })
@@ -20,6 +21,10 @@ export class IndexComponent implements OnInit {
   constructor(private coffeeService: CoffeeService) {}
 
   ngOnInit(): void {
+    this.loadCoffeeData();
+  }
+
+  loadCoffeeData(): void {
     this.coffeeService
       .getPaginatedResult(this.page, this.sizeOfList)
       .subscribe((data: CoffeeConsumption[]) => {
@@ -27,10 +32,23 @@ export class IndexComponent implements OnInit {
         console.log(data);
       });
   }
+
   deleteCoffee(id: number) {
     this.coffeeService.delete(id).subscribe((response) => {
       this.coffeeList = this.coffeeList.filter((item) => item.id != id);
       console.log('deleted');
     });
+    this.loadCoffeeData();
+  }
+
+  prev() {
+    if (this.page <= 1) return;
+    this.page -= 1;
+    this.loadCoffeeData();
+  }
+  next() {
+    if (this.sizeOfList != this.coffeeList.length) return;
+    this.page += 1;
+    this.loadCoffeeData();
   }
 }
