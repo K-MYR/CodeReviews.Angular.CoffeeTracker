@@ -1,33 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="-7.5 -6 38.5 38" class="loading-indicator__svg loading"
-    stroke-linecap="round" stroke-linejoin="round" stroke="#ffc628">
-  <g fill="#15141a" >
-    <path stroke-dasharray="5 3" stroke-dashoffset="24" stroke-width=".38" d="m11.75 9.18 3.3 1.9v3.83l-3.3 1.91-3.3-1.9v-3.83z" class="loading-indicator__svg__center-path">
-      <animate attributeName="stroke-dashoffset" dur="3s" from="27" to="3" repeatCount="indefinite" />
-      <animate id="c4" attributeName="stroke" begin="1.9;c4.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;"/>
+<svg xmlns="http://www.w3.org/2000/svg"  [attr.viewBox]="isLoadingTextVisible()? '-7.5 -6 38.5 38' : '1.5 3.3 20.4 19.4'" class="loading-indicator__svg loading"
+       stroke="#ffc628">
+<g fill="#15141a">
+<path stroke-dasharray="5 3" stroke-dashoffset="24" stroke-width=".38" d="m11.75 9.18 3.3 1.9v3.83l-3.3 1.91-3.3-1.9v-3.83z" class="loading-indicator__svg__center-path">
+<animate attributeName="stroke-dashoffset" dur="3s" from="27" to="3" repeatCount="indefinite" />
+<animate id="c4" attributeName="stroke" begin="1.9;c4.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;" />
     </path>
-    <path stroke-width=".39" d="M11.75 10.4 14 11.7v2.6l-2.25 1.3-2.25-1.3v-2.6Z" class="loading-indicator__svg__center-path">
-      <animate id="c3" attributeName="stroke" begin="1.6;c3.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;"/>
+<path stroke-width=".39" d="M11.75 10.4 14 11.7v2.6l-2.25 1.3-2.25-1.3v-2.6Z" class="loading-indicator__svg__center-path">
+<animate id="c3" attributeName="stroke" begin="1.6;c3.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;" />
     </path>
-    <path stroke-width=".35" d="m11.75 11.51 1.28.74v1.48l-1.28.74-1.28-.74v-1.48z" class="loading-indicator__svg__center-path">
-      <animate id="c2" attributeName="stroke" begin="1.3;c2.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;"/>
+<path stroke-width=".35" d="m11.75 11.51 1.28.74v1.48l-1.28.74-1.28-.74v-1.48z" class="loading-indicator__svg__center-path">
+<animate id="c2" attributeName="stroke" begin="1.3;c2.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;" />
     </path>
-    <path stroke-width=".23" d="m11.75 12.41.5.3v.58l-.5.3-.5-.3v-.58z" class="loading-indicator__svg__center-path">
-      <animate id="c1" attributeName="stroke" begin="1;c1.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;"/>
+<path stroke-width=".23" d="m11.75 12.41.5.3v.58l-.5.3-.5-.3v-.58z" class="loading-indicator__svg__center-path">
+<animate id="c1" attributeName="stroke" begin="1;c1.end+2" dur=".8" values="#ffc628;#04D9FF;#ffc628;" />
     </path>
   </g>
-  <g fill="#15141AD0" stroke-width=".15">
-      <path style="--_i:0" d="m15.36 10.15-2.93-1.69V5.08l2.92-1.69 2.93 1.7v3.37z" class="loading-indicator__svg__outer-path" />
-      <path style="--_i:1" d="M18.94 16.38 16 14.7v-3.38l2.92-1.7 2.93 1.7v3.38z" class="loading-indicator__svg__outer-path" />
-      <path style="--_i:2" d="m15.36 22.6-2.93-1.68v-3.38l2.92-1.7 2.93 1.7v3.38z" class="loading-indicator__svg__outer-path" />
-      <path style="--_i:3" d="m8.15 15.83 2.93 1.7v3.38l-2.92 1.68-2.93-1.7v-3.37z" class="loading-indicator__svg__outer-path" />
-      <path style="--_i:4" d="M4.56 9.62 7.5 11.3v3.38l-2.92 1.7-2.93-1.7v-3.38z" class="loading-indicator__svg__outer-path" />
-      <path style="--_i:5" d="m8.15 3.4 2.93 1.68v3.38l-2.92 1.7-2.93-1.7V5.08Z" class="loading-indicator__svg__outer-path" />
+<g fill="#15141AD0" stroke-width=".15">
+<path style="--_i:0" d="m15.36 10.15-2.93-1.69V5.08l2.92-1.69 2.93 1.7v3.37z" class="loading-indicator__svg__outer-path" />
+<path style="--_i:1" d="M18.94 16.38 16 14.7v-3.38l2.92-1.7 2.93 1.7v3.38z" class="loading-indicator__svg__outer-path" />
+<path style="--_i:2" d="m15.36 22.6-2.93-1.68v-3.38l2.92-1.7 2.93 1.7v3.38z" class="loading-indicator__svg__outer-path" />
+<path style="--_i:3" d="m8.15 15.83 2.93 1.7v3.38l-2.92 1.68-2.93-1.7v-3.37z" class="loading-indicator__svg__outer-path" />
+<path style="--_i:4" d="M4.56 9.62 7.5 11.3v3.38l-2.92 1.7-2.93-1.7v-3.38z" class="loading-indicator__svg__outer-path" />
+<path style="--_i:5" d="m8.15 3.4 2.93 1.68v3.38l-2.92 1.7-2.93-1.7V5.08Z" class="loading-indicator__svg__outer-path" />
   </g>
-  <g transform-origin="center" transform="rotate(0)" style="transform-box: fill-box" font-size="3.4">
-      <path id="halo" fill="none" stroke="#15141a" stroke-width=".8" d="M.06 7.55a12.9 12.9 0 1 1 23.38 10.9A12.9 12.9 0 1 1 .06 7.55" />
-      @for(path of this.paths(); track path.id) {
-         <text fill="#ffc628" stroke-width=".15" dy="-3"> <textPath [id]="path.id" href="#halo" [attr.startOffset]="path.startOffset | percent">{{ path.text }}</textPath></text>
-      }      
-      <animateTransform attributeName="transform" type="rotate" from="0" to="-360" repeatCount="indefinite" dur="6"></animateTransform>
-  </g>
+  @if(isLoadingTextVisible()) {
+<g transform-origin="center" transform="rotate(0)" style="transform-box: fill-box" font-size="3.4">
+<path id="halo" fill="none" stroke="#15141a" stroke-width=".8" d="M.06 7.55a12.9 12.9 0 1 1 23.38 10.9A12.9 12.9 0 1 1 .06 7.55" />
+        @for(path of this.paths(); track path.id) {
+<text fill="#ffc628" stroke-width=".15" dy="-3"> <textPath [id]="path.id" href="#halo" [attr.startOffset]="path.startOffset | percent">{{ path.text }}</textPath></text>
+        }      
+<animateTransform attributeName="transform" type="rotate" from="0" to="-360" repeatCount="indefinite" dur="6"></animateTransform>
+    </g>
+  }  
 </svg>

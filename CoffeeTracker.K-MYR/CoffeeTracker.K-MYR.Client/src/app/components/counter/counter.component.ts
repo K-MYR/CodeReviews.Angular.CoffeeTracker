@@ -1,9 +1,10 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-counter',
   standalone: true,
-  imports: [],
+  imports: [ DecimalPipe ],
   templateUrl: './counter.component.html',
   styleUrl: './counter.component.scss'
 })

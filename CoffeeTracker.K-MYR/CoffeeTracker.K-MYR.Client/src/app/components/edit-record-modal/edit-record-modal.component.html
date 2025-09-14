@@ -1,17 +1,23 @@
 <dialog #dialog class="modal" (mousedown)="onMouseDown($event)">
+    <button class="modal__close" (click)="close()">
+        <span class="visually-hidden">Close</span>
+        <svg class="modal__close-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+            <path d="M20.75 3.33a1 1 0 0 0-1.42 0l-7.3 7.3-7.29-7.3a1 1 0 1 0-1.41 1.41l7.3 7.3-7.3 7.3a1 1 0 0 0 1.41 1.4l7.3-7.29 7.3 7.3a1 1 0 0 0 1.4-1.42l-7.29-7.3 7.3-7.29a1 1 0 0 0 0-1.41Z" />
+        </svg>
+    </button>
     <div class="modal__head">
         Edit {{ type() }}
     </div>
     <div class="modal__body">
         <form class="form" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
-            <input type="number" class="hidden" value="" formControlName="id" id="modal-edit-record-id"/>
+            <input type="number" class="hidden" value="" formControlName="id" id="modal-edit-record-id" />
             <div class="form-group">
                 <label class="form-label" for="modal-edit-record-type">Type</label>
-                <input class="form-input" id="modal-edit-record-type" formControlName="type" type="text" value=""/>
+                <input class="form-input" id="modal-edit-record-type" formControlName="type" type="text" value="" />
             </div>
             <div class="form-group">
                 <label class="form-label" for="modal-edit-record-dateTime">Date & Time</label>
-                <input class="form-input" id="modal-edit-record-dateTime" formControlName="dateTime" type="datetime-local" value=""/>
+                <input class="form-input" id="modal-edit-record-dateTime" formControlName="dateTime" type="datetime-local" value="" />
             </div>
             <button type="submit" class="form-button" [disabled]="!recordForm.valid">
                 Edit

@@ -9,6 +9,7 @@ import { Component, input } from '@angular/core';
   styleUrl: './loading-indicator.component.scss'
 })
 export class LoadingIndicatorComponent {
+  isLoadingTextVisible = input<boolean>(false);
   paths = input<LoadingIndicatorTextPath[]>([]);
 }
 

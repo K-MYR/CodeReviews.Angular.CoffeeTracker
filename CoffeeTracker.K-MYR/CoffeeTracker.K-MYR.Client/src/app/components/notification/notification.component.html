@@ -1,0 +1,50 @@
+@let message = currentMessage();
+<div class="notification__container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+    <div class="notification__flex-container">
+        <div class="notification__icon-container">
+            <svg class="notification__icon-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.76 20.35" style="filter: url(#glow)">
+                <path d="M.5 5.34v9.67l8.38 4.84 8.38-4.84V5.34L8.88.5Z" />
+            </svg>
+            <div class="notification__icon" >                
+                <app-loading-indicator [class.hidden]="message?.status !== 'loading'"></app-loading-indicator>                
+                <svg class="notification__svg" [class.hidden]="message?.status === 'loading'">
+                    <use [attr.href]="iconId()"></use>
+                </svg>                
+            </div>
+        </div>
+        <div class="notification__messages-container">
+            <div class="notification__messages-container-inner">
+                <div class="notification__messages-border-container">
+                    <svg class="notification__messages-border" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.6 20.35" style="filter: url(#glow)">
+                        <path d="M 0.5,0.5H 104.23l 8.88,5.34V 15.51l -8.88,4.34H 0.5" />
+                    </svg>
+                </div>
+                <div class="notification__message-container">
+                    @if(message) {
+                    <div class="notification__message">
+                        {{ message.text }}
+                    </div>
+                    }
+                    @else {
+                    <div class="notification__message">
+                        No new messages — time for a coffee break?
+                    </div>
+                    }
+
+                </div>
+                <div class="notification__buttons">
+                    <button class="notification__button" (click)="previous()" [disabled]="!hasPrevious()">
+                        <svg height="18" width="18" class="notification__nav-icon">
+                            <use href="#caret-up" />
+                        </svg>
+                    </button>
+                    <button class="notification__button" (click)="next()" [disabled]="!hasNext()">
+                        <svg height="18" width="18" class="notification__nav-icon">
+                            <use href="#caret-down" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

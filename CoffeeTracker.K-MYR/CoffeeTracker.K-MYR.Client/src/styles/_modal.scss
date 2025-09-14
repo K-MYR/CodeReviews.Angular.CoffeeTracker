@@ -37,15 +37,32 @@
 }
 
 .modal__head {
+  max-width: calc(100% - 20px);
   padding: 15px;
   border-bottom: var(--blue) 4px solid;
   color: var(--orange);
-  font-size: 24px;
+  font-size: 1.6rem;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-shadow: 0px 0px 10px var(--orange);
+}
+
+.modal__close {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+}
+
+.modal__close:hover .modal__close-svg {
+    fill: var(--orange);
+    transform: scale(1.1);
+}
+
+.modal__close-svg {
+    fill: var(--silver);
+    transition: all 0.2s ease-in-out;
 }
 
 .modal__body {

@@ -178,7 +178,7 @@ internal sealed record CreateCoffeeRecordRequest(
     internal CoffeeRecord ToDomain(Guid userId) => new()
     {
         DateTime = DateTime,
-        Type = Type,
+        Type = Type.Trim(),
         UserId = userId
     };
 }
@@ -205,7 +205,7 @@ internal sealed record UpdateCoffeeRecordRequest(
     {
         Id = Id,
         DateTime = DateTime,
-        Type = Type,
+        Type = Type.Trim(),
         UserId = userId
     };
 }

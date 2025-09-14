@@ -3,6 +3,6 @@
         {{ title() }}
     </div>
     <div class="counter-box__counter">
-        {{ counter() }}
+        {{ counter() | number: "1.0-1" }}
     </div>
 </div>

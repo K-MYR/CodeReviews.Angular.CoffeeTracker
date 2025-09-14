@@ -1,0 +1,147 @@
+@use "variables";
+
+$container-height: variables.$navbar-height - variables.$navbar-divider-height;
+$container-padding: 4px;
+$displacement: 0.5 * ($container-height - ($container-padding * 2));
+
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 450px;
+  height: $container-height;
+  padding: $container-padding;
+  z-index: 2;
+}
+
+.notification__container {
+  height: 100%;
+  position: relative;
+}
+
+.notification__flex-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.notification__icon-container {
+  height: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.notification__icon{
+  height: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  padding: 22px;
+}
+
+.notification__svg {
+    height: 100%;
+    width: 100%;
+    color: var(--orange);
+}
+
+.notification__icon-border {
+  height: 100%;
+  aspect-ratio: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  fill: var(--primary);
+  stroke: var(--orange);
+}
+
+.notification__messages-container {
+  height: 100%;
+  margin-left: -$displacement;
+  overflow: clip;
+  flex-grow: 1;
+}
+
+.notification__messages-container-inner {
+  height: 100%;
+  position: relative;
+  padding: 8px $displacement 8px $displacement;
+  align-content: center;
+}
+
+.notification__messages-border-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.notification__messages-border {
+  width: 100%;
+  height: 100%;
+  fill: var(--primary);
+  stroke: var(--orange);
+  stroke-linecap: square;
+}
+
+.notification__message-container {
+  height: 100%;
+  position: relative;
+  overflow-y: hidden;
+  align-content: center;
+}
+
+.notification__message {
+  max-height: 100%;
+  text-align: center;
+  overflow-y: auto;
+  font-size: 1.1rem;
+
+  @-moz-document url-prefix() {
+    scrollbar-width: thin;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--silver);
+    border-radius: 4px;
+  }
+}
+
+.notification__buttons {
+  height: 100%;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 25px 0;
+}
+
+.notification__button {
+  color: var(--silver);
+  transition: 0.2s ease-in-out;
+}
+
+.notification__button:enabled:hover > .notification__nav-icon {
+  stroke-width: 2px;
+  stroke: var(--orange);
+}
+
+.notification__button:disabled {
+  color: var(--transparent-silver);
+}

@@ -61,14 +61,14 @@ internal sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRe
                 return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"'{request.OrderBy}' is not a valid field for ordering."));
             }
 
-            bool IsAscendingOrder = (request.OrderDirection == OrderDirection.Ascending) ^ request.IsPrevious;
-            string orderDirection = IsAscendingOrder ? "" : " DESC";
-            string orderString = $"{request.OrderBy}{orderDirection}, Id{orderDirection}";
+            var IsAscendingOrder = (request.OrderDirection == OrderDirection.Ascending) ^ request.IsPrevious;
+            var orderDirection = IsAscendingOrder ? "" : " DESC";
+            var orderString = $"{request.OrderBy}{orderDirection}, Id{orderDirection}";
             orderBy = q => q.OrderBy(orderString);
 
             if (request.LastId is not null)
             {
-                string comparerSymbol = IsAscendingOrder ? ">" : "<";
+                char comparerSymbol = IsAscendingOrder ? '>' : '<';
 
                 if (request.OrderBy != nameof(CoffeeRecord.Id) && request.LastValue is not null)
                 {

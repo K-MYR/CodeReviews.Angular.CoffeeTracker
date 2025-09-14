@@ -1,9 +1,11 @@
+@use "variables";
+
 :host {
   display: flex;
   position: fixed;
   top: 0;
   left: 0;
-  height: var(--navbar-height);
+  height: variables.$navbar-height;
   width: 100%;
   background: var(--primary);
   z-index: 1;
@@ -24,7 +26,8 @@
 
 .navbar__logo__svg {
   height: 90px;
-  width: 100px; 
+  width: 100px;
+  overflow:visible
 }
 
 .navbar__logo__svg #steam {
@@ -47,11 +50,11 @@
 }
 
 .navbar__divider {
-  height: 5px;
+  height: variables.$navbar-divider-height;
   width: 100%;
   position: absolute;
   bottom: 0;
   background-color: var(--blue);
   border: none;
-  box-shadow: 0 0 10px 2px var(--light-blue),
+  box-shadow: 0 0 4px 2px var(--light-blue),
 }

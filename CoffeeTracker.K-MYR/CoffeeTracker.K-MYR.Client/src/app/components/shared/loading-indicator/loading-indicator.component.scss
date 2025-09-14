@@ -1,5 +1,13 @@
 :host {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.loading-indicator__svg {
+  overflow: visible;
 }
 
 .loading-indicator__svg path {

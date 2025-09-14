@@ -18,7 +18,7 @@ html {
 
 body, input, button {
   font-family: Orbitron, Roboto, Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 
 body {
@@ -34,4 +34,10 @@ h1 {
 
 h2 {
     font-size: 2rem;
+}
+
+svg {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
 }
