@@ -13,6 +13,7 @@ import { Message } from '../../interfaces/message';
 export class NotificationComponent {
   private messageService = inject(NotificationService);
   private numberOfMessages = this.messageService.numberOfMessages;
+  IsHidden = computed(() => this.numberOfMessages() === 0);
   messages = this.messageService.userMessages;
   currentIndex = linkedSignal<Message[], number>({
     source: this.messages,

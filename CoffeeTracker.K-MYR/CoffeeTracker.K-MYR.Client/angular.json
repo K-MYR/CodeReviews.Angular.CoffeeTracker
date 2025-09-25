@@ -42,7 +42,6 @@
             },
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
             "ssr": {
               "entry": "server.ts"
             }
@@ -83,8 +82,7 @@
           },
           "defaultConfiguration": "development",
 	  "options": {
-            "proxyConfig": "src/proxy.conf.js",
-            "port": 56169
+            "proxyConfig": "src/proxy.conf.js"
           }
         },
         "extract-i18n": {

@@ -6,11 +6,7 @@ import { Status } from '../interfaces/status';
   providedIn: 'root'
 })
 export class NotificationService {
-  private testData: Message[] = [
-    { text: 'New record added', status: 'success', id: crypto.randomUUID() },
-    { text: 'A error occured adding a new record', status: 'error', id: crypto.randomUUID() },
-    { text: 'Adding new record...', status: 'loading', id: crypto.randomUUID() }]
-  private messages = signal<Message[]>(this.testData);
+  private messages = signal<Message[]>([]);
   userMessages = this.messages.asReadonly();
   numberOfMessages = computed(() => this.messages().length);
   private timer: NodeJS.Timeout | null = null;

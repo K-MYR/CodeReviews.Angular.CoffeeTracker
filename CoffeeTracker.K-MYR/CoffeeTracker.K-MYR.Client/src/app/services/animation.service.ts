@@ -11,12 +11,13 @@ export class AnimationService {
   private platformId = inject(PLATFORM_ID);
   private animationFinished = new ReplaySubject<void>(1);
   $animationFinished = this.animationFinished.asObservable();
+  readonly animationDuration: number = 2000;
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       this.animeTimelineInstance = createTimeline({
+        duration: this.animationDuration,
         autoplay: false,
-        duration: 3000,
         onComplete: () => {
           this.animationFinished.next();
         }

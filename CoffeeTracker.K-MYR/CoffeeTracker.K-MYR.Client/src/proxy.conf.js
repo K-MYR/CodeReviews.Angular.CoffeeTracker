@@ -1,17 +1,7 @@
-const { env } = require('process');
-
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7079';
-
-const PROXY_CONFIG = [
-  {
-    context: [
-      "/api/coffees",
-      "/api/account",
-    ],
-    target,
-    secure: false
-  }
-]
-
-module.exports = PROXY_CONFIG;
+module.exports = {
+  '/api': {
+    target: process.env["services__webapi__https__0"],    
+    secure: process.env["NODE_ENV"] !== 'development',
+    pathRewrite: { '/api' : ''}
+  },
+};

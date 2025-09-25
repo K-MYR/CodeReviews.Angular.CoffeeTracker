@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -14,6 +15,13 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: process.env['services__webapi__https__0'] || 'http://webapi:8080',
+    changeOrigin: true
+  })
+);
 
 /**
  * Serve static files from /browser
@@ -38,6 +46,7 @@ app.use('/**', (req, res, next) => {
     )
     .catch(next);
 });
+
 
 /**
  * Start the server if this module is the main entry point.

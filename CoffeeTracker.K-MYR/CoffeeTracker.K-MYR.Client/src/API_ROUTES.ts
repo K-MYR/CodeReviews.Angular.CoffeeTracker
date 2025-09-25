@@ -1,5 +1,5 @@
 export class API_ROUTES {
-  public static BASE_PATH: string = 'https://localhost:56169/api';
+  public static BASE_PATH: string = '/api';
   public static COFFEE_RECORDS: string = `${this.BASE_PATH}/coffees`;
   public static ACCOUNT: string = `${this.BASE_PATH}/account`;
   public static GET_RECORDS: string = `${this.COFFEE_RECORDS}`;

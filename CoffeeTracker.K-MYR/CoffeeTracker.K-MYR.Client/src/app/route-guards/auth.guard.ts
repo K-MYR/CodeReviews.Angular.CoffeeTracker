@@ -18,7 +18,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       }
     }),
     catchError((response: HttpErrorResponse) => {
-      if (response.status === HttpStatusCode.Unauthorized) {
+      if (response.status === HttpStatusCode.Unauthorized || response.status === HttpStatusCode.NotFound) {
         router.navigateByUrl('/auth/login');        
       } 
       return of(false);

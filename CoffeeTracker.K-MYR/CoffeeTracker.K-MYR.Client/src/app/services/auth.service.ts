@@ -35,7 +35,7 @@ export class AuthService {
       },
       params: {
         useCookies: true,
-        useSessionCookies: postLogin.rememberMe
+        useSessionCookies: !postLogin.rememberMe
       },
       observe: 'response'
     });

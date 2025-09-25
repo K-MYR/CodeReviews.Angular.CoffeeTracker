@@ -24,7 +24,7 @@ export class AuthShellComponent implements AfterViewInit {
       this.animationService.addAnimation(
         this.routerElement().nativeElement,
         {
-          opacity: { from: 0, to: 1, delay: 2400, duration: 1000 }
+          opacity: { from: 0, to: 1, delay: this.animationService.animationDuration, duration: 600 }
         },
         0
       );

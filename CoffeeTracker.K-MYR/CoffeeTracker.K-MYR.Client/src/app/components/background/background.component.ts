@@ -110,7 +110,7 @@ export class BackgroundComponent implements AfterViewInit, OnInit{
           if (!hex) {
             return 0;
           }
-          const delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 150;
+          const delay = Math.abs(doubledWidthDistance(center, hex.coordinates)) * 140;
           return delay
         }
       },

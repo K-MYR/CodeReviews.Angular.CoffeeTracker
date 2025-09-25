@@ -2,11 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+	<IsAspireProjectResource>false</IsAspireProjectResource>
+	<ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <RootNamespace>CoffeeTracker.K_MYR.RazorClassLib</RootNamespace>
   </PropertyGroup>	
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+  </ItemGroup>	  
 </Project>
