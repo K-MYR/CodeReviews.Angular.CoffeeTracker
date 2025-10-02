@@ -71,6 +71,8 @@ internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICof
 
     public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime dateTime, Guid userId, CancellationToken ct)
     {
+        IQueryable<CoffeeRecord> query = _context.CoffeeRecords.Where(c => c.UserId == userId);
+
         var todayStart = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
         var todayEnd = todayStart.AddDays(1);
         var elapsedDaysOfWeek = dateTime.ElapsedDaysOfWeek(DayOfWeek.Monday);
@@ -84,17 +86,14 @@ internal sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICof
         var yearStart = new DateTime(dateTime.Year, 1, 1);
         var yearEnd = yearStart.AddYears(1);
 
-        return _context.CoffeeRecords
-            .Where(c => 
-                c.UserId == userId && 
-                c.DateTime > yearStart && 
-                c.DateTime < yearEnd
-            )
+        return query
+            .Where(r => r.UserId == userId)
             .GroupBy(c => c.Type)
             .Select(g => new TypeStatisticsDTO()
             {
                 CoffeeType = g.Key,
-                YearCount = g.Count(),
+                AllTime = g.Count(),
+                YearCount = g.Count(c => c.DateTime >= yearStart && c.DateTime < yearEnd),
                 MonthCount = g.Count(c => c.DateTime >= monthStart && c.DateTime < monthEnd),
                 WeekCount = g.Count(c => c.DateTime >= weekStart && c.DateTime < weekEnd),
                 DayCount = g.Count(c => c.DateTime >= todayStart && c.DateTime < todayEnd)

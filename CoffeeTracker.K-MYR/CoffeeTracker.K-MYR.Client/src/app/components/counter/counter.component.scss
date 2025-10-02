@@ -1,13 +1,27 @@
 :host {
   display: block;
+  min-width: 0;
 }
 
 .counter-box__container {
+  position: relative;
   display: flex;
   flex-direction: column;
   aspect-ratio: 1 / 1;
   padding: 5px;
   background-color: var(--primary);
+  transition: box-shadow 1s cubic-bezier(0.737, 0.325, 0, 1), transform 0.4s linear(0, 0.998 44.6%, 0.896 52%, 0.866 58.4%, 1 77.4%, 0.98 84.6%, 1);
+  box-shadow: white 0 0 0 0,;
+}
+
+.counter-box__container:hover,
+.counter-box__container:focus {
+  transform: scale(0.97);
+  box-shadow: var(--silver) 0 0 1px 2px, var(--silver) 0 0 10px 1px, color-mix(in srgb, var(--silver) 30%,var(--primary) ) 0 0 5px 1px inset;
+}
+
+.counter-box__container.selected {
+  box-shadow: var(--orange) 0 0 1px 2px, var(--orange) 0 0 10px 1px, color-mix(in srgb, var(--orange) 30%,var(--primary) ) 0 0 5px 1px inset;
 }
 
 .counter-box__title {
@@ -21,4 +35,8 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin: auto 0;
+}
+
+.selected {
+    z-index: -1
 }

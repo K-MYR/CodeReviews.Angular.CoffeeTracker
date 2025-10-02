@@ -1,7 +1,12 @@
-export interface TypeStatistic {
-  coffeeType: string,
-  yearCount: number,
-  monthCount: number, 
-  weekCount: number,
-  dayCount: number,
+export class TypeStatistic {
+  coffeeType: string;
+  allTime: number = 0;
+  yearCount: number = 0;
+  monthCount: number = 0;
+  weekCount: number = 0;
+  dayCount: number = 0;
+
+  constructor(coffeetype: string) {
+    this.coffeeType = coffeetype;
+  }
 }

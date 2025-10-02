@@ -7,6 +7,8 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Component, inject, signal } from '@angular/core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { EMPTY} from 'rxjs';
+import { NotificationService } from '../../../services/notification.service';
+import { withMessage } from '../../../helpers/angular-extensions';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +18,7 @@ import { EMPTY} from 'rxjs';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+  private notificationService = inject(NotificationService);
   private authService = inject(AuthService);
   isRegistered = signal<boolean>(false);
   confirmationEmail = signal<string|null>(null);
@@ -34,17 +37,25 @@ export class RegisterComponent {
     };
     this.authService.register(credentials)
       .pipe(
-        switchMap(() => this.authService.login({
-          email: credentials.email,
-          password: credentials.password,
-          rememberMe: false
-        })
-          .pipe(
-            catchError((error) => {
-              console.warn(`automatic login failed: ${error}`);
-              return EMPTY;
+        switchMap(() =>
+          this.authService
+            .login({
+              email: credentials.email,
+              password: credentials.password,
+              rememberMe: false
             })
-          )
+            .pipe(
+              catchError((error) => {
+                this.notificationService.addMessage("Automatic login failed", 'error');
+                return EMPTY;
+              })
+            )
+        ),
+        withMessage(
+          this.notificationService,
+          "Creating your account...",
+          "Registration successful!",
+          "Sorry, we couldn’t complete your registration. Please try again."
         )
       )
       .subscribe(_ => {
@@ -59,10 +70,18 @@ export class RegisterComponent {
     if (!emailAddress) {
       return;
     }
-    this.authService.resendConfirmationEmail({
-      email: emailAddress
-    }).subscribe(_ => {
-      console.log("email has been resend");
-    })    
+    this.authService
+      .resendConfirmationEmail({
+        email: emailAddress
+      })
+      .pipe(
+        withMessage(
+          this.notificationService,
+          "Sending request...",
+          "If the email is valid, a confirmation message is on its way to your inbox.",
+          "Sorry, something went wrong. Please try again."
+        )
+      )
+      .subscribe();
   }
 }

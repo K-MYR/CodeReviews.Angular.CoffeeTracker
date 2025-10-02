@@ -1,7 +1,7 @@
 import { NgChartsConfiguration } from "ng2-charts";
 import { ArcElement, Legend, PieController, Colors, Tooltip, Title, ChartOptions, LegendItem, Chart, ChartTypeRegistry, ChartConfiguration } from 'chart.js';
 
-const maxLabelWidth: number = 70;
+const defaultMaxLabelWidth: number = 90;
 
 const globalChartOptions: ChartOptions = {
   normalized: true,
@@ -39,14 +39,32 @@ export function generateTruncatedLabels(chart: Chart): LegendItem[] {
     if (!label.text) {
       return label;
     }
-    const textWidth = context.measureText(label.text).width;
-    if (textWidth > maxLabelWidth) {
-      let truncated = label.text;
-      while (context.measureText(truncated + '...').width > maxLabelWidth) {
-        truncated = truncated.slice(0, -1);
-      }
-      label.text = truncated + '...';
-    }
-    return label;
+
+    let text = label.text;    
+    text = truncateString(text, context);
+    return { ...label, text: text };
   });
+}
+
+export function truncateString(text: string, context: CanvasRenderingContext2D, maxWidth: number = defaultMaxLabelWidth): string {
+  let ellipsis = "...";
+  let textWidth = context.measureText(text).width;
+  if (textWidth <= maxWidth) {
+    return text;
+  }
+
+  let low = 0;
+  let high = text.length;
+  let mid = 0;
+  while (low <= high) {
+    mid = Math.floor((low + high) / 2);
+    let truncated = text.slice(0, mid) + ellipsis;
+    let width = context.measureText(truncated).width;
+    if (width <= maxWidth) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return text.slice(0, mid) + ellipsis;
 }

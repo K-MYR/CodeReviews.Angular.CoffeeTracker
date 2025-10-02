@@ -6,9 +6,10 @@ import { Component, input } from '@angular/core';
   standalone: true,
   imports: [ DecimalPipe ],
   templateUrl: './counter.component.html',
-  styleUrl: './counter.component.scss'
+  styleUrl: './counter.component.scss',  
 })
 export class CounterComponent {
-  counter = input.required<number>();
+  count = input.required<number>();
   title = input.required<string>();
+  isSelected = input.required<boolean>();
 }

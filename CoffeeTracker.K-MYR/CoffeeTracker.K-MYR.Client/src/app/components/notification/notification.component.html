@@ -1,5 +1,5 @@
 @let message = currentMessage();
-<div class="notification__container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" [class.hidden]="IsHidden()">
+<div class="notification__container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" [class.closed]="IsHidden()">
     <div class="notification__flex-container">
         <div class="notification__icon-container">
             <svg class="notification__icon-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.76 20.35" style="filter: url(#glow)">

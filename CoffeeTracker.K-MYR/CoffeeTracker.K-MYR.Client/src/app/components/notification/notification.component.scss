@@ -3,21 +3,33 @@
 $container-height: variables.$navbar-height - variables.$navbar-divider-height;
 $container-padding: 4px;
 $displacement: 0.5 * ($container-height - ($container-padding * 2));
+$maxWidth: 450px;
+$transition-duration: 0.5s;
+$closing-delay: 1s;
 
 :host {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  max-width: 450px;
+  max-width: $maxWidth;
   height: $container-height;
-  padding: $container-padding;
   z-index: 2;
+  pointer-events: none;
 }
 
 .notification__container {
   height: 100%;
   position: relative;
+  padding: $container-padding;
+  transition: transform $transition-duration ease-out;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.notification__container.closed {
+  transition: transform $transition-duration ease-out calc($transition-duration + $closing-delay);
+  transform: translateX(-100%);
 }
 
 .notification__flex-container {
@@ -70,6 +82,13 @@ $displacement: 0.5 * ($container-height - ($container-padding * 2));
   position: relative;
   padding: 8px $displacement 8px $displacement;
   align-content: center;
+  transform: translateX(0);
+  transition: $transition-duration all ease-out $transition-duration;
+}
+
+.notification__container.closed .notification__messages-container-inner {
+  transition: $transition-duration all ease-out $closing-delay;
+  transform: translateX(-100%);
 }
 
 .notification__messages-border-container {

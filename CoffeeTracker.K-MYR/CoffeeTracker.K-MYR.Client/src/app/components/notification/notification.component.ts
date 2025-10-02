@@ -1,7 +1,8 @@
-import { Component, computed, inject, linkedSignal, signal, Signal } from '@angular/core';
+import { Component, computed, inject, linkedSignal } from '@angular/core';
 import { LoadingIndicatorComponent } from '../shared/loading-indicator/loading-indicator.component';
 import { NotificationService } from '../../services/notification.service';
 import { Message } from '../../interfaces/message';
+import { Status } from '../../interfaces/status';
 
 @Component({
   selector: 'app-notification',
@@ -11,10 +12,10 @@ import { Message } from '../../interfaces/message';
   standalone: true
 })
 export class NotificationComponent {
-  private messageService = inject(NotificationService);
-  private numberOfMessages = this.messageService.numberOfMessages;
+  private readonly _messageService = inject(NotificationService);
+  private numberOfMessages = this._messageService.numberOfMessages;
   IsHidden = computed(() => this.numberOfMessages() === 0);
-  messages = this.messageService.userMessages;
+  messages = this._messageService.userMessages;
   currentIndex = linkedSignal<Message[], number>({
     source: this.messages,
     computation: (newSource, previous) => previous?.value
@@ -25,16 +26,28 @@ export class NotificationComponent {
     ? this.messages()[this.currentIndex()]
     : null
   );
-  iconId = computed(() => this.currentMessage()?.status === 'success' ? '#checkmark' : '#error');
+  iconId = computed(() => {
+    const message = this.currentMessage();
+    if (!message) {
+      return '#coffee-cup';
+    }
+
+    if (message.status === 'static' && message.iconId) {
+      return message.iconId;
+    }
+
+    return statusMap[message.status] ?? '#coffee-cup';
+  });
+  
   hasNext = computed(() => this.currentIndex() < (this.numberOfMessages() - 1));
   hasPrevious = computed(() => this.currentIndex() > 0);
 
   onMouseEnter() {
-    this.messageService.setIsUserInteracting(true);
+    this._messageService.setIsUserInteracting(true);
   }
 
   onMouseLeave() {
-    this.messageService.setIsUserInteracting(false);
+    this._messageService.setIsUserInteracting(false);
   }
 
   previous() {
@@ -43,5 +56,10 @@ export class NotificationComponent {
 
   next() {
     this.currentIndex.update(current => Math.min(this.numberOfMessages() - 1, current + 1));
-  }
+  }  
 }
+
+const statusMap: Record<string, string> = {
+  error: '#error',
+  success: '#checkmark'
+};

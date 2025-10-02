@@ -3,6 +3,8 @@ import { AuthService } from '../../../services/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Email, EmailForm } from '../../../interfaces/email';
 import { HexButtonComponent } from '../../shared/hex-button/hex-button.component';
+import { withMessage } from '../../../helpers/angular-extensions';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,6 +15,7 @@ import { HexButtonComponent } from '../../shared/hex-button/hex-button.component
 })
 export class ForgotPasswordComponent {
   private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
   forgotPasswordForm = new FormGroup<EmailForm>({
     email: new FormControl<string>("", { nonNullable: true, validators: [Validators.required, Validators.email] })
   });
@@ -23,9 +26,14 @@ export class ForgotPasswordComponent {
       email: data.email
     }
     this.authService.forgotPassword(email)
-      .subscribe({
-        next: _ => console.log("Password reset email sent"),
-        error: (error) => console.log(`An error occured resending the mail: ${error}`)
-      });
+      .pipe(
+        withMessage(
+          this.notificationService,
+          "Sending request...",
+          "If the email is valid, a message with instructions is on its way to your inbox.",
+          "Sorry, something went wrong. Please try again."
+        )
+      )
+      .subscribe();
   }
 }

@@ -1,8 +1,8 @@
-<div class="counter-box__container box">
+<div class="counter-box__container box" [class.selected]="isSelected()">
     <div class="counter-box__title">
         {{ title() }}
     </div>
     <div class="counter-box__counter">
-        {{ counter() | number: "1.0-1" }}
+        {{ count() | number: "1.0-1" }}
     </div>
 </div>

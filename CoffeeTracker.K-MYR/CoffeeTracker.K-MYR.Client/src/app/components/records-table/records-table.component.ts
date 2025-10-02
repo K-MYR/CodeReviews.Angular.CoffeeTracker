@@ -11,6 +11,8 @@ import { Component, output, viewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { inject } from '@angular/core';
 import { LoadingIndicatorComponent, LoadingIndicatorTextPath } from '../shared/loading-indicator/loading-indicator.component';
+import { withMessage } from '../../helpers/angular-extensions';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-records-table',
@@ -26,6 +28,7 @@ export class RecordsTableComponent {
   private readonly _recordsSearchService = inject(RecordSearchStateService);
   private readonly _coffeeRecordService = inject(CoffeeRecordsService);
   private readonly _dataUpdateService = inject(DataUpdateService);
+  private notificationService = inject(NotificationService);
   textPaths: LoadingIndicatorTextPath[] = [
     { text: 'Loading .  .  .', startOffset: 0, id: "t1" },
     { text: 'Loading .  .  .', startOffset: 0.5, id: "t2" },
@@ -72,18 +75,45 @@ export class RecordsTableComponent {
   }
 
   onSubmitCoffeeRecord(record: any) {
-    this._coffeeRecordService.postCoffeeRecord(record)
+    this._coffeeRecordService
+      .postCoffeeRecord(record)
+      .pipe(
+        withMessage(
+          this.notificationService,
+          "Brewing your coffee...",
+          "Coffee entry added successfully!",
+          "Grounds for error—brew failed."
+        )
+      )
       .subscribe(_ =>  this._dataUpdateService.notify()
       );
   }
 
   onPutCoffeeRecord(record: any) {
-    this._coffeeRecordService.putCoffeeRecord(record)
+    this._coffeeRecordService
+      .putCoffeeRecord(record)
+      .pipe(
+        withMessage(
+          this.notificationService,
+          "Grinding through your edits...",
+          "Brew-tiful! Entry updated successfully.",
+          "Grounds for error—edit failed."
+        )
+      )
       .subscribe(_ => this._dataUpdateService.notify());
   }
 
   onDeleteCoffeeRecord(id: any) {
-    this._coffeeRecordService.deleteCoffeeRecord(id)
+    this._coffeeRecordService
+      .deleteCoffeeRecord(id)
+      .pipe(
+        withMessage(
+          this.notificationService,
+          "Pouring out your entry...",
+          "The cup is empty—deletion complete!",
+          "Grounds for error—deletion failed."
+        )
+      )
       .subscribe(_ => this._dataUpdateService.notify()
       );
   } 

@@ -8,6 +8,8 @@ import { getPropertyFromMap, hasNoNullsFromMap } from '../../../helpers/general'
 import { EmailQueryParams } from '../../../interfaces/email-query-params';
 import { EMAIL_QUERY_PARAM_KEYS } from '../../../route-guards/query-params.guard';
 import { AuthService } from '../../../services/auth.service';
+import { withMessage } from '../../../helpers/angular-extensions';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -32,12 +34,13 @@ export class ResetPasswordComponent implements OnInit {
       validators: [Validators.required]
     }),
   }, { validators: identicalValueValidator<PostResetPasswordForm>('newPassword', 'confirmPassword') });
+  private notificationService = inject(NotificationService);;
 
   ngOnInit(): void {
     const paramMap = this.route.snapshot.queryParamMap;
     const isValid = hasNoNullsFromMap<EmailQueryParams>(paramMap, EMAIL_QUERY_PARAM_KEYS);
     if (!isValid) {
-      return;
+      this.notificationService.addMessage('Invalid link. Redirecting to login...', 'error');
     }
     this.userId = getPropertyFromMap<EmailQueryParams>(paramMap, 'userId')!;
     this.token = getPropertyFromMap<EmailQueryParams>(paramMap, 'code')!;
@@ -50,10 +53,17 @@ export class ResetPasswordComponent implements OnInit {
       newPassword: data.newPassword,
       resetCode: this.token
     };
-    this.authService.resetPassword(resetPassword)
-      .subscribe({
-        next: _ => console.log("Password reset successfully")
-      });
+    this.authService
+      .resetPassword(resetPassword)
+      .pipe(
+        withMessage(
+        this.notificationService,
+        "Sending request...",
+        "The password was successfully changed.",
+        "Sorry, something went wrong. Please try again."
+        )
+      )
+      .subscribe();
 
   }
 }

@@ -12,4 +12,5 @@ import { BaseChartDirective } from 'ng2-charts';
 export class ChartComponent {
   chartData = input.required<ChartData>();
   chartOptions = input.required<ChartOptions>();  
+  maxSlots = input.required<number>();  
 }

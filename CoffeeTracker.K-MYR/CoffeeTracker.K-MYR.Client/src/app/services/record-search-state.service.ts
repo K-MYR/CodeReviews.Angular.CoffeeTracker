@@ -8,11 +8,13 @@ import { CoffeeRecordsService } from './coffee-records.service';
 import { computed, inject, Injectable,  signal } from '@angular/core';
 import { switchMap, BehaviorSubject, tap, Subject, combineLatest, distinctUntilChanged, throttleTime, startWith, map, debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecordSearchStateService {
+  private readonly _notificationService = inject(NotificationService);
   private readonly _coffeeRecordsService = inject(CoffeeRecordsService)
   private readonly _dataUpdateService = inject(DataUpdateService);
   private state = signal<RecordSearchState>({
@@ -98,11 +100,17 @@ export class RecordSearchStateService {
             );
         }),
         takeUntilDestroyed()
-    ).subscribe(({ paginatedList, page, searchParams }) => {
-      this.setRecords(paginatedList);
-      this.setPage(paginatedList.hasPrevious ? page.pageNumber: 1);
-      this.setFilters(searchParams);
-      this.setLoading(false);
+    ).subscribe({
+      next: ({ paginatedList, page, searchParams }) => {
+        this.setRecords(paginatedList);
+        this.setPage(paginatedList.hasPrevious ? page.pageNumber : 1);
+        this.setFilters(searchParams);
+        this.setLoading(false);
+      },
+      error: () => {
+        this._notificationService.addMessage("Something went wrong while loading the records. Please try again.", "error");
+        this.setLoading(false);
+      }
     });
 
     this._dataUpdateService.dataChanged$
