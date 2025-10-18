@@ -2,10 +2,11 @@
 
 public sealed class ResourceNames
 {
-    public const string SqlServer = "sqlserver";
-    public const string Database = "database";
+    public const string Postgres = "postgres";
+    public const string Database = "coffee-records-db";
     public const string WebApi = "webapi";
     public const string AngularApp = "angular";
     public const string Papercut = "papercut";
+    public const string Migrations = "migrations";
 }
 

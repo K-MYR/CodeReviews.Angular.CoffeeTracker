@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-CoffeeTracker.K_MYR.MigrationService-4b3809ce-bc1e-436a-bace-08c2a5a9b1d1</UserSecretsId>
+    <RootNamespace>CoffeeTracker.K_MYR.MigrationService</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoffeeTracker.K-MYR.Common\CoffeeTracker.K-MYR.Common.csproj" />
+    <ProjectReference Include="..\CoffeeTracker.K-MYR.Persistence\CoffeeTracker.K-MYR.Persistence.csproj" />
+    <ProjectReference Include="..\CoffeeTracker.K-MYR.ServiceDefaults\CoffeeTracker.K-MYR.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>

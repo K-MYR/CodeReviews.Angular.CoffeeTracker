@@ -6,7 +6,7 @@ import { OrderDirection } from '../enums/order-direction';
 import { DataUpdateService } from './data-update.service';
 import { CoffeeRecordsService } from './coffee-records.service';
 import { computed, inject, Injectable,  signal } from '@angular/core';
-import { switchMap, BehaviorSubject, tap, Subject, combineLatest, distinctUntilChanged, throttleTime, startWith, map, debounceTime } from 'rxjs';
+import { switchMap, BehaviorSubject, tap, Subject, combineLatest, distinctUntilChanged, throttleTime, startWith, map, debounceTime, catchError, EMPTY } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationService } from './notification.service';
 
@@ -19,20 +19,20 @@ export class RecordSearchStateService {
   private readonly _dataUpdateService = inject(DataUpdateService);
   private state = signal<RecordSearchState>({
     isLoading: false,
-    from: null,
-    to: null,
-    type: null,
-    lastId: null,
-    lastValue: null,
+    from: undefined,
+    to: undefined,
+    type: undefined,
+    lastId: undefined,
+    lastValue: undefined,
     isPrevious: false,
     page: 1,
     pageSize: 10,
     orderBy: "dateTime",
     orderDirection: OrderDirection.Descending,
     hasPrevious: false,
-    hasNext: false,    
+    hasNext: false,
     records: [],
-  })
+  });
   isLoading = computed(() => this.state().isLoading);
   records = computed(() => this.state().records);
   lastId = computed(() => this.state().lastId);
@@ -55,7 +55,6 @@ export class RecordSearchStateService {
     
   constructor() {
     const filters$ = this.filterParameters$.pipe(
-      distinctUntilChanged(),
       takeUntilDestroyed()
     );
 
@@ -64,7 +63,6 @@ export class RecordSearchStateService {
     );
 
     const page$ = this.page$.pipe(
-      distinctUntilChanged(),
       takeUntilDestroyed()
     );
 
@@ -75,8 +73,8 @@ export class RecordSearchStateService {
         switchMap(([filters, page]) => {
           const searchParams: RecordsSearchParameters = {
             ...filters,
-            lastId: page.lastId ?? undefined,
-            lastValue: page.lastValue ?? undefined,
+            lastId: page.lastId,
+            lastValue: page.lastValue,
             isPrevious: page.isPrevious,
             pageSize: page.pageSize
           }
@@ -91,11 +89,12 @@ export class RecordSearchStateService {
                   ...paginatedListResponse,
                   values: values
                 }
-                return {
-                  paginatedList,
-                  page,
-                  searchParams
-                } 
+                return { paginatedList, page, searchParams } 
+              }),
+              catchError(() => {
+                this._notificationService.addMessage("Something went wrong while loading the records. Please try again.", "error");
+                this.setLoading(false);
+                return EMPTY;
               })
             );
         }),
@@ -163,14 +162,14 @@ export class RecordSearchStateService {
     const index = isPrevious ? 0 : state.records.length - 1;
     const pageNumber = state.page + (isPrevious ? -1 : 1);
     const lastRecord = state.records[index];
-    let lastValue = null;
+    let lastValue = undefined;
     if (!(state.orderBy === 'id')) {
       lastValue = state.orderBy === 'dateTime' ? lastRecord.dateTime.toISOString() : lastRecord[state.orderBy].toString()
     }
 
     this.page$.next({
-      lastId: pageNumber === 1 ? null : lastRecord?.id,
-      lastValue: pageNumber === 1 ? null : lastValue,
+      lastId: pageNumber === 1 ? undefined : lastRecord?.id,
+      lastValue: pageNumber === 1 ? undefined : lastValue,
       isPrevious: pageNumber === 1 ? false : state.isPrevious,
       pageNumber: pageNumber,
       pageSize: state.pageSize
@@ -185,8 +184,8 @@ export class RecordSearchStateService {
     const numberOfRecordsBefore = (state.page - 1) * state.pageSize;
     const pageNumber = Math.floor(numberOfRecordsBefore / pageSize) + 1;
     this.page$.next({
-      lastId: pageNumber === 1 ? null : state.lastId ?? null,
-      lastValue: pageNumber === 1 ? null : state.lastValue ?? null,
+      lastId: pageNumber === 1 ? undefined : state.lastId,
+      lastValue: pageNumber === 1 ? undefined : state.lastValue,
       isPrevious: pageNumber === 1 ? false : state.isPrevious,
       pageSize: pageSize,
       pageNumber: pageNumber,
@@ -200,8 +199,8 @@ export class RecordSearchStateService {
     });
     this.page$.next({
       ...this.page$.value,
-      lastId: null,
-      lastValue: null,
+      lastId: undefined,
+      lastValue: undefined,
       pageNumber: 1,
       isPrevious: false
     });
@@ -211,7 +210,7 @@ export class RecordSearchStateService {
 interface Page {
   pageNumber: number;
   pageSize: number;
-  lastId?: number | null;
-  lastValue?: string | number | null;
+  lastId?: number | undefined;
+  lastValue?: string | number | undefined;
   isPrevious: boolean;
 }

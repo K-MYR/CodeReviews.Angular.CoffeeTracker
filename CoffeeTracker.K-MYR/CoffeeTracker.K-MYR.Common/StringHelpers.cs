@@ -9,7 +9,7 @@ public static class StringHelpers
         {
             var pair = pairs[i].Split('=');
 
-            if (pair.Length != 2 || pair[0] is null || pair[1] is null)
+            if (pair.Length != 2 || string.IsNullOrWhiteSpace(pair[0]) || string.IsNullOrWhiteSpace(pair[1]))
             {
                 continue;
             }

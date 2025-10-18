@@ -16,3 +16,7 @@ export function hasNoNullsFromMap<TType>(map: ParamMap, keys: (keyof TType & str
 export function getPropertyFromMap<TType>(map: ParamMap, key: keyof TType & string): string | null {
   return map.get(key);
 }
+
+export function stringIsNullOrEmpty(text: string|null|undefined): boolean {
+  return text == null || text === "";
+}

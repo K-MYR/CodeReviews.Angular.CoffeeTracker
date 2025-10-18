@@ -1,4 +1,4 @@
-﻿using CoffeeTracker.K_MYR.WebApi.Domain.Entities;
+﻿using CoffeeTracker.K_MYR.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Channels;
 

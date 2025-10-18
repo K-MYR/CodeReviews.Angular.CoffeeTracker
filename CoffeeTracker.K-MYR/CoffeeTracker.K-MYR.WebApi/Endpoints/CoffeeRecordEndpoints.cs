@@ -1,8 +1,8 @@
-﻿using CoffeeTracker.K_MYR.WebApi.Application.DTOs;
-using CoffeeTracker.K_MYR.WebApi.Application.Services;
-using CoffeeTracker.K_MYR.WebApi.Domain.Entities;
-using CoffeeTracker.K_MYR.WebApi.Shared;
-using CoffeeTracker.K_MYR.WebApi.Shared.Enums;
+﻿using CoffeeTracker.K_MYR.Application.DTOs;
+using CoffeeTracker.K_MYR.Application.Services;
+using CoffeeTracker.K_MYR.Common;
+using CoffeeTracker.K_MYR.Common.Enums;
+using CoffeeTracker.K_MYR.Domain.Entities;
 using LanguageExt;
 using LanguageExt.Pipes;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -16,14 +16,14 @@ public static class CoffeeRecordEndpoints
     {
         var group = app.MapGroup("/coffees")
             .WithTags("Coffee API");
-                      
-        group.MapGet("/{id:int}", async Task<Results<Ok<CoffeeRecordResponse>, ProblemHttpResult>>(
+
+        group.MapGet("/{id:int}", async Task<Results<Ok<CoffeeRecordResponse>, ProblemHttpResult>> (
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             int id) =>
         {
-            var userId = user.GetUserId(); 
+            var userId = user.GetUserId();
             var record = await coffeeRecordService.GetCoffeeRecordAsync(id, userId, ct);
             return record is not null
                 ? TypedResults.Ok(CoffeeRecordResponse.FromDomain(record))
@@ -31,7 +31,7 @@ public static class CoffeeRecordEndpoints
                     statusCode: StatusCodes.Status404NotFound,
                     detail: $"The record with the id {id} was not found."
                 );
-            
+
         })
         .WithName("GetCoffeeRecord")
         .RequireAuthorization();
@@ -43,7 +43,19 @@ public static class CoffeeRecordEndpoints
             [AsParameters] GetCoffeeRecordsRequest request) =>
         {
             var userId = user.GetUserId();
-            var result = await coffeeRecordService.GetCoffeeRecordsAsync(request, userId, ct);            
+            var result = await coffeeRecordService.GetCoffeeRecordsAsync(
+                userId,
+                request.DateTimeFrom,
+                request.DateTimeTo,
+                request.Type,
+                request.OrderBy,
+                request.LastId,
+                request.LastValue,
+                request.PageSize,
+                request.IsPrevious,
+                request.OrderDirection,
+                ct
+            );
 
             return result.Match<Results<Ok<PaginatedList<CoffeeRecordResponse>>, ProblemHttpResult>>(
                 succ => TypedResults.Ok(new PaginatedList<CoffeeRecordResponse>(
@@ -55,7 +67,7 @@ public static class CoffeeRecordEndpoints
                         succ.IsPrevious,
                         succ.OrderBy,
                         succ.OrderDirection
-                    )),                   
+                    )),
                 fail => TypedResults.Problem(
                         statusCode: StatusCodes.Status400BadRequest,
                         detail: fail.Message
@@ -79,7 +91,7 @@ public static class CoffeeRecordEndpoints
         .WithName("GetCoffeeTypeStatistics")
         .RequireAuthorization();
 
-        group.MapPost("/", async Task<CreatedAtRoute<CoffeeRecordResponse>>(
+        group.MapPost("/", async Task<CreatedAtRoute<CoffeeRecordResponse>> (
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
@@ -96,16 +108,16 @@ public static class CoffeeRecordEndpoints
         })
         .WithName("PostCoffeeRecord")
         .RequireAuthorization();
-        
 
-        group.MapPut("/{id:int}", async Task<Results<NoContent, ProblemHttpResult >>(
+
+        group.MapPut("/{id:int}", async Task<Results<NoContent, ProblemHttpResult>> (
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             UpdateCoffeeRecordRequest request,
             int id) =>
         {
-            if(id != request.Id)
+            if (id != request.Id)
             {
                 return TypedResults.Problem(
                     statusCode: StatusCodes.Status400BadRequest,
@@ -116,7 +128,7 @@ public static class CoffeeRecordEndpoints
             var userId = user.GetUserId();
             var record = await coffeeRecordService.GetCoffeeRecordAsync(id, userId, ct);
 
-            if(record is null)
+            if (record is null)
             {
                 return TypedResults.Problem(
                     statusCode: StatusCodes.Status404NotFound,
@@ -126,14 +138,14 @@ public static class CoffeeRecordEndpoints
 
             record.DateTime = request.DateTime;
             record.Type = request.Type;
-            await coffeeRecordService.UpdateCoffeeRecordAsync(record, ct );
+            await coffeeRecordService.UpdateCoffeeRecordAsync(record, ct);
             return TypedResults.NoContent();
         })
         .WithName("PutCoffeeRecord")
         .RequireAuthorization();
 
 
-        group.MapDelete("/{id:int}", async Task<Results<NoContent, ProblemHttpResult>>(
+        group.MapDelete("/{id:int}", async Task<Results<NoContent, ProblemHttpResult>> (
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
@@ -158,7 +170,7 @@ public static class CoffeeRecordEndpoints
     }
 }
 
-internal sealed record GetCoffeeRecordsRequest(        
+internal sealed record GetCoffeeRecordsRequest(
     DateTime? DateTimeFrom,
     DateTime? DateTimeTo,
     string? Type,
@@ -166,12 +178,12 @@ internal sealed record GetCoffeeRecordsRequest(
     int? LastId,
     string? LastValue,
     int PageSize = 10,
-    bool IsPrevious = false,    
+    bool IsPrevious = false,
     OrderDirection OrderDirection = OrderDirection.Ascending
 );
 
 internal sealed record CreateCoffeeRecordRequest(
-    DateTime DateTime, 
+    DateTime DateTime,
     string Type
 )
 {
@@ -201,7 +213,8 @@ internal sealed record UpdateCoffeeRecordRequest(
     DateTime DateTime,
     string Type
 )
-{    internal CoffeeRecord ToDomain(Guid userId) => new()
+{
+    internal CoffeeRecord ToDomain(Guid userId) => new()
     {
         Id = Id,
         DateTime = DateTime,
@@ -209,4 +222,3 @@ internal sealed record UpdateCoffeeRecordRequest(
         UserId = userId
     };
 }
-

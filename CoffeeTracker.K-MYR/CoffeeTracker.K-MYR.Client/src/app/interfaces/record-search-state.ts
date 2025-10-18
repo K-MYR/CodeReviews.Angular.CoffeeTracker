@@ -3,11 +3,11 @@ import { CoffeeRecord } from "./coffee-record";
 
 export interface RecordSearchState {
   isLoading: boolean,
-  from: string | null,
-  to: string | null,
-  type: string | null,
-  lastId: number | null,
-  lastValue: string | number | null,
+  from: string | undefined,
+  to: string | undefined,
+  type: string | undefined,
+  lastId: number | undefined,
+  lastValue: string | number | undefined,
   isPrevious: boolean,
   page: number,
   pageSize: number,

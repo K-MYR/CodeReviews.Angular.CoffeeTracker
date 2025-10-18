@@ -1,16 +1,17 @@
 using CoffeeTracker.K_MYR.Common;
 using CoffeeTracker.K_MYR.RazorClassLib.Services;
-using CoffeeTracker.K_MYR.WebApi.Application.Interfaces;
-using CoffeeTracker.K_MYR.WebApi.Application.Services;
-using CoffeeTracker.K_MYR.WebApi.Domain.Entities;
+using CoffeeTracker.K_MYR.Application.Interfaces;
+using CoffeeTracker.K_MYR.Application.Services;
+using CoffeeTracker.K_MYR.Domain.Entities;
 using CoffeeTracker.K_MYR.WebApi.Endpoints;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Email;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Extensions;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Spa;
-using CoffeeTracker.K_MYR.WebApi.Persistence.DatabaseContext;
-using CoffeeTracker.K_MYR.WebApi.Persistence.Repositories;
+using CoffeeTracker.K_MYR.Persistence.DatabaseContexts;
+using CoffeeTracker.K_MYR.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Channels;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
@@ -18,7 +19,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();
 builder.Services.AddProblemDetails();
-builder.AddSqlServerDbContext<CoffeeRecordContext>(ResourceNames.Database);
+builder.Services.AddDbContext<CoffeeRecordContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString(ResourceNames.Database)
+    );
+});
 builder.Services
     .AddIdentityApiEndpoints<AppUser>(options =>
     {
@@ -42,7 +48,7 @@ builder.Services.AddSingleton(Channel.CreateBounded<EmailChannelRequest>(
     }
 ));
 
-builder.ConfigureEmailOptions();
+
 builder.Services.Configure<SpaConfiguration>(
     builder.Configuration.GetSection(SpaConfiguration.Key))
     .AddOptionsWithValidateOnStart<EmailConfiguration>()
@@ -57,9 +63,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+builder.ConfigureEmailOptions();
 var app = builder.Build();
-
-await app.ConfigureDatabaseAsync<CoffeeRecordContext>();
 
 if (app.Environment.IsDevelopment())
 {

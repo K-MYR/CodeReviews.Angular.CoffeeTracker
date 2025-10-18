@@ -10,17 +10,23 @@ var papercut = builder.AddPapercutSmtp(ResourceNames.Papercut)
         e.IsExternal = true;
     });
 
-var sqlPassword = builder.AddParameter($"{ResourceNames.SqlServer}-password", secret: true);
-var sql = builder.AddSqlServer(ResourceNames.SqlServer, sqlPassword)
-    .WithDataVolume();
+var database = builder.AddPostgres(ResourceNames.Postgres)
+    .WithDataVolume()
+    .WithPgAdmin()
+    .AddDatabase(ResourceNames.Database);
+    
 
-var database = sql.AddDatabase(ResourceNames.Database);
+var migrations = builder.AddProject<Projects.CoffeeTracker_K_MYR_MigrationService>(ResourceNames.Migrations)
+    .WithReference(database)
+    .WaitFor(database);
 
 var apiProj = builder.AddProject<Projects.CoffeeTracker_K_MYR_WebApi>(ResourceNames.WebApi)
     .WithReference(papercut)
     .WaitFor(papercut)
     .WithReference(database)
     .WaitFor(database)
+    .WithReference(migrations)
+    .WaitForCompletion(migrations)
     .WithExternalHttpEndpoints();
 
 builder.AddNpmApp(ResourceNames.AngularApp, "../CoffeeTracker.K-MYR.Client")

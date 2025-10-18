@@ -8,26 +8,25 @@
 	<RootNamespace>CoffeeTracker.K_MYR.WebApi</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.4.2" />
     <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>9.*-*</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MimeKit" Version="4.13.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
+    <PackageReference Include="MimeKit" Version="4.14.0" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
+    <PackageReference Include="Npgsql" Version="9.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoffeeTracker.K-MYR.RazorClassLib\CoffeeTracker.K-MYR.RazorClassLib.csproj" />
+    <ProjectReference Include="..\CoffeeTracker.K-MYR.Application\CoffeeTracker.K-MYR.Application.csproj" />
+    <ProjectReference Include="..\CoffeeTracker.K-MYR.Persistence\CoffeeTracker.K-MYR.Persistence.csproj" />
+    <ProjectReference Include="..\CoffeeTracker.K-MYR.RazorClassLib\CoffeeTracker.K-MYR.Razor.csproj" />
     <ProjectReference Include="..\CoffeeTracker.K-MYR.Common\CoffeeTracker.K-MYR.Common.csproj" />
 	<ProjectReference Include="..\CoffeeTracker.K-MYR.ServiceDefaults\CoffeeTracker.K-MYR.ServiceDefaults.csproj" />
   </ItemGroup>

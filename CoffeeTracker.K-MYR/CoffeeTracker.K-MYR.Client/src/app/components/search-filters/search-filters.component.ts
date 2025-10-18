@@ -1,3 +1,4 @@
+import { stringIsNullOrEmpty } from '../../helpers/general';
 import { RecordsSearchForm } from '../../interfaces/records-search';
 import { RecordSearchStateService } from '../../services/record-search-state.service';
 import { Component, inject } from '@angular/core';
@@ -16,7 +17,7 @@ export class SearchFiltersComponent {
     dateTimeFrom: new FormControl<string|null>(null),
     dateTimeTo: new FormControl<string|null>(null),
   });
-  private _recordsSearchService = inject(RecordSearchStateService);
+  private readonly _recordsSearchService = inject(RecordSearchStateService);
 
   resetFilters(): void {
     this.filtersForm.reset();
@@ -28,13 +29,13 @@ export class SearchFiltersComponent {
   }    
 
   updateFilters(): void {
-    const data = this.filtersForm.value;
-    const dateTimeFrom = data.dateTimeFrom === "" ? null : data.dateTimeFrom;
-    const dateTimeTo = data.dateTimeTo === "" ? null : data.dateTimeTo;
+    const data = this.filtersForm.getRawValue();
+    const dateTimeFrom = stringIsNullOrEmpty(data.dateTimeFrom) ? undefined : data.dateTimeFrom!;
+    const dateTimeTo = stringIsNullOrEmpty(data.dateTimeTo) ? undefined : data.dateTimeTo!;
     this._recordsSearchService.updateFilter({
       type: data.type ?? undefined,
-      dateTimeFrom: dateTimeFrom ?? undefined,
-      dateTimeTo: dateTimeTo ?? undefined
+      dateTimeFrom: dateTimeFrom,
+      dateTimeTo: dateTimeTo
     });  
   }
 }

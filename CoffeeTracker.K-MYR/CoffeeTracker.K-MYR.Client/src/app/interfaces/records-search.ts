@@ -23,5 +23,5 @@ export interface RecordsSearchParameters {
   orderBy: keyof CoffeeRecord,
   lastId?: number
   lastValue?: string | number
-  isPrevious: boolean,
+  isPrevious?: boolean,
 }
