@@ -1,35 +1,76 @@
 ﻿using CoffeeTracker.K_MYR.Common;
+using CoffeeTracker.K_MYR.WebApi.Infrastructure.ClientApp;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Email;
 
 namespace CoffeeTracker.K_MYR.WebApi.Infrastructure.Extensions;
-public static class WebApplicationBuilderExtensions
+internal static class WebApplicationBuilderExtensions
 {
     public static WebApplicationBuilder ConfigureEmailOptions(this WebApplicationBuilder builder)
     {
-        var myoptions = builder.Configuration.GetSection(EmailConfiguration.Key)
-            .Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(myoptions);
+        var options = builder.Configuration.GetRequiredSection(EmailConfigurationSettings.Key)
+            .Get<EmailConfigurationSettings>();
+        ArgumentNullException.ThrowIfNull(options);
 
         var connectionString = builder.Configuration.GetConnectionString(ResourceNames.Papercut);
-        ArgumentNullException.ThrowIfNull(connectionString);
 
-        var dict = StringHelpers.ConnectionStringToDictionary(connectionString);
-        if (dict.TryGetValue("Endpoint", out var value) && Uri.TryCreate(value, UriKind.Absolute, out var uri))
+        if (connectionString is not null)
         {
-            myoptions.SmtpServer = uri.Host;
-            myoptions.SmtpPort = uri.Port;
+            var dict = StringHelpers.ConnectionStringToDictionary(connectionString);
+            if (dict.TryGetValue("Endpoint", out var value) && Uri.TryCreate(value, UriKind.Absolute, out var uri))
+            {
+                options.SmtpServer = uri.Host;
+                options.SmtpPort = uri.Port;
+            }
         }
 
-        builder.Services.Configure<EmailConfiguration>(options =>
+        if (options.SmtpPort is null || options.SmtpServer is null)
         {
-            options.SmtpServer = myoptions.SmtpServer;
-            options.SmtpPort = myoptions.SmtpPort;
-            options.UserName = myoptions.UserName;
-            options.Password = myoptions.Password;
-            options.SenderName = myoptions.SenderName;
-            options.SenderEmail = myoptions.SenderEmail;
+            throw new InvalidOperationException("SMTP server and port configurations are required");
+        }
+
+        builder.Services.Configure<EmailConfiguration>(opt =>
+        {
+            opt.SmtpServer = options.SmtpServer;
+            opt.SmtpPort = options.SmtpPort.Value;
+            opt.UserName = options.UserName;
+            opt.Password = options.Password;
+            opt.SenderName = options.SenderName;
+            opt.SenderEmail = options.SenderEmail;
         });
 
+        return builder;
+    }
+
+    public static WebApplicationBuilder ConfigureClientOptions(this WebApplicationBuilder builder)
+    {
+        var options = builder.Configuration.GetRequiredSection(ClientAppConfigurationSettings.Key)
+            .Get<ClientAppConfigurationSettings>();
+        ArgumentNullException.ThrowIfNull(options);
+
+
+        var httpsPorts = builder.Configuration.GetRequiredSection($"services:{ResourceNames.AngularApp}:https")
+            .GetChildren()
+            .Select(c => c.Value)
+            .ToArray();
+
+        if (!(httpsPorts.Length > 0
+            && Uri.TryCreate(httpsPorts[0], UriKind.Absolute, out Uri? uri))
+            && !Uri.TryCreate(options.Uri, UriKind.Absolute, out uri))
+        {
+            throw new InvalidOperationException("SMTP server and port configurations are required");
+        }   
+
+        builder.Services.Configure<ClientAppConfiguration>(opt => 
+        {
+            opt.ConfirmEmailEndpoint = new UriBuilder(uri)
+            {
+                Path = options.ConfirmEmailEndpoint
+            }.Uri;
+            opt.ResetPasswordEndpoint = new UriBuilder(uri)
+            {
+                Path = options.ResetPasswordEndpoint
+            }.Uri;
+        });
         return builder;
     }
 }

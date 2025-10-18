@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -165,7 +166,10 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "english")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "Type" })
                 },
                 constraints: table =>
                 {
@@ -216,21 +220,15 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoffeeRecords_DateTime",
+                name: "IX_CoffeeRecords_SearchVector",
                 table: "CoffeeRecords",
-                column: "DateTime");
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoffeeRecords_Type",
+                name: "IX_CoffeeRecords_UserId_DateTime_Id",
                 table: "CoffeeRecords",
-                column: "Type")
-                .Annotation("Npgsql:IndexMethod", "GIN")
-                .Annotation("Npgsql:TsVectorConfig", "english");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CoffeeRecords_UserId",
-                table: "CoffeeRecords",
-                column: "UserId");
+                columns: new[] { "UserId", "DateTime", "Id" });
         }
 
         /// <inheritdoc />

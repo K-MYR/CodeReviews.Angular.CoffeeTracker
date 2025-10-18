@@ -1,11 +1,12 @@
 ﻿using CoffeeTracker.K_MYR.Application.DTOs;
+using CoffeeTracker.K_MYR.Application.Enums;
 using CoffeeTracker.K_MYR.Application.Interfaces;
 using CoffeeTracker.K_MYR.Common;
 using CoffeeTracker.K_MYR.Common.Enums;
 using CoffeeTracker.K_MYR.Domain.Entities;
 using LanguageExt.Common;
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace CoffeeTracker.K_MYR.Application.Services;
 
@@ -17,7 +18,7 @@ public interface ICoffeeRecordService
         DateTime? dateTimeFrom = null,
         DateTime? dateTimeTo = null,
         string? type = null,
-        string? orderBy = null,
+        CoffeeRecordOrderBy orderBy = CoffeeRecordOrderBy.Id,
         int? lastId = null,
         string? lastValue = null,
         int pageSize = 10,
@@ -34,10 +35,17 @@ public interface ICoffeeRecordService
 public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepository) : ICoffeeRecordService
 {
     private readonly ICoffeeRecordRepository _coffeeRecordRepository = coffeeRecordRepository;
+    private static readonly Dictionary<CoffeeRecordOrderBy, PropertyInfo> _orderByMap =
+    new()
+    {
+        [CoffeeRecordOrderBy.Type] = typeof(CoffeeRecord).GetProperty(nameof(CoffeeRecord.Type))!,
+        [CoffeeRecordOrderBy.DateTime] = typeof(CoffeeRecord).GetProperty(nameof(CoffeeRecord.DateTime))!,
+        [CoffeeRecordOrderBy.Id] = typeof(CoffeeRecord).GetProperty(nameof(CoffeeRecord.Id))!,
+    };
 
     public Task<CoffeeRecord?> GetCoffeeRecordAsync(int id, Guid userId, CancellationToken ct)
     {
-        return _coffeeRecordRepository.GetAsync(id, userId, ct);
+        return _coffeeRecordRepository.GetAsync(userId, id, ct);
     }
 
     public Task CreateCoffeeRecordAsync(CoffeeRecord record, CancellationToken ct)
@@ -57,7 +65,7 @@ public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepo
 
     public Task<List<TypeStatisticsDTO>> GetStatistics(DateTime today, Guid userId, CancellationToken ct)
     {
-        return _coffeeRecordRepository.GetStatistics(today, userId, ct);
+        return _coffeeRecordRepository.GetStatistics(userId, today, ct);
     }
 
     public async Task<Result<PaginatedList<CoffeeRecord>>> GetCoffeeRecordsAsync(
@@ -65,61 +73,30 @@ public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepo
         DateTime? dateTimeFrom = null,
         DateTime? dateTimeTo = null,
         string? type = null,
-        string? orderBy = null,
+        CoffeeRecordOrderBy orderBy = CoffeeRecordOrderBy.Id,
         int? lastId = null,
         string? lastValue = null,
         int pageSize = 10,
         bool isPrevious = false,
         OrderDirection orderDirection = OrderDirection.Ascending,
-        CancellationToken ct = default
-    )
+        CancellationToken ct = default)
     {
-        Func<IQueryable<CoffeeRecord>, IOrderedQueryable<CoffeeRecord>> orderByFunc = q => q.OrderBy(t => t.Id);
-        Func<IQueryable<CoffeeRecord>, IQueryable<CoffeeRecord>>? filterFunc = null;
-
-        if (orderBy is not null)
+        object? convertedValue = null;
+        var coffeeRecordOrderBy = CoffeeRecordOrderBy.Id;
+        if (!_orderByMap.TryGetValue(coffeeRecordOrderBy, out PropertyInfo? property))
         {
-            if (!OrderingHelper.IsAllowedProperty(orderBy))
-            {
-                return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"'{orderBy}' is not a valid field for ordering."));
-            }
+            return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"'{orderBy}' is not a valid field for ordering."));
+        }         
 
-            var IsAscendingOrder = orderDirection == OrderDirection.Ascending ^ isPrevious;
-            var orderDirectionString = IsAscendingOrder ? "" : " DESC";
-            var orderString = $"{orderBy}{orderDirectionString}, Id{orderDirectionString}";
-            orderByFunc = q => q.OrderBy(orderString);
+        if (property is not null
+            && lastValue is not null
+            && !TryStringToType(lastValue, property.PropertyType, out convertedValue))
+        {
+            return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"Failed to convert '{lastValue}' to the expected type."));
+        }        
 
-            if (lastId is not null)
-            {
-                char comparerSymbol = IsAscendingOrder ? '>' : '<';
-
-                if (orderBy != nameof(CoffeeRecord.Id) && lastValue is not null)
-                {
-                    var propertyType = OrderingHelper.GetProperty<CoffeeRecord>(orderBy)?.PropertyType;
-
-                    if (propertyType is null)
-                    {
-                        return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"Failed to retrieve the type for the property '{orderBy}'."));
-                    }
-
-                    try
-                    {
-                        var lastValueConverted = Convert.ChangeType(lastValue, propertyType);
-                        filterFunc = q => q.Where($"{orderBy} {comparerSymbol} @0 || ({orderBy} == @0 && Id {comparerSymbol} @1)", lastValue, lastId);
-                    }
-                    catch
-                    {
-                        return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"Failed to convert '{lastValue}' to the expected type '{propertyType.Name}'."));
-                    }
-                }
-                else
-                {
-                    filterFunc = q => q.Where($"Id {comparerSymbol} @0", lastId);
-                }
-            }
-        }
         var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(
-            dateTimeFrom, dateTimeTo, type?.Trim(), pageSize + 1, orderByFunc, userId, ct, filterFunc);
+            userId, orderBy, ct, isPrevious, pageSize, orderDirection, dateTimeFrom, dateTimeTo, type?.Trim(), lastId, convertedValue);
         var hasNext = coffeeRecords.Count > pageSize;
         var hasPrevious = lastId is not null;
 
@@ -139,10 +116,24 @@ public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepo
             hasNext,
             hasPrevious,
             isPrevious,
-            orderBy ?? "Id",
+            orderBy.ToString(),
             orderDirection
         );
 
         return paginatedList;
+    }  
+
+    private static bool TryStringToType(string value, Type type, out object? lastValue)
+    {       
+        try
+        {
+            lastValue = Convert.ChangeType(value, type);
+            return true;
+        }
+        catch
+        {
+            lastValue = default;
+            return false;
+        }
     }
 }

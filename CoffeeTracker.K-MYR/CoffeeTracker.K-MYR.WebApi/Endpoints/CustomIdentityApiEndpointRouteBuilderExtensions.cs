@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CoffeeTracker.K_MYR.WebApi.Infrastructure.Spa;
+using CoffeeTracker.K_MYR.WebApi.Infrastructure.ClientApp;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;
@@ -51,7 +51,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
         // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
         // https://github.com/dotnet/aspnetcore/issues/47338
         routeGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] RegisterRequest registration, HttpContext context, [FromServices] IServiceProvider sp, IOptions<SpaConfiguration> config) =>
+            ([FromBody] RegisterRequest registration, HttpContext context, [FromServices] IServiceProvider sp, IOptions<ClientAppConfiguration> config) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
@@ -79,7 +79,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                 return CreateValidationProblem(result);
             }
 
-            await SendConfirmationEmailAsync(user, userManager, context, email, config.Value.ConfirmEmailUri);
+            await SendConfirmationEmailAsync(user, userManager, context, email, config.Value.ConfirmEmailEndpoint);
             return TypedResults.Ok();
         });
 
@@ -187,7 +187,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
         });
 
         routeGroup.MapPost("/resendConfirmationEmail", async Task<Ok>
-            ([FromBody] ResendConfirmationEmailRequest resendRequest, HttpContext context, [FromServices] IServiceProvider sp, IOptions<SpaConfiguration> config) =>
+            ([FromBody] ResendConfirmationEmailRequest resendRequest, HttpContext context, [FromServices] IServiceProvider sp, IOptions<ClientAppConfiguration> config) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             if (await userManager.FindByEmailAsync(resendRequest.Email) is not { } user 
@@ -196,19 +196,19 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                 return TypedResults.Ok();
             }
 
-            await SendConfirmationEmailAsync(user, userManager, context, resendRequest.Email, config.Value.ConfirmEmailUri);
+            await SendConfirmationEmailAsync(user, userManager, context, resendRequest.Email, config.Value.ConfirmEmailEndpoint);
             return TypedResults.Ok();
         });
 
         routeGroup.MapPost("/forgotPassword", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] ForgotPasswordRequest resetRequest, [FromServices] IServiceProvider sp, IOptions<SpaConfiguration> config) =>
+            ([FromBody] ForgotPasswordRequest resetRequest, [FromServices] IServiceProvider sp, IOptions<ClientAppConfiguration> config) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             var user = await userManager.FindByEmailAsync(resetRequest.Email);
 
             if (user is not null && await userManager.IsEmailConfirmedAsync(user))
             {
-                await SendPasswordResetEmailAsync(user, userManager, resetRequest.Email, config.Value.ResetPasswordUri);
+                await SendPasswordResetEmailAsync(user, userManager, resetRequest.Email, config.Value.ResetPasswordEndpoint);
             }
 
             // Don't reveal that the user does not exist or is not confirmed, so don't return a 200 if we would have
@@ -338,7 +338,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
         });
 
         accountGroup.MapPost("/info", async Task<Results<Ok<InfoResponse>, ValidationProblem, NotFound>>
-            (ClaimsPrincipal claimsPrincipal, [FromBody] InfoRequest infoRequest, HttpContext context, [FromServices] IServiceProvider sp, IOptions<SpaConfiguration> config) =>
+            (ClaimsPrincipal claimsPrincipal, [FromBody] InfoRequest infoRequest, HttpContext context, [FromServices] IServiceProvider sp, IOptions<ClientAppConfiguration> config) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             if (await userManager.GetUserAsync(claimsPrincipal) is not { } user)
@@ -372,14 +372,14 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
                 if (email != infoRequest.NewEmail)
                 {
-                    await SendConfirmationEmailAsync(user, userManager, context, infoRequest.NewEmail, config.Value.ConfirmEmailUri, isChange: true);
+                    await SendConfirmationEmailAsync(user, userManager, context, infoRequest.NewEmail, config.Value.ConfirmEmailEndpoint, isChange: true);
                 }
             }
 
             return TypedResults.Ok(await CreateInfoResponseAsync(user, userManager));
         });
 
-        async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, HttpContext context, string email, string path, bool isChange = false)
+        async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, HttpContext context, string email, Uri uri, bool isChange = false)
         {
             if (confirmEmailEndpointName is null)
             {
@@ -402,12 +402,12 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
             {
                 // This is validated by the /confirmEmail endpoint on change.
                 routeValues.Add("changedEmail", email);
-            }
-            var confirmEmailUrl = QueryHelpers.AddQueryString(path, routeValues);
+            }            
+            var confirmEmailUrl = QueryHelpers.AddQueryString(uri.ToString(), routeValues);
             await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
         }
 
-        async Task SendPasswordResetEmailAsync(TUser user, UserManager<TUser> userManager, string email, string path)
+        async Task SendPasswordResetEmailAsync(TUser user, UserManager<TUser> userManager, string email, Uri uri)
         {
             if (confirmEmailEndpointName is null)
             {
@@ -424,7 +424,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                 ["code"] = code,
             };
            
-            var resetPasswordUrl = QueryHelpers.AddQueryString(path, routeValues);
+            var resetPasswordUrl = QueryHelpers.AddQueryString(uri.ToString(), routeValues);
             await emailSender.SendPasswordResetLinkAsync(user, email, HtmlEncoder.Default.Encode(resetPasswordUrl));
         }
 

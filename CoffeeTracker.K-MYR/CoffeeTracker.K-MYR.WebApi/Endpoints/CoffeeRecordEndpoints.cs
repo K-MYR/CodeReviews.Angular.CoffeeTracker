@@ -1,4 +1,5 @@
 ﻿using CoffeeTracker.K_MYR.Application.DTOs;
+using CoffeeTracker.K_MYR.Application.Enums;
 using CoffeeTracker.K_MYR.Application.Services;
 using CoffeeTracker.K_MYR.Common;
 using CoffeeTracker.K_MYR.Common.Enums;
@@ -174,9 +175,9 @@ internal sealed record GetCoffeeRecordsRequest(
     DateTime? DateTimeFrom,
     DateTime? DateTimeTo,
     string? Type,
-    string? OrderBy,
     int? LastId,
     string? LastValue,
+    CoffeeRecordOrderBy OrderBy = CoffeeRecordOrderBy.Id,
     int PageSize = 10,
     bool IsPrevious = false,
     OrderDirection OrderDirection = OrderDirection.Ascending

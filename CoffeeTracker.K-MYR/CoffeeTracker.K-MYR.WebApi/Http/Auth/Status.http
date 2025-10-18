@@ -1,0 +1,5 @@
+@url = {{HostAddress}}/account/status
+GET {{HostAddress}}
+Content-Type: application/json
+Accept: application/json
+{}

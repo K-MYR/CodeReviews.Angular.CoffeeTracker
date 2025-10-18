@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
 namespace CoffeeTracker.K_MYR.Persistence.Migrations
 {
     [DbContext(typeof(CoffeeRecordContext))]
-    [Migration("20251017235853_Initial")]
+    [Migration("20251020085824_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +26,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CoffeeTracker.K_MYR.Domain.Entities.AppRole", b =>
+            modelBuilder.Entity("CoffeeTracker.K_MYR.Persistence.Entities.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +53,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeTracker.K_MYR.Domain.Entities.AppUser", b =>
+            modelBuilder.Entity("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,7 +118,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeTracker.K_MYR.Domain.Entities.CoffeeRecord", b =>
+            modelBuilder.Entity("CoffeeTracker.K_MYR.Persistence.Entities.CoffeeRecordEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,6 +129,13 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "english")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Type" });
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
@@ -137,14 +145,11 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DateTime");
+                    b.HasIndex("SearchVector");
 
-                    b.HasIndex("Type")
-                        .HasAnnotation("Npgsql:TsVectorConfig", "english");
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Type"), "GIN");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "DateTime", "Id");
 
                     b.ToTable("CoffeeRecords");
                 });
@@ -252,9 +257,9 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeTracker.K_MYR.Domain.Entities.CoffeeRecord", b =>
+            modelBuilder.Entity("CoffeeTracker.K_MYR.Persistence.Entities.CoffeeRecordEntity", b =>
                 {
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppUser", "User")
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", "User")
                         .WithMany("CoffeeRecords")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -265,7 +270,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppRole", null)
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -274,7 +279,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppUser", null)
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -283,7 +288,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppUser", null)
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,13 +297,13 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppRole", null)
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppUser", null)
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -307,14 +312,14 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("CoffeeTracker.K_MYR.Domain.Entities.AppUser", null)
+                    b.HasOne("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CoffeeTracker.K_MYR.Domain.Entities.AppUser", b =>
+            modelBuilder.Entity("CoffeeTracker.K_MYR.Persistence.Entities.AppUser", b =>
                 {
                     b.Navigation("CoffeeRecords");
                 });

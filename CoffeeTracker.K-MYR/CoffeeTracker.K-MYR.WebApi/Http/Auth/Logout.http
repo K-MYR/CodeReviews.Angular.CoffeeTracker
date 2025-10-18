@@ -3,18 +3,16 @@ POST {{HostAddress}}/account/login?useCookies=true&useSessionCookies=true
 Content-Type: application/json
 Accept: application/json
 {
-  "email": "user2@test.com",
+  "email": "user5@test.com",
   "password": "String!1"
 }
 
 ###
 
 @cookie = {{login.response.headers.Set-Cookie}}
-@orderBy = DateTime
-@orderDirection = 3
-@isPrevious = false
-@pageSize = 10
 
-GET {{HostAddress}}/coffees?orderBy={{orderBy}}&orderDirection={{orderDirection}}&isPrevious={{isPrevious}}&pageSize={{pageSize}}
+POST {{HostAddress}}/account/logout
+Content-Type: application/json
 Accept: application/json
 Cookie: session={{cookie}}
+{}

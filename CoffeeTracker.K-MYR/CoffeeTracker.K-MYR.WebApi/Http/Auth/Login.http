@@ -1,0 +1,8 @@
+@url = {{HostAddress}}/account/login
+POST {{url}}
+Content-Type: application/json
+Accept: application/json
+{
+  "email": "user2@test.com",
+  "password": "String!1"
+}

@@ -1,4 +1,4 @@
-﻿using CoffeeTracker.K_MYR.Domain.Entities;
+﻿using CoffeeTracker.K_MYR.Persistence.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 

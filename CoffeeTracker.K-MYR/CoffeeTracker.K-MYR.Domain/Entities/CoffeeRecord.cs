@@ -6,5 +6,4 @@ public class CoffeeRecord
     public required DateTime DateTime { get; set; }
     public required string Type { get; set; }
     public required Guid UserId { get; set; }
-    public AppUser? User { get; set; }
 }
