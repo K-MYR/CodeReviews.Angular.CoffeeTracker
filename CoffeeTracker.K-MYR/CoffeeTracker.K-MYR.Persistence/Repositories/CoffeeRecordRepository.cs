@@ -8,6 +8,7 @@ using CoffeeTracker.K_MYR.Persistence.Entities;
 using CoffeeTracker.K_MYR.Shared;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CoffeeTracker.K_MYR.Persistence.Repositories;
 
@@ -18,40 +19,40 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
     public Task<CoffeeRecord?> GetAsync(Guid userId, int id, CancellationToken ct)
     {
         return _context.CoffeeRecords
-            .Select(c => c.ToDomain())
+            .Select(EntityToDomain)
             .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId, ct);
     }
 
     public Task CreateAsync(CoffeeRecord coffeeRecord, CancellationToken ct)
     {
-        _context.Add(coffeeRecord);
+        _context.Add(CoffeeRecordEntity.FromDomain(coffeeRecord));
         return _context.SaveChangesAsync(ct);
     }
 
     public Task UpdateAsync(CoffeeRecord record, CancellationToken ct)
     {
-        _context.Update(record);
+        _context.Update(CoffeeRecordEntity.FromDomain(record));
         return _context.SaveChangesAsync(ct);
     }
 
     public Task DeleteAsync(CoffeeRecord record, CancellationToken ct)
     {
-        _context.Remove(record);
+        _context.Remove(CoffeeRecordEntity.FromDomain(record));
         return _context.SaveChangesAsync(ct);
     }
 
     public Task<List<CoffeeRecord>> GetAllAsync(
         Guid userId,
-        CoffeeRecordOrderBy orderBy,
         CancellationToken ct,
         bool isPrevious = false,
-        int pageSize = 10,        
+        CoffeeRecordOrderBy orderBy = CoffeeRecordOrderBy.Id,
+        int pageSize = 10,
         OrderDirection orderDirection = OrderDirection.Ascending,
         DateTime? startDate = null,
         DateTime? endDate = null,
         string? type = null,
         int? lastId = null,
-        object? lastValue = null      
+        object? lastValue = null
         )
     {
         var isAscendingOrder = orderDirection == OrderDirection.Ascending ^ isPrevious;
@@ -71,14 +72,13 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
 
         if (!string.IsNullOrEmpty(type))
         {
-            query = query.Where(c => c.SearchVector.Matches(EF.Functions.PhraseToTsQuery("english", type))
-            );
+            query = query.Where(c => EF.Functions.TrigramsAreSimilar(c.Type, type));
         }
 
         query = ApplyOrdering(query, orderBy, isAscendingOrder);
 
         return query
-            .Select(c => c.ToDomain())
+            .Select(EntityToDomain)           
             .Take(pageSize + 1)
             .AsNoTracking()
             .ToListAsync(ct);
@@ -87,7 +87,7 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
     public Task<List<TypeStatisticsDTO>> GetStatistics(Guid userId, DateTime dateTime, CancellationToken ct)
     {
         IQueryable<CoffeeRecordEntity> query = _context.CoffeeRecords.Where(c => c.UserId == userId);
-        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc); 
+        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
         var todayStart = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
         var todayEnd = todayStart.AddDays(1);
         var elapsedDaysOfWeek = dateTime.ElapsedDaysOfWeek(DayOfWeek.Monday);
@@ -118,13 +118,22 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
             .ToListAsync(ct);
     }
 
+    private static Expression<Func<CoffeeRecordEntity, CoffeeRecord>> EntityToDomain =>
+    (coffeeRecord) => new CoffeeRecord()
+    {
+        UserId = coffeeRecord.UserId,
+        Id = coffeeRecord.Id,
+        Type = coffeeRecord.Type,
+        DateTime = coffeeRecord.DateTime,
+    };
+
     private static IQueryable<CoffeeRecordEntity> ApplyPagination(
     IQueryable<CoffeeRecordEntity> query,
     CoffeeRecordOrderBy orderBy,
     int? lastId = null,
     object? lastValue = null,
     bool isAscending = true)
-    {         
+    {
         if (orderBy == CoffeeRecordOrderBy.Id
             && lastId is not null)
         {
@@ -134,7 +143,7 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
         }
         else if (lastValue is not null && lastId is not null)
         {
-            query =  orderBy switch
+            query = orderBy switch
             {
                 CoffeeRecordOrderBy.Type => isAscending
                     ? query.Where(c => EF.Functions.GreaterThan(
@@ -154,7 +163,7 @@ public sealed class CoffeeRecordRepository(CoffeeRecordContext context) : ICoffe
             };
         }
         return query;
-        }
+    }
 
     private static IQueryable<CoffeeRecordEntity> ApplyOrdering(
         IQueryable<CoffeeRecordEntity> query,

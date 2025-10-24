@@ -1,5 +1,4 @@
 using CoffeeTracker.K_MYR.Common;
-using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 builder.AddDockerComposeEnvironment("env");
@@ -17,10 +16,10 @@ var database = builder.AddPostgres(ResourceNames.Postgres)
     .AddDatabase(ResourceNames.Database);
 
 var apiProj = builder.AddProject<Projects.CoffeeTracker_K_MYR_WebApi>(ResourceNames.WebApi)
-    .WithExternalHttpEndpoints();    
+    .WithExternalHttpEndpoints();
 
 var angularProj = builder.AddNpmApp(ResourceNames.AngularApp, "../CoffeeTracker.K-MYR.Client")
-    .WithHttpsEndpoint(targetPort: 4000, env: "PORT")
+    .WithHttpsEndpoint(port: 423, targetPort: 4000, env: "PORT")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 
@@ -33,12 +32,9 @@ apiProj.WithReference(papercut)
 angularProj.WithReference(apiProj)
     .WaitFor(apiProj);
 
-if (builder.Environment.IsDevelopment())
-{
-    var migrations = builder.AddProject<Projects.CoffeeTracker_K_MYR_MigrationService>(ResourceNames.Migrations)
-    .WithReference(database)
-    .WaitFor(database);
-    apiProj.WaitForCompletion(migrations);
-}
+var migrations = builder.AddProject<Projects.CoffeeTracker_K_MYR_MigrationService>(ResourceNames.Migrations)
+.WithReference(database)
+.WaitFor(database);
+apiProj.WaitForCompletion(migrations);
 
 builder.Build().Run();

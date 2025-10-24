@@ -2,7 +2,7 @@
 
 public class ClientAppConfigurationSettings
 {
-    public const string Key = "SpaConfiguration";
+    public const string Key = "ClientAppConfiguration";
     public string? Uri { get; init; }
     public required string ConfirmEmailEndpoint { get; init; }
     public required string ResetPasswordEndpoint { get; init; }

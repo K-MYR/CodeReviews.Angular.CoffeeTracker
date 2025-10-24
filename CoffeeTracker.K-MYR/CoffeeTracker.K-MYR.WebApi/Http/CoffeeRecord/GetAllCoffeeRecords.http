@@ -10,11 +10,13 @@ Accept: application/json
 ###
 
 @cookie = {{login.response.headers.Set-Cookie}}
-@orderBy = DateTime
-@orderDirection = 3
+@lastId = 409
+@lastValue = 2025-09-23T09:23:18.415Z
+@orderBy = dateTime
+@orderDirection = 1
 @isPrevious = false
 @pageSize = 10
 
-GET {{HostAddress}}/coffees?orderBy={{orderBy}}&orderDirection={{orderDirection}}&isPrevious={{isPrevious}}&pageSize={{pageSize}}
+GET {{HostAddress}}/coffees?orderBy={{orderBy}}&orderDirection={{orderDirection}}&isPrevious={{isPrevious}}&pageSize={{pageSize}}&lastId={{lastID}}&lastValue={{lastValue}}
 Accept: application/json
 Cookie: session={{cookie}}

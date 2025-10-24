@@ -9,9 +9,9 @@ public interface ICoffeeRecordRepository
 {
     Task<List<CoffeeRecord>> GetAllAsync(
         Guid userId,
-        CoffeeRecordOrderBy orderBy,
         CancellationToken ct,
         bool isPrevious = false,
+        CoffeeRecordOrderBy orderBy = CoffeeRecordOrderBy.Id,
         int pageSize = 10,
         OrderDirection orderDirection = OrderDirection.Ascending,
         DateTime? startDate = null,

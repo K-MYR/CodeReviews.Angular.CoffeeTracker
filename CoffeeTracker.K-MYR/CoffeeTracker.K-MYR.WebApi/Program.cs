@@ -1,16 +1,16 @@
-using CoffeeTracker.K_MYR.Common;
-using CoffeeTracker.K_MYR.RazorClassLib.Services;
 using CoffeeTracker.K_MYR.Application.Interfaces;
 using CoffeeTracker.K_MYR.Application.Services;
+using CoffeeTracker.K_MYR.Common;
+using CoffeeTracker.K_MYR.Persistence.DatabaseContexts;
+using CoffeeTracker.K_MYR.Persistence.Entities;
+using CoffeeTracker.K_MYR.Persistence.Repositories;
+using CoffeeTracker.K_MYR.RazorClassLib.Services;
 using CoffeeTracker.K_MYR.WebApi.Endpoints;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Email;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Extensions;
-using CoffeeTracker.K_MYR.Persistence.DatabaseContexts;
-using CoffeeTracker.K_MYR.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
-using System.Threading.Channels;
 using Microsoft.EntityFrameworkCore;
-using CoffeeTracker.K_MYR.Persistence.Entities;
+using System.Threading.Channels;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
@@ -46,7 +46,6 @@ builder.Services.AddSingleton(Channel.CreateBounded<EmailChannelRequest>(
         FullMode = BoundedChannelFullMode.Wait,
     }
 ));
-
 builder.Services.Configure<RouteHandlerOptions>(options =>
 {
     options.ThrowOnBadRequest = false;

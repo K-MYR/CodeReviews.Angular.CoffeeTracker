@@ -20,7 +20,6 @@ COPY . .
 # Build the Angular application
 RUN npm run build 
 
-
 FROM node:${NODE_VERSION}
 
 # Copy only what’s needed from build

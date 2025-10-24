@@ -12,19 +12,14 @@ internal sealed class CoffeeRecordEntityConfiguration : IEntityTypeConfiguration
             .HasIndex(c => new { c.UserId, c.DateTime, c.Id });
 
         builder
+           .HasIndex(c => new { c.UserId, c.Type, c.Id });
+
+        builder
             .Property(e => e.DateTime)
             .HasConversion(
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
                 v => v
             );
-
-        builder
-            .HasGeneratedTsVectorColumn(
-                c => c.SearchVector,
-                "english",
-                c => new { c.Type })
-            .HasIndex(c => c.SearchVector)
-            .HasMethod("GIN");
 
         builder
             .HasOne(s => s.User)

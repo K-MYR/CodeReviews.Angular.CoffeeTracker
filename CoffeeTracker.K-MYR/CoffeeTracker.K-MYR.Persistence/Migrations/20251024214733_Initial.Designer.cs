@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using NpgsqlTypes;
 
 #nullable disable
 
 namespace CoffeeTracker.K_MYR.Persistence.Migrations
 {
     [DbContext(typeof(CoffeeRecordContext))]
-    [Migration("20251020085824_Initial")]
+    [Migration("20251024214733_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +23,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CoffeeTracker.K_MYR.Persistence.Entities.AppRole", b =>
@@ -129,13 +129,6 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<NpgsqlTsVector>("SearchVector")
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("tsvector")
-                        .HasAnnotation("Npgsql:TsVectorConfig", "english")
-                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Type" });
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
@@ -145,11 +138,9 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SearchVector");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
-
                     b.HasIndex("UserId", "DateTime", "Id");
+
+                    b.HasIndex("UserId", "Type", "Id");
 
                     b.ToTable("CoffeeRecords");
                 });

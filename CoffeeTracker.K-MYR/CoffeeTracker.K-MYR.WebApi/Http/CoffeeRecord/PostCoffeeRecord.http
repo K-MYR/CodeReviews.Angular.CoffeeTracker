@@ -1,6 +1,17 @@
+# @name login
+POST {{HostAddress}}/account/login?useCookies=true&useSessionCookies=true
+Content-Type: application/json
+Accept: application/json
+{
+  "email": "user2@test.com",
+  "password": "String!1"
+}
+
+###
+
 @type = "Espresso"
 @timestamp = "2025-01-01T10:15:20Z"
-POST {{HostAddress}}
+POST {{HostAddress}}/coffees
 Content-Type: application/json
 Accept: application/json
 {

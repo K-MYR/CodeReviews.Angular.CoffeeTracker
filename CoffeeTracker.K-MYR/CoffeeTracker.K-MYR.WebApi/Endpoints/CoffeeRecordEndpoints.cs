@@ -7,6 +7,7 @@ using CoffeeTracker.K_MYR.Domain.Entities;
 using LanguageExt;
 using LanguageExt.Pipes;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace CoffeeTracker.K_MYR.WebApi.Endpoints;
@@ -41,6 +42,7 @@ public static class CoffeeRecordEndpoints
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
+            PagingData pagingData,
             [AsParameters] GetCoffeeRecordsRequest request) =>
         {
             var userId = user.GetUserId();
@@ -49,12 +51,12 @@ public static class CoffeeRecordEndpoints
                 request.DateTimeFrom,
                 request.DateTimeTo,
                 request.Type,
-                request.OrderBy,
-                request.LastId,
-                request.LastValue,
-                request.PageSize,
-                request.IsPrevious,
-                request.OrderDirection,
+                pagingData.OrderBy,
+                pagingData.LastId,
+                pagingData.LastValue,
+                pagingData.PageSize,
+                pagingData.IsPrevious,
+                pagingData.OrderDirection,
                 ct
             );
 
@@ -167,20 +169,13 @@ public static class CoffeeRecordEndpoints
         })
         .WithName("DeleteCoffeeRecord")
         .RequireAuthorization();
-
     }
 }
 
 internal sealed record GetCoffeeRecordsRequest(
     DateTime? DateTimeFrom,
     DateTime? DateTimeTo,
-    string? Type,
-    int? LastId,
-    string? LastValue,
-    CoffeeRecordOrderBy OrderBy = CoffeeRecordOrderBy.Id,
-    int PageSize = 10,
-    bool IsPrevious = false,
-    OrderDirection OrderDirection = OrderDirection.Ascending
+    string? Type
 );
 
 internal sealed record CreateCoffeeRecordRequest(
@@ -222,4 +217,79 @@ internal sealed record UpdateCoffeeRecordRequest(
         Type = Type.Trim(),
         UserId = userId
     };
+}
+
+internal sealed record PagingData(
+    int? LastId,
+    string? LastValue,
+    CoffeeRecordOrderBy OrderBy = CoffeeRecordOrderBy.Id,
+    int PageSize = 10,
+    bool IsPrevious = false,
+    OrderDirection OrderDirection = OrderDirection.Ascending) : IBindableFromHttpContext<PagingData>
+{
+    const string lastIdKey = "lastId";
+    const string lastValueKey = "lastValue";
+    const string orderByKey = "orderBy";
+    const string orderDirectionKey = "orderDirection";
+    const string pageSizeKey = "pageSize";
+    const string isPreviousKey = "isPrevious";
+
+    public static ValueTask<PagingData?> BindAsync(HttpContext context, ParameterInfo parameter)
+    {
+        var query = context.Request.Query;
+
+        int? lastId = null;
+        if (query.TryGetValue(lastIdKey, out var lastIdStr))
+        {
+            if (!int.TryParse(lastIdStr, out var parsedLastId))
+            {
+                return ValueTask.FromResult<PagingData?>(null);
+            }
+            lastId = parsedLastId;
+        }
+
+        string? lastValue = query.TryGetValue(lastValueKey, out var lvStr) ? lvStr.ToString() : null;       
+
+        var orderBy = CoffeeRecordOrderBy.Id;
+        if (query.TryGetValue(orderByKey, out var orderByStr) && !Enum.TryParse(orderByStr, true, out orderBy))
+        {
+            return ValueTask.FromResult<PagingData?>(null);
+        }
+
+        int pageSize = 10;
+        if (query.TryGetValue(pageSizeKey, out var pageSizeStr) && !int.TryParse(pageSizeStr, out pageSize))
+        {
+            return ValueTask.FromResult<PagingData?>(null);
+        }
+
+        bool isPrevious = false;
+        if (query.TryGetValue(isPreviousKey, out var isPreviousStr) && !bool.TryParse(isPreviousStr, out isPrevious))
+        {
+            return ValueTask.FromResult<PagingData?>(null);
+        }
+
+        var orderDirection = OrderDirection.Ascending;
+        if (query.TryGetValue(orderDirectionKey, out var odStr))
+        {
+            if (Enum.TryParse<OrderDirection>(odStr, true, out var parsed) 
+                && Enum.IsDefined(parsed))
+            {
+                orderDirection = parsed;
+            }
+            else
+            {
+                return ValueTask.FromResult<PagingData?>(null);
+            }
+        }
+
+        var result = new PagingData(
+            LastId: lastId,
+            LastValue: lastValue,
+            OrderBy: orderBy,
+            PageSize: pageSize,
+            IsPrevious: isPrevious,
+            OrderDirection: orderDirection);
+
+        return ValueTask.FromResult<PagingData?>(result);
+    }
 }

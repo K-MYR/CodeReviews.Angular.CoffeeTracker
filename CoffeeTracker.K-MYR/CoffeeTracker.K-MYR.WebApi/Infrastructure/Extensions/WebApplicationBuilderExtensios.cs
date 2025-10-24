@@ -53,14 +53,13 @@ internal static class WebApplicationBuilderExtensions
             .Select(c => c.Value)
             .ToArray();
 
-        if (!(httpsPorts.Length > 0
-            && Uri.TryCreate(httpsPorts[0], UriKind.Absolute, out Uri? uri))
-            && !Uri.TryCreate(options.Uri, UriKind.Absolute, out uri))
+        if (!Uri.TryCreate(options.Uri, UriKind.Absolute, out Uri? uri)
+            && !Uri.TryCreate(httpsPorts.LastOrDefault(), UriKind.Absolute, out uri))
         {
-            throw new InvalidOperationException("SMTP server and port configurations are required");
-        }   
+            throw new InvalidOperationException("No valid uri was provided.");
+        }
 
-        builder.Services.Configure<ClientAppConfiguration>(opt => 
+        builder.Services.Configure<ClientAppConfiguration>(opt =>
         {
             opt.ConfirmEmailEndpoint = new UriBuilder(uri)
             {

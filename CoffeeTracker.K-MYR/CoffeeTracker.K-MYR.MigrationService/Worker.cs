@@ -27,7 +27,7 @@ public class Worker(
             var dbContext = sp.GetRequiredService<CoffeeRecordContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
-            await SeedDataAsync(sp, dbContext, cancellationToken);
+            await SeedDataAsync(sp, dbContext);
         }
         catch (Exception ex)
         {
@@ -39,28 +39,22 @@ public class Worker(
     }
 
     private static async Task RunMigrationAsync(CoffeeRecordContext dbContext, CancellationToken ct)
-    {
-        var strategy = dbContext.Database.CreateExecutionStrategy();
-        await strategy.ExecuteAsync(async () =>
-        {
-            await dbContext.Database.MigrateAsync(ct);
-        });
+    {        
+        await dbContext.Database.MigrateAsync(ct);        
     }
 
-    private static async Task SeedDataAsync(IServiceProvider sp, CoffeeRecordContext dbContext, CancellationToken ct)
+    private static async Task SeedDataAsync(IServiceProvider sp, CoffeeRecordContext dbContext)
     {
         if (dbContext.CoffeeRecords.Any() || dbContext.Users.Any())
         {
             return;
         }
-
-        var strategy = dbContext.Database.CreateExecutionStrategy();
-
+        
         var userManager = sp.GetRequiredService<UserManager<AppUser>>();
         var userStore = sp.GetRequiredService<IUserStore<AppUser>>(); 
         var emailStore = (IUserEmailStore<AppUser>)userStore;
         List<AppUser> users = [];
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= 20; i++)
         {
             AppUser user = new();
             var email = $"user{i}@test.com";
@@ -74,21 +68,18 @@ public class Worker(
             }
             users.Add(user);
         }
+        
+        var random = new Random();
+        var dateTime = DateTime.Now;
 
-        await strategy.ExecuteAsync(async () =>
-        {
-            var random = new Random();
-            var dateTime = DateTime.Now;
+        var records = Enumerable.Range(0, 10_000)
+            .Select(_ => new CoffeeRecordEntity
+            {
+                UserId = users[random.Next(0, users.Count - 1)].Id,
+                DateTime = dateTime.AddMinutes(-random.Next(0, 60 * 24 * 365 * 5)),
+                Type = _coffeeTypes[random.Next(0, _coffeeTypes.Length - 1)]
+            });
 
-            var records = Enumerable.Range(0, 2000)
-                .Select(_ => new CoffeeRecordEntity
-                {
-                    UserId = users[random.Next(0, users.Count - 1)].Id,
-                    DateTime = dateTime.AddMinutes(-random.Next(0, 60 * 24 * 730)),
-                    Type = _coffeeTypes[random.Next(0, _coffeeTypes.Length - 1)]
-                });
-
-            await dbContext.CoffeeRecords.BulkInsertAsync(records);
-        });
+        await dbContext.CoffeeRecords.BulkInsertAsync(records);        
     }
 }

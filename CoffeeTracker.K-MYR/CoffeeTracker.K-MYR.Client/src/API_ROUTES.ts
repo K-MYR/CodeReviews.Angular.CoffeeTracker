@@ -17,4 +17,3 @@ export class API_ROUTES {
   public static FORGOT_PASSWORD: string = `${this.ACCOUNT}/forgotPassword`;
   public static RESET_PASSWORD: string = `${this.ACCOUNT}/resetPassword`;
 }
-

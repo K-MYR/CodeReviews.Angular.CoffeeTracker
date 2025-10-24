@@ -15,6 +15,7 @@
 	<PackageReference Include="Aspire.Hosting.NodeJs" />
 	<PackageReference Include="Aspire.Hosting.PostgreSQL" />
 	<PackageReference Include="Aspire.Hosting.SqlServer" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
 	<PackageReference Include="CommunityToolkit.Aspire.Hosting.PapercutSmtp" />
   </ItemGroup>
 

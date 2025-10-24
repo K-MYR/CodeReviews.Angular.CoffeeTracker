@@ -12,6 +12,7 @@ public sealed class CoffeeRecordContext(DbContextOptions<CoffeeRecordContext> op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.HasPostgresExtension("pg_trgm");
         new CoffeeRecordEntityConfiguration()
             .Configure(modelBuilder.Entity<CoffeeRecordEntity>());
     }

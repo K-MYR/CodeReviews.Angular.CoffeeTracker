@@ -82,8 +82,7 @@ public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepo
         CancellationToken ct = default)
     {
         object? convertedValue = null;
-        var coffeeRecordOrderBy = CoffeeRecordOrderBy.Id;
-        if (!_orderByMap.TryGetValue(coffeeRecordOrderBy, out PropertyInfo? property))
+        if (!_orderByMap.TryGetValue(orderBy, out PropertyInfo? property))
         {
             return new Result<PaginatedList<CoffeeRecord>>(new ValidationException($"'{orderBy}' is not a valid field for ordering."));
         }         
@@ -96,7 +95,7 @@ public sealed class CoffeeRecordService(ICoffeeRecordRepository coffeeRecordRepo
         }        
 
         var coffeeRecords = await _coffeeRecordRepository.GetAllAsync(
-            userId, orderBy, ct, isPrevious, pageSize, orderDirection, dateTimeFrom, dateTimeTo, type?.Trim(), lastId, convertedValue);
+            userId, ct, isPrevious, orderBy, pageSize, orderDirection, dateTimeFrom, dateTimeTo, type?.Trim(), lastId, convertedValue);
         var hasNext = coffeeRecords.Count > pageSize;
         var hasPrevious = lastId is not null;
 

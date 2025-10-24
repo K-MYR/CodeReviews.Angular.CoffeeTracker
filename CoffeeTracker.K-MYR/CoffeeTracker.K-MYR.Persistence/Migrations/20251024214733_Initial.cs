@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using NpgsqlTypes;
 
 #nullable disable
 
@@ -13,6 +12,9 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -166,10 +168,7 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
-                        .Annotation("Npgsql:TsVectorConfig", "english")
-                        .Annotation("Npgsql:TsVectorProperties", new[] { "Type" })
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,15 +219,14 @@ namespace CoffeeTracker.K_MYR.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoffeeRecords_SearchVector",
-                table: "CoffeeRecords",
-                column: "SearchVector")
-                .Annotation("Npgsql:IndexMethod", "GIN");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CoffeeRecords_UserId_DateTime_Id",
                 table: "CoffeeRecords",
                 columns: new[] { "UserId", "DateTime", "Id" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoffeeRecords_UserId_Type_Id",
+                table: "CoffeeRecords",
+                columns: new[] { "UserId", "Type", "Id" });
         }
 
         /// <inheritdoc />

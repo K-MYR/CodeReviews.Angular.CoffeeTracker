@@ -10,12 +10,18 @@ public sealed class CoffeeRecordEntity
     public required string Type { get; set; }
     public required Guid UserId { get; set; }
     public AppUser? User { get; set; }
-    public NpgsqlTsVector SearchVector { get; init; } = NpgsqlTsVector.Empty;
     internal CoffeeRecord ToDomain() => new()
     {
         Id = Id,
         DateTime = DateTime,
-        Type = Type.Trim(),
+        Type = Type,
         UserId = UserId,
+    };
+    internal static CoffeeRecordEntity FromDomain(CoffeeRecord coffeeRecord) => new()
+    {
+        Id = coffeeRecord.Id,
+        DateTime = coffeeRecord.DateTime,
+        Type = coffeeRecord.Type,
+        UserId = coffeeRecord.UserId,
     };
 }
