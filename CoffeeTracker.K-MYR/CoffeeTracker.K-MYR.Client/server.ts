@@ -18,7 +18,7 @@ const angularApp = new AngularNodeAppEngine();
 app.use(
   '/api',
   createProxyMiddleware({
-    target: process.env['services__webapi__https__0'] || ' ',
+    target: process.env['services__webapi__http__0'] || ' ',
     changeOrigin: true
   })
 );
