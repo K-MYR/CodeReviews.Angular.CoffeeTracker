@@ -1,0 +1,22 @@
+services:  
+  postgres:   
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 10
+      start_period: 5s
+      timeout: 1s
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  migrations:
+    depends_on:
+      postgres:
+        condition: "service_healthy" 
+  webapi:
+    environment:
+       services__angular__https__0: "${HOST}:${ANGULAR_PORT}"
+  angular:
+            #false error; VS 2022 Language Server Support Sucks  
+    ports: !override
+    - "${ANGULAR_PORT}:${ANGULAR_TARGET_PORT}"

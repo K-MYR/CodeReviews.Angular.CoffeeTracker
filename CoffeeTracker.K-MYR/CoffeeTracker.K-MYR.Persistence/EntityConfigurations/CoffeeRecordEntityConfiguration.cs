@@ -26,5 +26,8 @@ internal sealed class CoffeeRecordEntityConfiguration : IEntityTypeConfiguration
             .WithMany(u => u.CoffeeRecords)
             .HasForeignKey(u => u.UserId)
             .IsRequired();
+
+        builder.Property(e => e.Type)
+            .HasMaxLength(50);
     }
 }

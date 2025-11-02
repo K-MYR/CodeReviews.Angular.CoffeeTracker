@@ -1,21 +1,22 @@
 ﻿# ☕ CodeReviews.Angular.CoffeeTracker
 
 **Full-Stack Coffee Tracker App**  
-2nd Angular project developed as part of the [C# Academy](https://www.thecsharpacademy.com/) curriculum.
+2nd Angular project developed as part of the [C# Academy](https://www.thecsharpacademy.com/) curriculum. \
+**Goal:** Build a fullstack application with Angular and ASP .NET Core, where users can track their coffee consumption
 
-## 📘 Overview
+## :bookmark_tabs: Project Description
 CodeReviews.Angular.CoffeeTracker is a **full-stack application** that allows users to track their coffee consumption.  
 It combines an **Angular (v19)** frontend with an **ASP.NET Core Web API** backend and demonstrates essential production concepts such as authentication, database management, and deployment using Docker and Aspire.
 
-## 🎯 Project Goals
-- Build a simple yet complete full-stack project using modern technologies.  
-- Practice separation of concerns between **frontend** and **backend**.  
-- Implement **data persistence**, **form validation**, and **authentication** from scratch.  
-- Focus on **Angular fundamentals** without relying on Angular Material.
+## :clipboard: Requirements
+
+:heavy_check_mark: This is an application where you should record their coffee consumption. \
+:heavy_check_mark: You should create two projects: A.NET WebApi and an Angular app. \
+:heavy_check_mark: You should have a filter functionality, so users can select records per date. \
 
 ---
 
-## ⚙️ Tech Stack
+## :gear: Technologies & Architecture
 
 ### Backend
 - **ASP.NET Core Web API**
@@ -36,6 +37,7 @@ It combines an **Angular (v19)** frontend with an **ASP.NET Core Web API** backe
 ---
 
 ## ✅ Features
+
 - Record and visualize daily coffee (or other) consumption  
 - Filter records by date range  
 - Secure login and registration with Identity  
@@ -58,9 +60,12 @@ You can run the project in two ways: **standard Visual Studio** or **Aspire/Dock
 This method uses **Aspire publish** to generate a Docker Compose setup.
 
 1. Ensure Docker is installed and running.  
-2. Use the provided `.env` file to set environment-specific variables such as database credentials.  
-3. Apply `docker-compose.override.yml` to override the generated Docker Compose configuration.  
-4. Start the application with: `docker compose up`
+2. From the `CoffeeTracker.K-MYR.AppHost` folder run `aspire publish -o <output-directory>`.
+3. Copy the provided `.env.example` to the output directory and rename it to .env.
+4. Copy the provided `docker-compose.override.example.yaml` to the output directory and rename it to `docker-compose.override.yaml`. 
+5. Navigate to the output directory and start the application with: `docker compose up`.
+
+Note: For demo purposes, all users are pre-seeded with email addresses in the format "user{0-20}@test.com" and the password "String!1".
 
 ## 🛠️ Planned Features
 

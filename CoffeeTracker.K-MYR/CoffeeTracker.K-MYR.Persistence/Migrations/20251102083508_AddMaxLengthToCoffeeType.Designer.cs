@@ -3,6 +3,7 @@ using System;
 using CoffeeTracker.K_MYR.Persistence.DatabaseContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeTracker.K_MYR.Persistence.Migrations
 {
     [DbContext(typeof(CoffeeRecordContext))]
-    partial class CoffeeRecordContextModelSnapshot : ModelSnapshot
+    [Migration("20251102083508_AddMaxLengthToCoffeeType")]
+    partial class AddMaxLengthToCoffeeType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

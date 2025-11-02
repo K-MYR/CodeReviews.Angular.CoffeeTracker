@@ -4,6 +4,7 @@ using CoffeeTracker.K_MYR.Application.Services;
 using CoffeeTracker.K_MYR.Common;
 using CoffeeTracker.K_MYR.Common.Enums;
 using CoffeeTracker.K_MYR.Domain.Entities;
+using FluentValidation;
 using LanguageExt;
 using LanguageExt.Pipes;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -94,12 +95,23 @@ public static class CoffeeRecordEndpoints
         .WithName("GetCoffeeTypeStatistics")
         .RequireAuthorization();
 
-        group.MapPost("/", async Task<CreatedAtRoute<CoffeeRecordResponse>> (
+        group.MapPost("/", async Task<Results<CreatedAtRoute<CoffeeRecordResponse>, ProblemHttpResult>> (
+            IValidator<CreateCoffeeRecordRequest> validator,
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
             CreateCoffeeRecordRequest request) =>
         {
+            var validationResult = validator.Validate(request);
+            if(!validationResult.IsValid)
+            {
+                return TypedResults.Problem(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: "Validation failed",
+                    detail: validationResult.ToString()
+                );
+            }
+
             var userId = user.GetUserId();
             var record = request.ToDomain(userId);
             await coffeeRecordService.CreateCoffeeRecordAsync(record, ct);
@@ -114,6 +126,7 @@ public static class CoffeeRecordEndpoints
 
 
         group.MapPut("/{id:int}", async Task<Results<NoContent, ProblemHttpResult>> (
+            IValidator<UpdateCoffeeRecordRequest> validator,
             ClaimsPrincipal user,
             ICoffeeRecordService coffeeRecordService,
             CancellationToken ct,
@@ -125,6 +138,16 @@ public static class CoffeeRecordEndpoints
                 return TypedResults.Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     detail: $"The route value '{id}' does not align with the expected record identifier '{request.Id}'."
+                );
+            }
+
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid) 
+            {
+                return TypedResults.Problem(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: "Validation failed",
+                    detail: validationResult.ToString()
                 );
             }
 
@@ -172,13 +195,13 @@ public static class CoffeeRecordEndpoints
     }
 }
 
-internal sealed record GetCoffeeRecordsRequest(
+public sealed record GetCoffeeRecordsRequest(
     DateTime? DateTimeFrom,
     DateTime? DateTimeTo,
     string? Type
 );
 
-internal sealed record CreateCoffeeRecordRequest(
+public sealed record CreateCoffeeRecordRequest(
     DateTime DateTime,
     string Type
 )
@@ -191,7 +214,7 @@ internal sealed record CreateCoffeeRecordRequest(
     };
 }
 
-internal sealed record CoffeeRecordResponse(
+public sealed record CoffeeRecordResponse(
     int Id,
     DateTime DateTime,
     string Type
@@ -204,7 +227,7 @@ internal sealed record CoffeeRecordResponse(
     );
 }
 
-internal sealed record UpdateCoffeeRecordRequest(
+public sealed record UpdateCoffeeRecordRequest(
     int Id,
     DateTime DateTime,
     string Type
@@ -219,7 +242,7 @@ internal sealed record UpdateCoffeeRecordRequest(
     };
 }
 
-internal sealed record PagingData(
+public sealed record PagingData(
     int? LastId,
     string? LastValue,
     CoffeeRecordOrderBy OrderBy = CoffeeRecordOrderBy.Id,

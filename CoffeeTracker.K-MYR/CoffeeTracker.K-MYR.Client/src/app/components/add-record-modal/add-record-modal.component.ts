@@ -7,7 +7,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 @Component({
   selector: 'app-add-record-modal',
   standalone: true,
-  imports: [ ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-record-modal.component.html',
   styleUrl: './add-record-modal.component.scss'
 })
@@ -15,10 +15,9 @@ export class AddRecordModalComponent extends ModalComponent {
   recordForm = new FormGroup<PostCoffeeRecordForm>({
     type: new FormControl<string|null>(null, [
       Validators.required,
+      Validators.maxLength(50)
     ]),
-    dateTime: new FormControl<string|null>(null, [
-      Validators.required,
-    ])
+    dateTime: new FormControl<string|null>(null, [Validators.required])
   });
   submitCoffeeRecord: OutputEmitterRef<PostCoffeeRecord> = output<PostCoffeeRecord>();
 
@@ -29,7 +28,7 @@ export class AddRecordModalComponent extends ModalComponent {
     });
   }
 
-  onSubmit() : void {
+  onSubmit(): void {
     if (this.recordForm.valid) {
       this.close();
       let data = this.recordForm.value;

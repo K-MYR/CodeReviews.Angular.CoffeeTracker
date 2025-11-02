@@ -8,6 +8,7 @@ using CoffeeTracker.K_MYR.RazorClassLib.Services;
 using CoffeeTracker.K_MYR.WebApi.Endpoints;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Email;
 using CoffeeTracker.K_MYR.WebApi.Infrastructure.Extensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Channels;
@@ -55,6 +56,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.SlidingExpiration = true;
 });
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
 builder.ConfigureEmailOptions();
 builder.ConfigureClientOptions();
 
